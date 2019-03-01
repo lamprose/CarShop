@@ -1,2 +1,2 @@
 # CarShop
-一个网上汽车销售系统
+A simple online automobile sales system

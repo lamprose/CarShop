@@ -1,4 +1,4 @@
-[For English User](https://github.com/lipses/BookShop/blob/master/README.md)
+[For English User](https://github.com/lipses/CarShop/blob/master/README.md)
 
 一个简单的网上汽车销售系统，大三数据库课程设计小组所做的项目，bug比较多，请谅解。
 # 前端

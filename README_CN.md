@@ -1,6 +1,7 @@
 [For English User](https://github.com/lipses/BookShop/blob/master/README.md)
-Ò»¸ö¼òµ¥µÄÍøÉÏÆû³µÏúÊÛÏµÍ³£¬´óÈıÊı¾İ¿â¿Î³ÌÉè¼ÆĞ¡×éËù×öµÄÏîÄ¿£¬bug±È½Ï¶à£¬ÇëÁÂ½â¡£
-# Ç°¶Ë
-Ç°¶ËÊÇ²ÉÓÃvue.js¿ò¼ÜÓëElemeUIĞ´µÄ.[Ç°¶ËÔ´´úÂë](https://github.com/lipses/CarShop/tree/fore-end)
-# ºó¶Ë
-ºó¶Ë²ÉÓÃMVC¿ò¼Ü,ÓÃJAVAÓïÑÔÓëMySQLÒ»ÆğĞ´µÄ.[ºó¶ËÔ´´úÂë](https://github.com/lipses/CarShop/tree/back-end)
+
+ä¸€ä¸ªç®€å•çš„ç½‘ä¸Šæ±½è½¦é”€å”®ç³»ç»Ÿï¼Œå¤§ä¸‰æ•°æ®åº“è¯¾ç¨‹è®¾è®¡å°ç»„æ‰€åšçš„é¡¹ç›®ï¼Œbugæ¯”è¾ƒå¤šï¼Œè¯·è°…è§£ã€‚
+# å‰ç«¯
+å‰ç«¯æ˜¯é‡‡ç”¨vue.jsæ¡†æ¶ä¸ElemeUIå†™çš„.[å‰ç«¯æºä»£ç ](https://github.com/lipses/CarShop/tree/fore-end)
+# åç«¯
+åç«¯é‡‡ç”¨MVCæ¡†æ¶,ç”¨JAVAè¯­è¨€ä¸MySQLä¸€èµ·å†™çš„.[åç«¯æºä»£ç ](https://github.com/lipses/CarShop/tree/back-end)

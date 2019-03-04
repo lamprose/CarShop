@@ -5,7 +5,8 @@ import App from './App'
 import router from './router'
 import elementUi from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
-import './style.css'
+import './style.css';
+import 'font-awesome/css/font-awesome.css';
 
 Vue.config.productionTip = false
 

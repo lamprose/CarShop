@@ -10,7 +10,8 @@
         </el-container>
         <el-footer><router-view name="bottomBar"></router-view></el-footer>
       </el-container>
-      <el-aside width="50px"><router-view name="sideBar"></router-view></el-aside>
+      <el-aside width="50px" class="aside" id="abc"><router-view name="sideBar" @toggleSideBarBlank="toggleStates"></router-view></el-aside>
+      <el-aside v-if="show" width="200px" class="aside"><router-view name="sideBar"></router-view></el-aside>
     </el-container>
     <router-view></router-view>
   </div>
@@ -18,7 +19,21 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  data(){
+    return{
+      show: false,
+    }
+  },
+  methods:{
+    toggleStates(){
+      this.show=!this.show
+      if(this.show===false)
+        document.getElementById("abc").style.cssText="right:0px"
+      else
+        document.getElementById("abc").style.cssText="right:200px"
+    }
+  }
 }
 </script>
 
@@ -34,10 +49,13 @@ export default {
 }
   .Main{
     margin-left: 10%;
-    margin-right: 9%;
-    margin-right: calc(10% - 50px);
+    margin-right: 10%;
   }
   .topBar{
 
+  }
+  .aside{
+    position: absolute;
+    right: 0px;
   }
 </style>

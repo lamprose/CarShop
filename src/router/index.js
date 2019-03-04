@@ -1,10 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import TopBar from '@/components/CommonModule/TopBar'
-import BottomBar from '@/components/CommonModule/BottomBar'
-import SideBar from '@/components/CommonModule/SideBar'
-import MainBox from '@/components/CommonModule/MainBox'
-import page404 from '@/404'
 
 Vue.use(Router)
 
@@ -14,16 +9,17 @@ export default new Router({
       path: '/',
       name: 'HelloWorld',
       components: {
-        'topBar': TopBar,
-        'sideBar': SideBar,
-        'bottomBar':BottomBar,
-        'mainBox':MainBox
+        'topBar': resolve => require(["../components/TopBar.vue"], resolve),
+        'sideBar': resolve => require(["../components/SideBar.vue"], resolve),
+        'sideBarBlank': resolve => require(["../components/SideBarBlank.vue"], resolve),
+        'bottomBar': resolve => require(["../components/BottomBar.vue"], resolve),
+        'mainBox': resolve => require(["../components/MainBox.vue"], resolve),
       },
     },
     {
       path:'*',
       name:'404',
-      component: page404,
+      component: resolve => require(["../components/Error404.vue"], resolve),
       meta:{
         title: '404 not found'
       }

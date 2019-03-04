@@ -1,5 +1,5 @@
 <template>
-  <div class="footer" style="border-style: solid;">
+  <div class="footer">
     <div class="footerContent">
       <el-breadcrumb separator="    ">
         <el-breadcrumb-item :to="{ path: '/' }" class="footerItem">网站首页</el-breadcrumb-item>

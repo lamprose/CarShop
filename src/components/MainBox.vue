@@ -1,5 +1,5 @@
 <template>
-  <div class="MainBox" style="border-style: solid;">
+  <div class="MainBox" style="height:3000px;border-style: solid;">
     <h1>MainBox</h1>
   </div>
 </template>

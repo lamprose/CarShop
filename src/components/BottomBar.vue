@@ -10,6 +10,7 @@
         </el-breadcrumb-item>
         <el-breadcrumb-item class="footerItem">专家招募</el-breadcrumb-item>
         <el-breadcrumb-item class="footerItem">常见问题</el-breadcrumb-item>
+        <el-breadcrumb-item class="footerItem" :to="toMessage">意见反馈</el-breadcrumb-item>
         <el-breadcrumb-item class="footerItem">友情链接</el-breadcrumb-item>
       </el-breadcrumb>
       <div class="footerRight">
@@ -17,7 +18,7 @@
       </div>
       <el-dialog title="关于" :visible.sync="aboutUs" width="30%" center>
         <div style="width: 170px;margin:30px auto">
-          <label>组长：谭健雄 161310526</label><br>
+          <label>组长：谭健雄 141140128</label><br>
           <label>组员：李鹏书 161310523</label><br>
           <label style="margin-left: 42px">饶学亮 161310120</label><br>
         </div>
@@ -33,6 +34,7 @@
         //footer版权声明
         footerRight:"Copyright © 2018 cxy.com All Rights Reserved | 沪ICP备 12003892号-11",
         aboutUs: false,
+        toMessage:{ path: '/messageboard' },
       }
     }
   }

@@ -1,16 +1,18 @@
 <template>
-  <div>
-    <router-view v-if="isRouterAlive"></router-view>
+  <div style="height: 100%">
+    <router-view v-if="now==='user'" name="userBlankBox"></router-view>
+    <router-view v-if="now==='shopCart'" name="shopCartBlankBox"></router-view>
+    <router-view v-if="now==='tool'" name="toolBlankBox"></router-view>
   </div>
 </template>
 
 <script>
   export default {
     name: "MainBox",
+    props:['now'],
     data() {
       return {
-        msg: "Welcome to Your Vue.js App",
-        isRouterAlive:true,
+
       };
     },
     provide(){

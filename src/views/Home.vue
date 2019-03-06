@@ -286,7 +286,7 @@
     margin-left: 1px;
   }
   .shop-item{
-    width: 208px;
+    width: 20%;
     height: 193px;
     border: 1px solid #ccc;
     float: left;

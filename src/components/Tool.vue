@@ -64,8 +64,4 @@
       }
     }
   }
-  .el-scrollbar__wrap {
-    overflow-x: hidden;
-    overflow-y: hidden;
-  }
 </style>

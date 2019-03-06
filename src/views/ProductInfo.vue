@@ -1,7 +1,12 @@
 <template>
-    <div>
-      <h4>{{this.$route.params.id}}</h4>
-      <el-row :gutter="24">
+    <div style="margin-top: 20px">
+      <el-breadcrumb separator-class="el-icon-arrow-right" style="width: 100%">
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/' }">上汽大众</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/' }">凌渡</el-breadcrumb-item>
+        <el-breadcrumb-item >上汽大众 凌渡 280TSI DSG米色内饰限量版</el-breadcrumb-item>
+      </el-breadcrumb>
+      <el-row :gutter="24" style="margin-top: 20px">
         <el-col :span="9">
           <el-carousel id="product-large" indicator-position="outside">
             <el-carousel-item v-for="item in 4" :key="item" style="background-color: #000">

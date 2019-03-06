@@ -11,20 +11,17 @@ export default new Router({
       components: {
         'topBar': resolve => require(["./components/TopBar.vue"], resolve),
         'asideBar': resolve => require(["./components/AsideBar.vue"], resolve),
-        'asideBarBlank': resolve => require(["./components/AsideBarBlank.vue"], resolve),
         'bottomBar': resolve => require(["./components/BottomBar.vue"], resolve),
         'mainBox': resolve => require(["./components/MainBox.vue"], resolve),
+        'userBlankBox': resolve => require(["./components/User.vue"], resolve),
+        'shopCartBlankBox': resolve => require(["./components/ShopCart.vue"], resolve),
+        'toolBlankBox': resolve => require(["./components/Tool.vue"], resolve),
       },
       children:[
         {
           path:'/home',
           name:'Home',
-          components:{
-            'default':resolve => require(["./views/Home.vue"], resolve),
-            'userBlankBox': resolve => require(["./views/User.vue"], resolve),
-            'shopCartBlankBox': resolve => require(["./views/ShopCart.vue"], resolve),
-            'toolBlankBox': resolve => require(["./views/Tool.vue"], resolve),
-          }
+          component:resolve => require(["./views/Home.vue"], resolve),
         },
         {
           path:'/search',
@@ -36,11 +33,29 @@ export default new Router({
           name:'Goods',
           components:{
             'default':resolve => require(["./views/ProductInfo.vue"], resolve),
-            'userBlankBox': resolve => require(["./views/User.vue"], resolve),
-            'shopCartBlankBox': resolve => require(["./views/ShopCart.vue"], resolve),
-            'toolBlankBox': resolve => require(["./views/Tool.vue"], resolve),
           }
-        }
+        },
+        {
+          path:'/shop/:id',
+          name:'Shop',
+          components:{
+            'default':resolve => require(["./views/Shop.vue"], resolve),
+          }
+        },
+        {
+          path:'/forgot',
+          name:'Forgot',
+          components:{
+            'default':resolve => require(["./views/Forgot.vue"], resolve),
+          }
+        },
+        {
+          path:'/register',
+          name:'Register',
+          components:{
+            'default':resolve => require(["./views/Register.vue"], resolve),
+          }
+        },
       ]
     },
     {

@@ -10,11 +10,12 @@
         </el-container>
         <el-footer><router-view name="bottomBar"></router-view></el-footer>
       </el-container>
-      <el-aside width="55px" class="aside" id="asideBar"><router-view name="asideBar" @toggleAsideBarBlankBox="toggle" @toggleAsideBarBlank="toggleStates"></router-view></el-aside>
+      <el-aside width="45px" class="aside" id="asideBar"><router-view name="asideBar" @toggleAsideBarBlankBox="toggle"></router-view></el-aside>
       <el-scrollbar><!--隐藏滚动条-->
-        <el-aside v-if="show" width="200px" class="aside" id="asideBarBlank">
-          <router-view :now="asideBarNow" v-if="isRouterAlive" name="asideBarBlank"></router-view>
-
+        <el-aside v-if="show" width="300px" class="aside" id="asideBarBlank">
+          <router-view v-if="asideBarNow==='user'" name="userBlankBox"></router-view>
+          <router-view v-if="asideBarNow==='shopCart'" name="shopCartBlankBox"></router-view>
+          <router-view v-if="asideBarNow==='tool'" name="toolBlankBox"></router-view>
         </el-aside>
       </el-scrollbar>
     </el-container>
@@ -36,17 +37,16 @@ export default {
   methods:{
     toggle(data){
       console.log(data);
+      let blank=document.getElementById("asideBarBlank")
+      let side=document.getElementById("asideBar")
+      let needOpen=(blank.style.width==="0px")
+      let needClose=(data.id===this.asideBarNow&&!needOpen)
+      if(needOpen){
+        blank.style.width="300px"
+        side.style.right="300px"
+      }
       this.asideBarNow=data.id;
-      this.isRouterAlive = false;
-      this.$nextTick(()=>(this.isRouterAlive=true));
-    },
-    toggleStates(){
-      var blank=document.getElementById("asideBarBlank")
-      var side=document.getElementById("asideBar")
-      if(blank.style.width==="0px"){
-        blank.style.width="200px"
-        side.style.right="200px"
-      }else{
+      if(needClose){
         blank.style.width="0px"
         side.style.right="0px"
       }
@@ -73,17 +73,19 @@ export default {
     z-index: 100000;
   }
   #asideBar{
-    right: 200px;
+    right: 300px;
     transition-property: right;
-    transition-duration: 2s;
+    transition-duration: 1s;
     height: calc(100% + 10px );
   }
   #asideBarBlank{
     transition-property: width;
-    transition-duration: 2s;
+    transition-duration: 1s;
+  }
+  .el-scrollbar__thumb {
+    display: none;
   }
   .el-scrollbar__wrap {
     overflow-x: hidden;
-    overflow-y: hidden;
   }
 </style>

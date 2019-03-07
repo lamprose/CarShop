@@ -1,14 +1,13 @@
 <template>
   <div style="height: 100%">
-    <el-scrollbar style="width: 100%;height: 100%;background-color: #fff"><!--隐藏滚动条-->
-      <div class="main">
-        <div  class="icon">
-          <h2 class="item">工具箱</h2>
-          <ul class="item">
-            <li v-for="(o,index) in toolItems" :class="o.fa"><br><span>{{o.tag}}</span></li>
-          </ul>
-        </div>
-      </div>
+    <!--隐藏滚动条-->
+    <el-scrollbar style="width: 100%;height: 100%;background-color: #fff">
+      <div class="main"><div  class="icon">
+        <h2 class="item">工具箱</h2>
+        <ul class="item">
+          <li v-for="(o,index) in toolItems" :class="o.fa"><br><span>{{o.tag}}</span></li>
+        </ul>
+      </div></div>
     </el-scrollbar>
   </div>
 </template>

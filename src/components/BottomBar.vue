@@ -1,6 +1,7 @@
 <template>
   <div class="footer">
     <div class="footerContent">
+      <!--底栏快速导航-->
       <el-breadcrumb separator="    ">
         <el-breadcrumb-item :to="{ path: '/' }" class="footerItem">网站首页</el-breadcrumb-item>
         <el-breadcrumb-item class="footerItem">企业合作</el-breadcrumb-item>
@@ -13,9 +14,11 @@
         <el-breadcrumb-item class="footerItem" :to="toMessage">意见反馈</el-breadcrumb-item>
         <el-breadcrumb-item class="footerItem">友情链接</el-breadcrumb-item>
       </el-breadcrumb>
+      <!--版权声明-->
       <div class="footerRight">
         {{footerRight}}
       </div>
+      <!--关于我们弹窗-->
       <el-dialog title="关于" :visible.sync="aboutUs" width="30%" center>
         <div style="width: 170px;margin:30px auto">
           <label>组长：谭健雄 141140128</label><br>

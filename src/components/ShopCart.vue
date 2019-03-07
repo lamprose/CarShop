@@ -2,26 +2,24 @@
   <div class="main">
     <el-scrollbar id="scrollbar-table">
       <el-table :data="tableData" style="width: 300px;" @selection-change="selected">
+        <!--选择方框-->
         <el-table-column type="selection" width="50"> </el-table-column>
+        <!--显示商品信息-->
         <el-table-column label="商品名称" width="250">
-          <template slot-scope="scope">
-            <div style="margin-left: 50px">
-              ![](scope.row.goods.img)
-              <span style="font-size: 18px;padding-left: 200px;">{{scope.row.goods.description}}</span>
-            </div>
-          </template>
+          <template slot-scope="scope"><div style="margin-left: 50px">
+            ![](scope.row.goods.img)
+            <span style="font-size: 18px;padding-left: 200px;">{{scope.row.goods.description}}</span>
+          </div></template>
         </el-table-column>
       </el-table>
     </el-scrollbar>
     <el-scrollbar id="scrollbar-operate">
       <div id="operate">
+        <!--商品总价格-->
         <div id="totalInfo">
-          <label id="amount">已选3件</label>
-          <label id="totalPrice">￥1223</label>
+          <label id="amount">已选3件</label><label id="totalPrice">￥1223</label>
         </div>
-        <div id="balance">
-          <el-button>结算</el-button>
-        </div>
+        <div id="balance"><el-button>结算</el-button></div>
       </div>
     </el-scrollbar>
   </div>

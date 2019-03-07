@@ -34,20 +34,18 @@
           <el-button round type="primary" @click="secondToThird">提交验证</el-button>
         </div>
       </div>
-      <div class="mainBox" v-else-if="activeStep===2">
-        <div>
-          <label>输入新密码:</label>
-          <el-input v-model="newUser.password" :type="showPasswordType" class="input">
+      <el-form prop="password" class="mainBox" v-else-if="activeStep===2" :model="newUser" status-icon :rules="rePasswordRule">
+        <el-form-item label="输入新密码:">
+          <el-input prop="" v-model="newUser.password" :type="showPasswordType" class="input">
             <i
               class="el-icon-view"
               slot="suffix"
               @click="showPasswordChange">
             </i>
           </el-input>
-        </div><br>
-        <div>
-          <label>确认新密码:</label>
-          <el-input v-model="rePassword" :type="showPasswordType" class="input">
+        </el-form-item><br>
+        <el-form-item prop="rePassword" label="确认新密码:">
+          <el-input v-model="newUser.rePassword" :type="showPasswordType" class="input">
             <i
               class="el-icon-view"
               slot="suffix"
@@ -58,11 +56,11 @@
                     title="密码不一致"
                     type="error" :closable="false" show-icon style="height: 30px;width: 350px;margin-top: 10px">
           </el-alert>
-        </div>
+        </el-form-item>
         <div class="submitButton">
           <el-button round type="primary" @click="thirdToCompleted">提交</el-button>
         </div>
-      </div>
+      </el-form>
       <div class="mainBox" v-else>
         <img src="../assets/congratulations.png" width="200px">
         恭喜！修改密码成功
@@ -80,15 +78,37 @@
       name: "ForgotPassword",
       components: {DragVerify},
       data() {
+        var checkPassword=(rule, value, callback) => {
+          if(this.passwordStrength===0){
+            return callback(new Error('密码只能是数字、大小写字母混合的至少6位字符串'));
+          }else
+            return callback();
+        }
+        var checkRePassword=(rule, value, callback) => {
+          if(this.newUser.password!=this.newUser.rePassword){
+            return callback(new Error('密码不一致'));
+          }else
+            return callback();
+        }
         return {
-          activeStep:0,
+          password:[
+            {required:true,message:'请输入密码',trigger:'blur'},
+            { validator: checkPassword, trigger: 'change' },
+            { validator: checkPassword, trigger: 'blur' },
+          ],
+          rePasswordRule:{
+            rePassword:[
+              {required:true,message:'请确认密码',trigger:'blur'},
+              { validator: checkRePassword, trigger: 'change' },
+              { validator: checkRePassword, trigger: 'blur' },
+            ],
+          },
+          activeStep:2,
           //自动登陆按钮内容
           contentAutoLogin:'s后自动登陆',
           //倒计时时间
           totalTime:5,
           canClick:true,
-          //重复密码框里的数据
-          rePassword:'',
           //控制密码输入框下错误是否显示
           showAlertPassword:false,
           //控制是否显示密码
@@ -104,6 +124,7 @@
           newUser: {
             id: '',
             password: '',
+            rePassword:'',
             secretOption:null,
             secret:''
           },
@@ -149,31 +170,8 @@
             });
             return
           }
-          this.$ajax.get('http://localhost:8080/user/login/?id='+this.newUser.id)
-            .then((response)=>{
-              if(response.data.length===0){
-                this.$message.error({
-                  message:"用户名不存在，3s后自动刷新",
-                  showClose:true
-                })
-                setTimeout(function () {
-                  location.reload()
-                },3000)
-                return
-            }else if(!response.data['secretOption']){
-                this.$message.error({
-                  message:"未设置密保问题，无法找回密码",
-                  showClose:true
-                })
-                setTimeout(function () {
-                  location.reload()
-                },3000)
-              }else{
-                console.log(response.data)
-                this.user=response.data
-                this.activeStep=1
-              }
-            })
+          this.activeStep=1;
+          //TODO:忘记密码第一步验证用户名是否存在以及用户密保问题是否设置
         },
         secondToThird(){
           console.log(this.user)
@@ -192,28 +190,13 @@
             });
             return
           }
-          if(this.user.secretOption===this.newUser.secretOption&&this.user.secret===this.newUser.secret)
-            this.activeStep=2
-          else{
-            this.$message.error({
-              message:"密保答案错误",
-              showClose:true
-            });
-            this.newUser.secretOption=null
-            this.newUser.secret=null
-          }
+          //TODO:验证密保问题答案是否正确
+          this.activeStep=2;
         },
         thirdToCompleted(){
-          if(this.showAlertPassword)
-            return
-          this.$ajax.get('http://localhost:8080/user/updateOnePassword/?id='+this.newUser.id+"&password="+this.newUser.password)
-            .then((response)=>{
-              if(response.data==='success'){
-                this.activeStep=3
-                if(this.activeStep===3)
-                  this.countDown()
-              }
-            })
+          //TODO: 验证新密码格式并提交数据修改到数据库
+          this.activeStep=3;
+          this.countDown()
         },
         showPasswordChange(){
           if(this.showPasswordType==='password')

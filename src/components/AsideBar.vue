@@ -1,12 +1,16 @@
 <template>
-  <div style="height:100%;background-color: #222;width: 45px">
-    <el-menu class="el-menu-vertical-demo" style="height: 100%" collapse="true">
+  <div style="height:100%;width: 45px">
+    <!--侧栏图标-->
+    <el-menu style="height: 100%" collapse="true">
+      <!--侧栏上部三个图标-->
       <el-menu-item v-for="i in 3" :id="sideBarItems[i-1].id" :index="i" class="asideBarItem" @click="toggle" :key="i">
         <el-tooltip :content="sideBarItems[i-1].tag" placement="left">
           <i :class="sideBarItems[i-1].fa"></i>
         </el-tooltip>
       </el-menu-item>
+      <!--上下图标间隔-->
       <el-menu-item index="0" class="blank" style="height: calc(100% - 350px)"></el-menu-item>
+      <!--侧栏下部三个图标-->
       <el-menu-item :index="i" class="asideBarItem" v-for="i in [4,5,6]" :key="i">
         <el-tooltip :content="sideBarItems[i-1].tag" placement="left">
           <i :class="sideBarItems[i-1].fa"></i>
@@ -30,10 +34,10 @@
             {fa:"fa fa-angle-up fa-lg",tag:"返回顶部"},
           ],
           scrollTop: "",
-          goTopShow: false
         }
       },
       methods:{
+        //侧栏点击图标后发出事件
         toggle(){
           this.$emit("toggleAsideBarBlankBox",{id:event.currentTarget.id})
         },
@@ -42,10 +46,8 @@
             window.pageYOffset ||
             document.documentElement.scrollTop ||
             document.body.scrollTop;
-          if (this.scrollTop > 500) {
-            this.goTopShow = true;
-          }
         },
+        //返回顶部
         goTop() {
           let timer = null,
             _that = this;
@@ -58,11 +60,11 @@
               timer = requestAnimationFrame(fn);
             } else {
               cancelAnimationFrame(timer);
-              _that.goTopShow = false;
             }
           });
         },
       },
+      //初始化绑定事件
       mounted() {
         window.addEventListener("scroll", this.handleScroll);
         document.getElementsByClassName("fa fa-angle-up fa-lg")[0].addEventListener("click",this.goTop);

@@ -1,11 +1,13 @@
 <template>
     <div style="margin-top: 20px">
+      <!--顶部面包屑-->
       <el-breadcrumb separator-class="el-icon-arrow-right" style="width: 100%">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/' }">上汽大众</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/' }">凌渡</el-breadcrumb-item>
-        <el-breadcrumb-item >上汽大众 凌渡 280TSI DSG米色内饰限量版</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/' }">{{productInfo.shop}}</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/' }">{{productInfo.series}}</el-breadcrumb-item>
+        <el-breadcrumb-item >{{productInfo.name}}</el-breadcrumb-item>
       </el-breadcrumb>
+      <!--商品信息-->
       <el-row :gutter="24" style="margin-top: 20px">
         <el-col :span="9">
           <el-carousel id="product-large" indicator-position="outside">
@@ -14,54 +16,44 @@
             </el-carousel-item>
           </el-carousel>
         </el-col>
-        <el-col :span="15">
-          <div class="base-info-cont-name">
-            <h1>上汽大众 凌渡 280TSI DSG米色内饰限量版</h1>
-            <div class="car-ad">【车享自营】综合优惠：46818元，手快抢10万公里免保</div>
+        <el-col :span="15" class="info">
+          <div class="info-item" style="margin-top: 20px">
+            <h1 class="car-name">{{productInfo.name}}</h1>
           </div>
-          <div class="naked-car-price-mod">
-            <div class="naked-car-price">
-              <div class="summary-price">
-                <span class="summary-price-name item-title">裸车价</span><strong><span class="yen">¥</span><span>14.59</span>万<span></span></strong>
-                <span class="zd-price">指导价<span>¥18.49</span>万</span>
-              </div>
-            </div>
+          <div class="info-item" style="">
+            <div class="car-tag">{{productInfo.tag}}</div>
           </div>
-          <div class="from-operate">
-            <div class="form-outside-color">
-              <label class="item-title" style="float: left">车身颜色</label>
-              <div style="height: 30px">
-                <ul class="color-list">
-                  <li colorid="42979" skucode="10168291" colorname="玛瑙红" class="has-amount cur" availablenum="29">
-                    <img src="//i3.cximg.com/images/84bd33606b889b25/20171017/3f0b4c0c09204275b3db9bad67bc6112.jpg" alt="玛瑙红" width="20" height="20">
-                  </li>
-                  <li colorid="42982" skucode="10168289" colorname="雪域白" class="has-amount" availablenum="27">
-                    <img src="//i3.cximg.com/images/84bd33606b889b25/20171017/355e400f40b84db392b28c11b376eed9.jpg" alt="雪域白" width="20" height="20">
-                  </li>
-                  <li colorid="42983" skucode="10168290" colorname="流沙金" class="has-amount" availablenum="10">
-                    <img src="//i3.cximg.com/images/84bd33606b889b25/20171025/3172d04cff45456996357d57e07b06b1.jpg" alt="流沙金" width="20" height="20">
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="form-region">
-              <label class="item-title">提车地区</label>
-              <el-select value="1"></el-select>
-              <el-select value="1"></el-select>
-            </div>
+          <div class="info-item" style="position: relative">
+            <span class="car-price">裸车价</span><strong><span class="yen">￥</span><span>{{productInfo.price}}</span>万<span></span></strong>
+            <span class="car-guidingPrice">指导价<span>{{productInfo.guidingPrice}}</span>万</span>
           </div>
-          <div class="form-submit">
+          <div class="info-item" style="height: 40px">
+            <label class="item-title" style="margin-top:10px;float: left">车身颜色</label>
+            <ul class="color-list">
+              <li class="color-item" v-for="colorItem in productInfo.color">
+                <div :style="{backgroundColor: colorItem}"></div>
+              </li>
+            </ul>
+          </div>
+          <div class="info-item car-loc" style="">
+            <label class="item-title">提车地区</label>
+            <el-select value="1"></el-select>
+            <el-select value="1"></el-select>
+          </div>
+          <div class="info-item" style="">
             <el-button>立即购买</el-button>
             <el-button>加入购物车</el-button>
           </div>
         </el-col>
       </el-row>
+      <!--商品详细信息-->
       <div>
+        <!--侧边固定栏-->
         <div id="sideBar" :class="sideBarFixed == true ? 'isFixed' :''" style="float:left;width:200px;height: 600px;background-color: red">
 
         </div>
+        <!--商品图片信息-->
         <div style="float:right;width:calc(100% - 220px);height: 1000px;background-color: black"></div>
-      </div>
       </div>
     </div>
 </template>
@@ -71,6 +63,17 @@
     name: "GoodsInfo",
     data(){
       return{
+        productInfo:{
+          name:'上汽大众 凌渡 280TSI DSG米色内饰限量版',
+          shop:'上汽大众',
+          series:'凌渡',
+          tag:'【车享自营】综合优惠：46818元，手快抢10万公里免保',
+          price:'14.59',
+          guidingPrice:'18.49',
+          color:[
+            'red','black','gold'
+          ],
+        },
         offsetTop:0,
         sideBarFixed:false,
       }
@@ -90,66 +93,82 @@
 </script>
 
 <style lang="less" scoped>
-  #product-large{
-
+  .isFixed{
+    position: fixed;
+    top:5px;
   }
-  .base-info-cont-name h1 {
-    width: 70%;
-    padding-bottom: 12px;
-    font-size: 18px;
-    color: #333;
-    font-weight: normal;
-    line-height: 22px;
-  }
-  .car-ad {
-    font-size: 14px;
-    color: #c71445;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    display: -webkit-box;
-    width: 70%;
-    height: 44px;
-    line-height: 22px;
-  }
-  .naked-car-price {
-    position: relative;
-    padding: 19px 0 20px 20px;
-    .summary-price{
-      position: relative;
-      z-index: 4;
-      color: #666;
-      font-size: 0;
-      strong{
-        font-size: 24px;
-        color: #c71445;
-        padding: 0 15px 0 7px;
-        font-weight: 100;
-        display: inline-block;
-        vertical-align: middle;
-        line-height: 100%;
-        height: 29px;
+  .info{
+    height: 300px;
+    .info-item{
+      margin-left: 10%;
+      margin-right: 10%;
+      min-width: 400px;
+      margin-top: 10px;
+      .car-name{
+        margin-left: 0px;
+        font-size: 18px;
+        color: #333;
+        font-weight: normal;
+        height: 20px;
       }
-      .zd-price{
+      .car-tag{
+        font-size: 14px;
+        color: #c71445;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 44px;
+        line-height: 22px;
+      }
+      .car-price{
+        left: 0px;
+        top:5px;
+        position: absolute;
+        + strong{
+          font-size: 24px;
+          color: #c71445;
+          padding: 0 15px 0 7px;
+          font-weight: 100;
+          display: inline-block;
+          vertical-align: middle;
+          line-height: 100%;
+          height: 29px;
+        }
+      }
+      .car-guidingPrice{
+        position: absolute;
+        right: 40px;
+        top:10px;
         font-size: 12px;
-        margin-right: 260px;
         color: #999;
+        margin-left: 20px;
+      }
+      .color-item{
+        width: 20px;
+        height: 20px;
+        margin-left: 3px;
+        margin-top: 10px;
+        &:hover{
+          box-shadow: 0px 0px 5px #888888;
+        }
+        div{
+          width: 100%;
+          height: 100%;
+        }
+      }
+      &.car-loc{
+        .el-select{
+          width: 150px;
+          margin-left: 70px;
+        }
       }
     }
   }
   .item-title{
-    min-width: 56px;
-    margin-right: 26px;
     font-size: 14px;
     color: #666;
     display: inline-block;
     vertical-align: middle;
     text-align: justify;
     text-align-last: justify;
-  }
-  .isFixed{
-    position: fixed;
-    top:5px;
   }
 </style>

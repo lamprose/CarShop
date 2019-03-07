@@ -12,7 +12,7 @@
       </el-container>
       <el-aside width="45px" class="aside" id="asideBar"><router-view name="asideBar" @toggleAsideBarBlankBox="toggle"></router-view></el-aside>
       <el-scrollbar><!--隐藏滚动条-->
-        <el-aside v-if="show" width="300px" class="aside" id="asideBarBlank">
+        <el-aside v-if="show" width="0px" class="aside" id="asideBarBlank">
           <router-view v-if="asideBarNow==='user'" name="userBlankBox"></router-view>
           <router-view v-if="asideBarNow==='shopCart'" name="shopCartBlankBox"></router-view>
           <router-view v-if="asideBarNow==='tool'" name="toolBlankBox"></router-view>
@@ -73,7 +73,7 @@ export default {
     z-index: 100000;
   }
   #asideBar{
-    right: 300px;
+    right: 0px;
     transition-property: right;
     transition-duration: 1s;
     height: calc(100% + 10px );

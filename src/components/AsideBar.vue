@@ -1,17 +1,17 @@
 <template>
   <div style="height:100%;width: 45px">
     <!--侧栏图标-->
-    <el-menu style="height: 100%" collapse="true">
+    <el-menu style="height: 100%" :collapse="true">
       <!--侧栏上部三个图标-->
-      <el-menu-item v-for="i in 3" :id="sideBarItems[i-1].id" :index="i" class="asideBarItem" @click="toggle" :key="i">
+      <el-menu-item v-for="i in 3" :id="sideBarItems[i-1].id" class="asideBarItem" @click="toggle" :key="i">
         <el-tooltip :content="sideBarItems[i-1].tag" placement="left">
           <i :class="sideBarItems[i-1].fa"></i>
         </el-tooltip>
       </el-menu-item>
       <!--上下图标间隔-->
-      <el-menu-item index="0" class="blank" style="height: calc(100% - 350px)"></el-menu-item>
+      <el-menu-item  class="blank" style="height: calc(100% - 350px)"></el-menu-item>
       <!--侧栏下部三个图标-->
-      <el-menu-item :index="i" class="asideBarItem" v-for="i in [4,5,6]" :key="i">
+      <el-menu-item  class="asideBarItem" v-for="i in [4,5,6]" :key="i">
         <el-tooltip :content="sideBarItems[i-1].tag" placement="left">
           <i :class="sideBarItems[i-1].fa"></i>
         </el-tooltip>

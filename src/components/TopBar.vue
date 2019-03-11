@@ -1,13 +1,13 @@
 <template>
   <div class="navigation">
     <div style="width: 100%;">
-      <el-row :gutter="24" class="firstNav">
+      <el-row class="firstNav">
         <!--logo图片-->
-        <el-col :span="5" ><div class="log">
-          <img style="width: 200px" src="../assets/carshop-logo.jpg">
+        <el-col :span="4" ><div class="log">
+          <img class="logo" src="../assets/carshop-logo.jpg">
         </div></el-col>
         <!--搜索栏-->
-        <el-col :span="12"><div class="search">
+        <el-col :span="13"><div id="search">
           <el-autocomplete placeholder="搜索商品"
                            v-model="searchText"
                            :fetch-suggestions="querySearchAsync"
@@ -19,11 +19,13 @@
         </div></el-col>
         <!--搜索栏右侧快速导航-->
         <el-col :span="7">
-          <el-button type="text" @click="loginProps.show=true">登陆</el-button>
-          <el-button type="text">注册</el-button>
-          <el-button type="text">关注我们</el-button>
-          <el-button type="text">商户中心</el-button>
-          <el-button type="text">首页</el-button>
+          <div class="top-button">
+            <el-button type="text" @click="loginProps.show=true">登陆</el-button>
+            <el-button type="text">注册</el-button>
+            <el-button type="text">关注我们</el-button>
+            <el-button type="text">商户中心</el-button>
+            <el-button type="text">首页</el-button>
+          </div>
         </el-col>
       </el-row>
       <!--导航栏项-->
@@ -37,7 +39,7 @@
       </el-menu></div>
     </div>
     <!--登陆弹窗-->
-    <login :props="loginProps" :user="user" :radio="radio"></login>
+    <login :props="loginProps" :user="user"></login>
     <!--注销弹窗-->
     <logout-confirm :props="logoutProps"></logout-confirm>
   </div>
@@ -148,14 +150,24 @@
     }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+  .logo{
+    min-width: 120px;
+    width: 100%;
+    height: 100%;
+  }
+  #search{
+    margin-left: 20px;
+    min-width: 275px;
+  }
   .searchInput{
     width: 100%;
   }
   .el-menu-demo{
-    width: calc(100% - 200px);
-    margin-left: 220px;
+    width: 710px;
+    margin-left: calc( 50% - 305px ) ;
     border: none;
+    min-width: 710px;
   }
   .el-menu-demo li a{
     text-decoration: none;
@@ -167,5 +179,10 @@
   }
   .el-menu-demo li a:hover{
     color: red;
+  }
+  .top-button{
+    margin-left:calc(50% - 132px);
+    min-width: 264px;
+    float: left;
   }
 </style>

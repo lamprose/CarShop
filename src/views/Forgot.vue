@@ -10,7 +10,7 @@
       <el-step title="完成并登陆" description="恭喜你！修改密码完成"></el-step>
     </el-steps>
     <div style="width: 100%">
-      <el-form class="mainBox" :model="newUser"  label-position="left" label-width="100px" :rules="formRule">
+      <el-form class="mainBox" :model="newUser" ref="form"  label-position="left" label-width="100px" :rules="formRule">
         <div v-if="activeStep===0">
           <el-form-item label="用户名:">
             <el-input placeholder="请输入用户名" v-model="newUser.id"></el-input>
@@ -53,7 +53,7 @@
           </el-input>
         </el-form-item>
         <div class="submitButton" v-if="activeStep===2">
-          <el-button round type="primary" @click="thirdToCompleted">提交</el-button>
+          <el-button round type="primary" @click="thirdToCompleted('form')">提交</el-button>
         </div>
       </el-form>
       <div class="mainBox" v-if="activeStep===3">
@@ -169,10 +169,18 @@
           //TODO:验证密保问题答案是否正确
           this.activeStep=2;
         },
-        thirdToCompleted(){
-          //TODO: 验证新密码格式并提交数据修改到数据库
-          this.activeStep=3;
-          this.countDown()
+        thirdToCompleted(formName){
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              //TODO: 验证新密码格式并提交数据修改到数据库
+              this.activeStep=3;
+              this.countDown()
+              return '1';
+            } else {
+              console.log('error submit!!');
+              return '0';
+            }
+          });
         },
         showPasswordChange(){
           if(this.showPasswordType==='password')

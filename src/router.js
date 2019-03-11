@@ -62,13 +62,6 @@ export default new Router({
           components:{
             'default':resolve => require(["./views/User.vue"], resolve),
           }
-        },
-        {
-          path:'/user',
-          name:'Use',
-          components:{
-            'default':resolve => require(["./views/demo.vue"], resolve),
-          }
         }
       ]
     },

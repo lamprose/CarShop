@@ -10,41 +10,40 @@
       <el-step title="完成并登陆" description="恭喜你！修改密码完成"></el-step>
     </el-steps>
     <div style="width: 100%">
-      <div class="mainBox" v-if="activeStep===0">
-        <label>用户名:</label>
-        <el-input placeholder="请输入用户名" v-model="newUser.id"></el-input>
-        <drag-verify v-if="identify.show" style="margin: 30px auto" text="拉拽到右边以验证" :width="identify.width" :height="identify.height" success-text="验证成功" ref="Verity"></drag-verify>
-        <div class="submitButton">
+      <el-form class="mainBox" :model="newUser"  label-position="left" label-width="100px" :rules="formRule">
+        <div v-if="activeStep===0">
+          <el-form-item label="用户名:">
+            <el-input placeholder="请输入用户名" v-model="newUser.id"></el-input>
+          </el-form-item>
+          <drag-verify v-if="identify.show" style="margin: 30px auto" text="拉拽到右边以验证" :width="identify.width" :height="identify.height" success-text="验证成功" ref="Verity"></drag-verify>
           <el-button round type="primary" @click="firstToSecond">下一步</el-button>
         </div>
-      </div>
-      <div class="mainBox" v-else-if="activeStep===1">
-        <label>密保问题:</label>
-        <el-select v-model="newUser.secretOption" placeholder="请选择" style="width: 350px">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select><br><br>
-        <label>密保答案:</label>
-        <el-input placeholder="请输入密保答案" v-model="newUser.secret"></el-input>
-        <div class="submitButton">
+        <div v-if="activeStep===1">
+          <el-form-item label="密保问题:" v-if="activeStep===1">
+            <el-select v-model="newUser.secretOption" placeholder="请选择" style="width: 350px">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="密保答案:" v-if="activeStep===1">
+            <el-input placeholder="请输入密保答案" v-model="newUser.secret"></el-input>
+          </el-form-item>
           <el-button round type="primary" @click="secondToThird">提交验证</el-button>
         </div>
-      </div>
-      <el-form prop="password" class="mainBox" v-else-if="activeStep===2" :model="newUser" status-icon :rules="rePasswordRule">
-        <el-form-item label="输入新密码:">
-          <el-input prop="" v-model="newUser.password" :type="showPasswordType" class="input">
+        <el-form-item v-if="activeStep===2" prop="password" label="输入新密码:">
+          <el-input v-model="newUser.password" :type="showPasswordType" class="input" id="password">
             <i
               class="el-icon-view"
               slot="suffix"
               @click="showPasswordChange">
             </i>
           </el-input>
-        </el-form-item><br>
-        <el-form-item prop="rePassword" label="确认新密码:">
+        </el-form-item>
+        <el-form-item v-if="activeStep===2" prop="rePassword" label="确认新密码:">
           <el-input v-model="newUser.rePassword" :type="showPasswordType" class="input">
             <i
               class="el-icon-view"
@@ -52,16 +51,12 @@
               @click="showPasswordChange">
             </i>
           </el-input>
-          <el-alert v-if="showAlertPassword"
-                    title="密码不一致"
-                    type="error" :closable="false" show-icon style="height: 30px;width: 350px;margin-top: 10px">
-          </el-alert>
         </el-form-item>
-        <div class="submitButton">
+        <div class="submitButton" v-if="activeStep===2">
           <el-button round type="primary" @click="thirdToCompleted">提交</el-button>
         </div>
       </el-form>
-      <div class="mainBox" v-else>
+      <div class="mainBox" v-if="activeStep===3">
         <img src="../assets/congratulations.png" width="200px">
         恭喜！修改密码成功
         <div class="submitButton">
@@ -74,36 +69,17 @@
 
 <script>
   import DragVerify from "vue-drag-verify/src/dragVerify";
+  import rule from "../tool/rule";
     export default {
       name: "ForgotPassword",
       components: {DragVerify},
       data() {
-        var checkPassword=(rule, value, callback) => {
-          if(this.passwordStrength===0){
-            return callback(new Error('密码只能是数字、大小写字母混合的至少6位字符串'));
-          }else
-            return callback();
-        }
-        var checkRePassword=(rule, value, callback) => {
-          if(this.newUser.password!=this.newUser.rePassword){
-            return callback(new Error('密码不一致'));
-          }else
-            return callback();
-        }
         return {
-          password:[
-            {required:true,message:'请输入密码',trigger:'blur'},
-            { validator: checkPassword, trigger: 'change' },
-            { validator: checkPassword, trigger: 'blur' },
-          ],
-          rePasswordRule:{
-            rePassword:[
-              {required:true,message:'请确认密码',trigger:'blur'},
-              { validator: checkRePassword, trigger: 'change' },
-              { validator: checkRePassword, trigger: 'blur' },
-            ],
+          formRule:{
+            password:rule.Password,
+            rePassword:rule.RePassword,
           },
-          activeStep:2,
+          activeStep:0,
           //自动登陆按钮内容
           contentAutoLogin:'s后自动登陆',
           //倒计时时间
@@ -254,7 +230,7 @@
     }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
   .stepStatus{
     margin-top: 30px;
   }
@@ -265,5 +241,11 @@
   .submitButton{
     width: 90px;
     margin: 20px auto;
+  }
+  li.el-select-dropdown__item{
+    float: none;
+  }
+  .el-input{
+    width: 350px;
   }
 </style>

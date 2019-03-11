@@ -30,6 +30,7 @@
         name: "ShopCart",
       data(){
           return{
+            //TODO:获取用户购物车商品信息
             tableData:[
               {
                 goods:{

@@ -17,8 +17,13 @@
 
 <script>
     export default {
-        name: "LogoutConfirm",
+      name: "LogoutConfirm",
       props:['props'],
+      methods:{
+          logout(){
+            //TODO:实现注销功能
+          }
+      }
     }
 </script>
 

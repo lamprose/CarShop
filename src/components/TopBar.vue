@@ -96,7 +96,7 @@
           this.typeIndex = key
           //console.log(key, keyPath);
         },
-        //实现搜索建议下拉的数据写入
+        //TODO:实现搜索建议下拉的数据写入
         querySearchAsync(queryString, cb) {
           let searchSuggest = this.searchSuggestions;
           searchSuggest=this.unique(searchSuggest)
@@ -107,7 +107,7 @@
             cb(results);
           }, 2700 * Math.random());
         },
-        //实现输入过滤功能
+        //TODO:实现输入过滤功能
         createStateFilter(queryString) {
           return (state) => {
             return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1);
@@ -117,7 +117,7 @@
           const res = new Map();
           return arr.filter((arr) => !res.has(arr.value) && res.set(arr.value, 1))
         },
-        //跳转搜索页面
+        //TODO:实现搜索跳转功能
         toSearchResult(){
           if(this.searchText===''){
             this.$message.error({
@@ -131,7 +131,7 @@
             params:{queryString:this.searchText}
           })
         },
-        //加载热门书籍到搜索建议里
+        //TODO:加载热门搜索
         loadSearchSuggestion(){
           let searchArray=new Array();
           this.$ajax.get('http://localhost:8080/book/0')

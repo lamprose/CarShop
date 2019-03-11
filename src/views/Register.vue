@@ -5,7 +5,7 @@
         <el-input v-model="registerUser.id" class="input"></el-input><br>
       </el-form-item>
       <el-form-item label="登陆密码" prop="password" v-if="showPassword">
-        <el-input v-model="registerUser.password" :type="showPasswordType" class="input" @change="testPasswordStrength">
+        <el-input v-model="registerUser.password" :type="showPasswordType" class="input" @change="testPasswordStrength" id="password">
           <i class="el-icon-view" slot="suffix" @click="showPasswordChange"></i>
         </el-input><br>
         <label class="placement" v-if="pwd" style="float: left">密码强度：</label>
@@ -27,7 +27,8 @@
           <el-input style="width: 189px" v-model="registerUser.identifyText"></el-input>
         </div>
         <div style="float: left" @click="refreshCode">
-        <identify :identify-code="identifyInfo.identifyCode"></identify>
+          <identify :identify-code="identifyInfo.identifyCode"></identify>
+          <label id="identifyCode" style="display: none">{{identifyInfo.identifyCode}}</label>
         </div>
       </el-form-item>
       <el-form-item prop="checked">
@@ -54,45 +55,11 @@
 
 <script>
   import identify from '../tool/Identify'
+  import rule from "../tool/rule";
   export default {
     components: {identify},
     data() {
-      var checkId= (rule, value, callback) =>{
-        let rex=/^[a-zA-Z][a-zA-Z0-9]{5,15}$/
-        if(!rex.test(this.registerUser.id)){
-          return callback(new Error('用户名必须以字母开头且为6~20位的字母数字的字符串'));
-        }else{
-          let data = this.registerUser;
-          //console.log(data);
-          this.$ajax.get('http://localhost:8080/user/login/?id='+data.id)
-            .then((response)=> {
-              //console.log(response.data)
-              if(response.data.length!==0){
-                return callback(new Error('该用户名已被注册，请重新输入'));
-              }else
-                return callback();
-            })
-        }
-      }
-      var checkPassword=(rule, value, callback) => {
-        if(this.passwordStrength===0){
-          return callback(new Error('密码只能是数字、大小写字母混合的至少6位字符串'));
-        }else
-          return callback();
-      }
-      var checkRePassword=(rule, value, callback) => {
-        if(this.registerUser.password!=this.registerUser.rePassword){
-          return callback(new Error('密码不一致'));
-        }else
-          return callback();
-      }
-      var checkIdentify=(rule, value, callback) => {
-        if(this.registerUser.identifyText!=this.identifyInfo.identifyCode){
-          return callback(new Error('验证码错误，请重试'));
-        }else
-          return callback();
-      }
-      var checkChecked=(rule, value, callback) => {
+      let checkChecked=(rule, value, callback) => {
         if(!this.registerUser.checked){
           return callback(new Error('需同意交易条款才能继续注册'));
         }else
@@ -100,26 +67,10 @@
       }
       return {
         registerRule:{
-          id:[
-            { validator: checkId, trigger: 'change' },
-            { validator: checkId, trigger: 'blur' },
-            { required: true,message:'请输入用户名', trigger: 'blur' },
-          ],
-          password:[
-            {required:true,message:'请输入密码',trigger:'blur'},
-            { validator: checkPassword, trigger: 'change' },
-            { validator: checkPassword, trigger: 'blur' },
-          ],
-          rePassword:[
-            {required:true,message:'请确认密码',trigger:'blur'},
-            { validator: checkRePassword, trigger: 'change' },
-            { validator: checkRePassword, trigger: 'blur' },
-          ],
-          identifyText:[
-            {required:true,message:'请输入验证码',trigger:'blur'},
-            { validator: checkIdentify, trigger: 'change' },
-            { validator: checkIdentify, trigger: 'blur' },
-          ],
+          id:rule.ID,
+          password:rule.Password,
+          rePassword:rule.RePassword,
+          identifyText:rule.Identify,
           checked:[
             { validator: checkChecked, trigger: 'change' },
           ]

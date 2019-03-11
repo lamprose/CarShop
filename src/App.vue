@@ -13,9 +13,9 @@
       <el-aside width="45px" class="aside" id="asideBar"><router-view name="asideBar" @toggleAsideBarBlankBox="toggle"></router-view></el-aside>
       <el-scrollbar><!--隐藏滚动条-->
         <el-aside v-if="show" width="0px" class="aside" id="asideBarBlank">
-          <router-view v-if="asideBarNow==='user'" name="userBlankBox"></router-view>
-          <router-view v-if="asideBarNow==='shopCart'" name="shopCartBlankBox"></router-view>
-          <router-view v-if="asideBarNow==='tool'" name="toolBlankBox"></router-view>
+          <router-view v-if="asideBarNow=='user'" name="userBlankBox"></router-view>
+          <router-view v-if="asideBarNow=='shopCart'" name="shopCartBlankBox"></router-view>
+          <router-view v-if="asideBarNow=='tool'" name="toolBlankBox"></router-view>
         </el-aside>
       </el-scrollbar>
     </el-container>
@@ -39,8 +39,8 @@ export default {
       console.log(data);
       let blank=document.getElementById("asideBarBlank")
       let side=document.getElementById("asideBar")
-      let needOpen=(blank.style.width==="0px")
-      let needClose=(data.id===this.asideBarNow&&!needOpen)
+      let needOpen=(blank.style.width=="0px")
+      let needClose=(data.id==this.asideBarNow&&!needOpen)
       if(needOpen){
         blank.style.width="300px"
         side.style.right="300px"

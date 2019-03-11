@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const state = {
   user:{
@@ -16,12 +16,22 @@ const state = {
     secretOption:null,
     secret:null
   },
-  loginStatus:false
+  loginStatus:false,
+  remember:false
 }
 
 const mutations = {
   setUser(state, str){
     state.user = str;
+  },
+  setUserId(state,str){
+    state.user.id = str;
+  },
+  setUserPassword(state,str){
+    state.user.password = str;
+  },
+  setRemember(state,str){
+    state.remember = str;
   },
   changeLoginStatus(state){
     state.loginStatus=!state.loginStatus;

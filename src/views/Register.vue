@@ -124,7 +124,7 @@
         this.$refs[formName].resetFields();
       },
       showPasswordChange(){
-        if(this.showPasswordType==='password')
+        if(this.showPasswordType=='password')
           this.showPasswordType='text'
         else
           this.showPasswordType='password'

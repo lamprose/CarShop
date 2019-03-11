@@ -23,9 +23,9 @@
         </el-form-item>
       </el-form>
       <!--底部登陆忘记密码按钮-->
-      <span slot="footer" class="dialog-footer" v-if="!loginStatus">
+      <span slot="footer" class="dialog-footer">
         <el-button type="primary" round :disabled=loginDisabled @click="onSubmit">立即登录</el-button>
-        <el-button type="primary" round  @click="getCookie">忘记密码</el-button>
+        <el-button type="primary" round >忘记密码</el-button>
       </span>
     </el-dialog>
   </div>
@@ -51,8 +51,17 @@
       },
       methods:{
         onSubmit(){
-          this.setCookie(this.user.id,this.user.password,10);
+          let re=this.props.radio=='0'?"false":"true"
+          this.$cookie.setCookie(this.user.id,this.user.password,re,10);
           //TODO: 数据格式验证完毕，实现登录功能
+          //console.log(this.user)
+          //将用户名和token放入sessionStorage
+
+          //console.log("in login image is " + sessionStorage.getItem("user"))
+          //将用户信息放入vuex
+          this.$store.commit("setUser",this.user)
+          this.$store.commit("changeLoginStatus")
+          this.props.show=false;
         },
         toForgot(){
           //TODO:跳转忘记密码功能
@@ -68,46 +77,24 @@
         loginClose(){
           this.identify.show=false
         },
-        //设置cookie方法
-        setCookie(id, password, exdays) {
-          let hash = Crypto.createHash('md5');
-          hash.update(password)
-          let text = hash.digest('hex');//使用CryptoJS方法加密
-          console.log(text);
-          let d = new Date();
-          d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-          let expires = "expires=" + d.toUTCString();
-          //字符串拼接存入cookie
-          window.document.cookie = "id" + "=" + id  +';'+ expires+"; path=/";
-          window.document.cookie = "password" + "=" + text +';'+ expires+"; path=/";
-        },
-        //读取cookie
-        getCookie() {
-          if (document.cookie.length > 0) {
-            let arr = document.cookie.split('; '); //这里显示的格式需要切割一下自己可输出看下
-            for (let i = 0; i < arr.length; i++) {
-              let arr2 = arr[i].split('='); //再次切割
-              //这里会切割出以mobile为第0项的数组、以password为第0项的数组，判断查找相对应的值
-              if (arr2[0] === 'id') {
-                console.log(arr2[1])
-                /*this.ruleForm.mobile = arr2[1]; //拿到账号*/
-              } else if (arr2[0] === 'password') {
-                /*//拿到拿到加密后的密码arr2[1]并解密
-                let bytes = hash.decrypt(arr2[1].toString(), 'secret key 123');
-                let plaintext = bytes.toString(CryptoJS.enc.Utf8); //拿到解密后的密码（登录时输入的密码）*/
-                console.log(arr2[1]);
-              }
-            }
-          }
-        },
-        //清除cookie
-        clearCookie() {
-          this.setCookie("", "", 0); //账号密码置空，天数置0
+      },
+      mounted(){
+        console.log(this.$store.state.remember)
+        if(this.$store.state.remember){
+          this.user.id=this.$store.state.user.id;
+          this.user.password=this.$store.state.user.password;
         }
       },
       computed:{
         loginStatus(){
           //TODO:获取当前用户登录状态
+
+        },
+        keepId(){
+          return sessionStorage.getItem("keepId")?sessionStorage.getItem("keepId"):''
+        },
+        keepPassword(){
+          return sessionStorage.getItem("keepPassword")?sessionStorage.getItem("keepPassword"):''
         }
       }
     }

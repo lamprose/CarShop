@@ -21,7 +21,7 @@
         <el-col :span="7">
           <div class="top-button">
             <el-button type="text" @click="loginProps.show=true">登陆</el-button>
-            <el-button type="text">注册</el-button>
+            <el-button type="text" @click="logoutProps.show=true">注册</el-button>
             <el-button type="text">关注我们</el-button>
             <el-button type="text">商户中心</el-button>
             <el-button type="text">首页</el-button>
@@ -121,7 +121,7 @@
         },
         //TODO:实现搜索跳转功能
         toSearchResult(){
-          if(this.searchText===''){
+          if(this.searchText==''){
             this.$message.error({
               message:"搜索内容不能为空",
               showClose:true
@@ -146,7 +146,10 @@
               //console.log(this.searchSuggestions);
             });
         }
-      }
+      },
+      mounted(){
+        this.$cookie.getCookie();
+      },
     }
 </script>
 

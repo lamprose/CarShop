@@ -11,15 +11,15 @@
     </el-steps>
     <div style="width: 100%">
       <el-form class="mainBox" :model="newUser" ref="form"  label-position="left" label-width="100px" :rules="formRule">
-        <div v-if="activeStep===0">
+        <div v-if="activeStep==0">
           <el-form-item label="用户名:">
             <el-input placeholder="请输入用户名" v-model="newUser.id"></el-input>
           </el-form-item>
           <drag-verify v-if="identify.show" style="margin: 30px auto" text="拉拽到右边以验证" :width="identify.width" :height="identify.height" success-text="验证成功" ref="Verity"></drag-verify>
           <el-button round type="primary" @click="firstToSecond">下一步</el-button>
         </div>
-        <div v-if="activeStep===1">
-          <el-form-item label="密保问题:" v-if="activeStep===1">
+        <div v-if="activeStep==1">
+          <el-form-item label="密保问题:" v-if="activeStep==1">
             <el-select v-model="newUser.secretOption" placeholder="请选择" style="width: 350px">
               <el-option
                 v-for="item in options"
@@ -29,12 +29,12 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="密保答案:" v-if="activeStep===1">
+          <el-form-item label="密保答案:" v-if="activeStep==1">
             <el-input placeholder="请输入密保答案" v-model="newUser.secret"></el-input>
           </el-form-item>
           <el-button round type="primary" @click="secondToThird">提交验证</el-button>
         </div>
-        <el-form-item v-if="activeStep===2" prop="password" label="输入新密码:">
+        <el-form-item v-if="activeStep==2" prop="password" label="输入新密码:">
           <el-input v-model="newUser.password" :type="showPasswordType" class="input" id="password">
             <i
               class="el-icon-view"
@@ -43,7 +43,7 @@
             </i>
           </el-input>
         </el-form-item>
-        <el-form-item v-if="activeStep===2" prop="rePassword" label="确认新密码:">
+        <el-form-item v-if="activeStep==2" prop="rePassword" label="确认新密码:">
           <el-input v-model="newUser.rePassword" :type="showPasswordType" class="input">
             <i
               class="el-icon-view"
@@ -52,11 +52,11 @@
             </i>
           </el-input>
         </el-form-item>
-        <div class="submitButton" v-if="activeStep===2">
+        <div class="submitButton" v-if="activeStep==2">
           <el-button round type="primary" @click="thirdToCompleted('form')">提交</el-button>
         </div>
       </el-form>
-      <div class="mainBox" v-if="activeStep===3">
+      <div class="mainBox" v-if="activeStep==3">
         <img src="../assets/congratulations.png" width="200px">
         恭喜！修改密码成功
         <div class="submitButton">
@@ -132,7 +132,7 @@
       },
       methods:{
         firstToSecond(){
-          if(this.newUser.id===''){
+          if(this.newUser.id==''){
             this.$message.error({
               message:"用户名不能为空",
               showClose:true
@@ -159,7 +159,7 @@
             console.log(this.newUser.secretOption)
             return
           }
-          if(this.newUser.secret===''){
+          if(this.newUser.secret==''){
             this.$message.error({
               message:"请填写密保答案",
               showClose:true
@@ -183,7 +183,7 @@
           });
         },
         showPasswordChange(){
-          if(this.showPasswordType==='password')
+          if(this.showPasswordType=='password')
             this.showPasswordType='text'
           else
             this.showPasswordType='password'
@@ -225,7 +225,7 @@
             //将用户信息放入vuex
             this.$store.commit("setUser",this.user)
             this.$store.commit("changeLoginStatus")
-            if(this.user.flag===0)
+            if(this.user.flag==0)
               this.$router.push({name:'Home'})
             else
               this.$router.push({name:'Admin'})

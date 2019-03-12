@@ -54,8 +54,8 @@
 </template>
 
 <script>
-  import identify from '../tool/Identify'
-  import rule from "../tool/rule";
+  import identify from '../components/Identify'
+  import rule from "../utils/rule";
   export default {
     components: {identify},
     data() {

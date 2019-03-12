@@ -12,7 +12,7 @@
                            v-model="searchText"
                            :fetch-suggestions="querySearchAsync"
                            class="searchInput">
-            <el-button v-if="showHotSearch" v-for="(hot,index) in hotSearchText" slot="suffix" type="text" :key="index">{{hot}}</el-button>
+            <el-button v-for="(hot,index) in hotSearchText" slot="suffix" type="text" :key="index">{{hot}}</el-button>
             <el-button slot="append" icon="el-icon-search" ></el-button>
           </el-autocomplete>
           <br>

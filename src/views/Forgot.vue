@@ -69,7 +69,7 @@
 
 <script>
   import DragVerify from "vue-drag-verify/src/dragVerify";
-  import rule from "../tool/rule";
+  import rule from "../utils/rule";
     export default {
       name: "ForgotPassword",
       components: {DragVerify},

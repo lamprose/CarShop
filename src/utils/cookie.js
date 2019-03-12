@@ -1,5 +1,5 @@
 import Crypto from 'crypto'
-import store from '../vuex'
+import store from '../store/vuex'
 //设置cookie方法
 export function setCookie(id, password ,radio, exdays) {
   let hash = Crypto.createHash('md5');

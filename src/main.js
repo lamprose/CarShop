@@ -5,10 +5,10 @@ import App from './App'
 import router from './router.js'
 import elementUi from 'element-ui'
 import axios from 'axios'
-import store from './vuex'
-import {setCookie,getCookie,clearCookie} from "./tool/cookie";
+import store from './store/vuex'
+import {setCookie,getCookie,clearCookie} from "./utils/cookie";
 import 'element-ui/lib/theme-chalk/index.css';
-import './style.css';
+import './styles/style.css';
 import 'font-awesome/css/font-awesome.css';
 
 Vue.config.productionTip = false

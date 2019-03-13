@@ -24,7 +24,9 @@
             <el-button type="text" v-if="!status" @click="toRegister">注册</el-button>
             <label v-if="status">
               <el-dropdown>
-                <i>{{username}}</i>
+                <i style="color: #409EFF">
+                  {{username}}
+                </i>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>
                     <el-button type="text">我的</el-button>
@@ -38,7 +40,18 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </label>
-            <el-button type="text" @click="toAdmin">关注我们</el-button>
+            <label>
+              <el-dropdown>
+                <span style="color:#409EFF">
+                  关注我们
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>
+                    <img width="100px" height="100px" src="@/assets/QRCode.svg" @click="qrCodeShow=true">
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </label>
             <el-button type="text">商户中心</el-button>
           </div>
         </el-col>
@@ -46,7 +59,7 @@
       <!--导航栏项-->
       <div><el-menu default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect">
         <el-menu-item v-for="(o,index) in navigationBarItem" :key="index">
-          <router-link :to="o.to">{{o.text}}</router-link>
+          <el-button type="text" :id="o.id" @click="goToItem">{{o.text}}</el-button>
         </el-menu-item>
         <el-menu-item>
           <label>400 866 999</label>
@@ -57,11 +70,16 @@
     <login :props="loginProps" :user="user"></login>
     <!--注销弹窗-->
     <logout-confirm :props="logoutProps"></logout-confirm>
+    <el-dialog :visible.sync="qrCodeShow" width="30%">
+      <img height="100%" width="100%" src="@/assets/QRCode.svg">
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {getHotSearch,searchByText} from "../api/search";
+import {goToElement} from '@/utils'
+
 export default {
   name: "TopBar",
   components:{
@@ -100,16 +118,26 @@ export default {
         showHotSearch:true,
         //导航栏内容
         navigationBarItem:[
-          {text:"首页",to:"/home"},
-          {text:"享推荐",to:"/price"},
-          {text:"享定制",to:"/search"},
-          {text:"品牌旗舰店",to:"/shop"},
-          {text:"全国实体店",to:"/shop"},
-          {text:"贷款购车",to:"/tool"},
+          {text:"首页",to:"/home",id:"top-home"},
+          {text:"享推荐",to:"/price",id:"top-recommend"},
+          {text:"品牌旗舰店",to:"/shop",id:"top-shop"},
+          {text:"全国实体店",to:"/shop",id:"top-shop-local"},
+          {text:"贷款购车",to:"/tool",id:"top-loan"},
         ],
+        qrCodeShow:false,
       }
   },
   methods:{
+    goToItem(){
+      let id=event.currentTarget.id
+      if(id==="top-home"){
+        this.$router.push({path:'/home'})
+      }else if(id==="top-loan"){
+
+      }else{
+
+      }
+    },
     toAdmin(){
       this.$router.push({name:'admin'});
     },
@@ -172,7 +200,6 @@ export default {
   mounted(){
     this.loadSearchSuggestion();
     this.searchText=this.searchSuggestions[0,3];
-    console.log(this.$store.getters.status)
   },
   watch:{
     //监控搜索框的内容

@@ -21,58 +21,67 @@
 </template>
 
 <script>
-    export default {
-      data(){
-        return{
-          //侧边栏项
-          sideBarItems:[
-            {fa:"fa fa-user fa-lg",tag:"我的",id:"user"},
-            {fa:"fa fa-shopping-cart fa-lg",tag:"购物车",id:"shopCart"},
-            {fa:"fa fa-wrench fa-lg",tag:"工具箱",id:"tool"},
-            {fa:"fa fa-phone fa-lg",tag:"客服电话"},
-            {fa:"fa fa-map-marker fa-lg",tag:"定位"},
-            {fa:"fa fa-angle-up fa-lg",tag:"返回顶部"},
-          ],
-          scrollTop: "",
-        }
-      },
-      methods:{
-        //侧栏点击图标后发出事件
-        toggle(){
-          this.$emit("toggleAsideBarBlankBox",{id:event.currentTarget.id})
-        },
-        handleScroll() {
-          this.scrollTop =
-            window.pageYOffset ||
-            document.documentElement.scrollTop ||
-            document.body.scrollTop;
-        },
-        //返回顶部
-        goTop() {
-          let timer = null,
-            _that = this;
-          cancelAnimationFrame(timer);
-          timer = requestAnimationFrame(function fn() {
-            if (_that.scrollTop > 0) {
-              _that.scrollTop -= 50;
-              document.body.scrollTop = document.documentElement.scrollTop =
-                _that.scrollTop;
-              timer = requestAnimationFrame(fn);
-            } else {
-              cancelAnimationFrame(timer);
-            }
-          });
-        },
-      },
-      //初始化绑定事件
-      mounted() {
-        window.addEventListener("scroll", this.handleScroll);
-        document.getElementsByClassName("fa fa-angle-up fa-lg")[0].addEventListener("click",this.goTop);
-      },
-      destroyed() {
-        window.removeEventListener("scroll", this.handleScroll);
+  import {goToElement} from '@/utils'
+  export default {
+    data(){
+      return{
+        //侧边栏项
+        sideBarItems:[
+          {fa:"fa fa-user fa-lg",tag:"我的",id:"user"},
+          {fa:"fa fa-shopping-cart fa-lg",tag:"购物车",id:"shopCart"},
+          {fa:"fa fa-wrench fa-lg",tag:"工具箱",id:"tool"},
+          {fa:"fa fa-phone fa-lg",tag:"客服电话"},
+          {fa:"fa fa-map-marker fa-lg",tag:"定位"},
+          {fa:"fa fa-angle-up fa-lg",tag:"返回顶部"},
+        ],
+        scrollTop: "",
       }
+    },
+    methods:{
+      //侧栏点击图标后发出事件
+      toggle(){
+        let id=event.currentTarget.id
+        if(!this.$store.getters.status&&(id==="shopCart"||id==="user")){
+          this.$message.error({
+            message:"请先登录",
+            showClose:true
+          })
+        }else
+          this.$emit("toggleAsideBarBlankBox",{id:event.currentTarget.id})
+      },
+      handleScroll() {
+        this.scrollTop =
+          window.pageYOffset ||
+          document.documentElement.scrollTop ||
+          document.body.scrollTop;
+      },
+      //返回顶部
+      goTop() {
+        goToElement(this,0)
+        /*let timer = null,
+          _that = this;
+        cancelAnimationFrame(timer);
+        timer = requestAnimationFrame(function fn() {
+          if (_that.scrollTop > 0) {
+            _that.scrollTop -= 50;
+            document.body.scrollTop = document.documentElement.scrollTop =
+              _that.scrollTop;
+            timer = requestAnimationFrame(fn);
+          } else {
+            cancelAnimationFrame(timer);
+          }
+        });*/
+      },
+    },
+    //初始化绑定事件
+    mounted() {
+      window.addEventListener("scroll", this.handleScroll);
+      document.getElementsByClassName("fa fa-angle-up fa-lg")[0].addEventListener("click",this.goTop);
+    },
+    destroyed() {
+      window.removeEventListener("scroll", this.handleScroll);
     }
+  }
 </script>
 
 <style lang="less" scoped>

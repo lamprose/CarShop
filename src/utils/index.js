@@ -295,3 +295,32 @@ export function createUniqueString() {
   const randomNum = parseInt((1 + Math.random()) * 65536) + ''
   return (+(randomNum + timestamp)).toString(32)
 }
+
+export function goToElement(_that,scrollTo) {
+  let timer = null
+  cancelAnimationFrame(timer);
+  if(_that.scrollTop>scrollTo){
+    timer = requestAnimationFrame(function fn() {
+      if (_that.scrollTop > scrollTo) {
+        _that.scrollTop -= 50;
+        document.body.scrollTop = document.documentElement.scrollTop =
+          _that.scrollTop;
+        timer = requestAnimationFrame(fn);
+      } else {
+        cancelAnimationFrame(timer);
+      }
+    });
+  }else{
+    timer = requestAnimationFrame(function fn() {
+      if (_that.scrollTop < scrollTo) {
+        _that.scrollTop += 50;
+        document.body.scrollTop = document.documentElement.scrollTop =
+          _that.scrollTop;
+        timer = requestAnimationFrame(fn);
+      } else {
+        cancelAnimationFrame(timer);
+      }
+    });
+  }
+
+}

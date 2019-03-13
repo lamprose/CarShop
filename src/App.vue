@@ -39,8 +39,8 @@ export default {
       /*console.log(data);*/
       let blank=document.getElementById("asideBarBlank")
       let side=document.getElementById("asideBar")
-      let needOpen=(blank.style.width=="0px")
-      let needClose=(data.id==this.asideBarNow&&!needOpen)
+      let needOpen=(blank.style.width==="0px")
+      let needClose=(data.id===this.asideBarNow&&!needOpen)
       if(needOpen){
         blank.style.width="300px"
         side.style.right="300px"

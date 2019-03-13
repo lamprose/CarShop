@@ -17,6 +17,7 @@ const user = {
     SET_USER:(state,user)=>{
       state.id=user.id
       state.token = user.token
+      state.status = true
       state.name = user.name
       state.avatar = user.avatar
       state.introduction = user.introduction
@@ -42,6 +43,15 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    CLEAR_USER:(state)=>{
+      state.id=''
+      state.token = ''
+      state.status = false
+      state.name = ''
+      state.avatar = ''
+      state.introduction = ''
+      state.roles = []
     }
   },
 
@@ -53,7 +63,6 @@ const user = {
         loginByUsername(username, userInfo.password).then(response => {
           const data = response.data
           commit('SET_USER',data)
-          commit('SET_STATUS',true)
           setToken(response.data.token)
           resolve()
         }).catch(error => {
@@ -77,11 +86,7 @@ const user = {
           } else {
             reject('getInfo: roles must be a non-null array!')
           }
-
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_STATUS',true)
-          commit('SET_INTRODUCTION', data.introduction)
+          commit('SET_USER', data)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -93,10 +98,8 @@ const user = {
       const username = userInfo.id.trim()
       return new Promise((resolve, reject) => {
         register(username, userInfo.password).then(response => {
-          console.log(response.data)
           const data = response.data
           commit('SET_USER',data)
-          commit('SET_STATUS',true)
           setToken(response.data.token)
           resolve()
         }).catch(error => {
@@ -125,7 +128,7 @@ const user = {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_STATUS',false)
-          commit('SET_ROLES', [])
+          commit('CLEAR_USER', [])
           removeToken()
           resolve()
         }).catch(error => {

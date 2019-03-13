@@ -76,9 +76,12 @@
           this.loginForm.password=encryptMd5(this.loginForm.password)
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
             /*console.log(this.$store.getters.user);*/
-            /*this.$router.push({ path: '/' })*/
+            /*window.location.reload()*/
           }).catch(() => {
-
+            this.$message.error({
+              message:"登录失败,请检查后重试",
+              showClose:true
+            })
           })
           //console.log("in login image is " + sessionStorage.getItem("user"))
           //将用户信息放入vuex
@@ -109,7 +112,6 @@
         },
       },
       mounted(){
-        console.log(this.$store.state.remember)
         if(this.$store.state.remember){
           this.user.id=this.$store.state.user.id;
           this.user.password=this.$store.state.user.password;

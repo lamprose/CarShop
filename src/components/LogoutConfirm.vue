@@ -22,7 +22,11 @@
       methods:{
         logout(){
           //TODO:实现注销功能
-          this.$store.dispatch("LogOut");
+          this.$store.dispatch("LogOut").then(()=>{
+            /*window.location.reload()*/
+            document.getElementById("asideBarBlank").style.width="0px"
+            document.getElementById("asideBar").style.right="0px"
+          })
           this.props.show=false;
         }
       }

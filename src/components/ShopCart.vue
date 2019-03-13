@@ -1,6 +1,6 @@
 <template>
-  <div class="main">
-    <el-scrollbar id="scrollbar-table">
+  <div class="main" style="min-width: 300px;">
+    <el-scrollbar style="min-width: 300px" id="scrollbar-table">
       <el-table :data="tableData" style="width: 300px;" @selection-change="selected">
         <!--选择方框-->
         <el-table-column type="selection" width="50"> </el-table-column>
@@ -8,16 +8,16 @@
         <el-table-column label="商品名称" width="250">
           <template slot-scope="scope"><div style="margin-left: 50px">
             ![](scope.row.goods.img)
-            <span style="font-size: 18px;padding-left: 200px;">{{scope.row.goods.description}}</span>
+            <span style="font-size: 18px;padding-left: 200px;">{{scope.row.description}}</span>
           </div></template>
         </el-table-column>
       </el-table>
     </el-scrollbar>
-    <el-scrollbar id="scrollbar-operate">
+    <el-scrollbar style="min-width: 300px" id="scrollbar-operate">
       <div id="operate">
         <!--商品总价格-->
         <div id="totalInfo">
-          <label id="amount">已选3件</label><label id="totalPrice">￥1223</label>
+          <label id="amount">已选{{amount}}件</label><label id="totalPrice">￥{{totalPrice}}</label>
         </div>
         <div id="balance"><el-button>结算</el-button></div>
       </div>
@@ -27,50 +27,67 @@
 
 <script>
     export default {
-        name: "ShopCart",
+      name: "ShopCart",
       data(){
-          return{
-            //TODO:获取用户购物车商品信息
-            tableData:[
-              {
-                goods:{
-                  description:"123"
-                }
-              },
-              {
-                goods:{
-                  description:"123"
-                }
-              },
-              {
-                goods:{
-                  description:"123"
-                }
-              },
-              {
-                goods:{
-                  description:"123"
-                }
-              },
-              {
-                goods:{
-                  description:"123"
-                }
-              },
-              {
-                goods:{
-                  description:"123"
-                }
-              },
-            ],
+        return{
+          //TODO:获取用户购物车商品信息
+          tableData:[
+            {
+              price:120,
+              description:"123"
+            },
+            {
+              price:120,
+              description:"123"
+            },
+            {
+              price:120,
+              description:"123"
+            },
+            {
+              price:120,
+              description:"123"
+            },
+            {
+              price:120,
+              description:"123"
+            },
+            {
+              price:120,
+              description:"123"
+            },
+            {
+              price:120,
+              description:"123"
+            },
+            {
+              price:120,
+              description:"123"
+            },
+          ],
+          amount:0,
+          totalPrice:0,
+        }
+      },
+      methods:{
+        selected(val){
+          let totalGoods = 0;
+          let totalPrice = 0;
+          for(let goods of val)
+          {
+            totalGoods += 1;
+            totalPrice += Number(goods.price);
           }
+          this.amount=totalGoods
+          this.totalPrice=totalPrice
+        }
       }
     }
 </script>
 
 <style lang="less" scoped>
-  div#scrollbar-table{
-    height:80%;
+  #scrollbar-table{
+    height:90%;
     background-color: #fff;
     overflow-y: visible;
     z-index: 1;
@@ -81,7 +98,7 @@
     z-index: 0;
   }
   div.el-scrollbar__bar.is-horizontal .el-scrollbar__thumb{
-    display: block!important;
+    display: none!important;
   }
   .main{
     height: 100%;

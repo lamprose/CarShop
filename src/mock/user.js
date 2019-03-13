@@ -17,7 +17,7 @@ const userMap = {
   },
   normalUser: {
     roles: ['editor'],
-    token: 'user',
+    token: 'normalUser',
     introduction: '我是普通用户',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Normal User'

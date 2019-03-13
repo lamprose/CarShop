@@ -64,12 +64,26 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: '/admin',
+    name:'admin',
+    component: resolve => require(["@/views/admin"], resolve),
+  },
+  {
+    path: '/401',
+    name:'401',
+    component: resolve => require(["@/views/errorPage/401.vue"], resolve),
+  },
+  {
     path:'/404',
     name:'404',
     component: resolve => require(["@/views/errorPage/404.vue"], resolve),
     meta:{
       title: '404 not found'
     }
+  },
+  {
+    path: "*", // 此处需特别注意置于最底部
+    redirect: "/404"
   }
 ]
 
@@ -83,11 +97,7 @@ export const adminRouterMap = [
   {
     path: '/admin',
     name:'admin',
-    component: resolve => require(["@/views/demo.vue"], resolve),
-  },
-  {
-    path: "*", // 此处需特别注意置于最底部
-    redirect: "/404"
+    component: resolve => require(["@/views/admin"], resolve),
   }
 ]
 export const userRouterMap = [
@@ -95,7 +105,9 @@ export const userRouterMap = [
     path: '/admin',
     name:'admin',
     component: resolve => require(["@/views/errorPage/401.vue"], resolve),
-  },
+  }
+]
+export const defalutRouterMap = [
   {
     path: "*", // 此处需特别注意置于最底部
     redirect: "/404"

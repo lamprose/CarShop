@@ -123,7 +123,12 @@
               /*console.log(this.$store.getters.user);*/
               this.$router.push({ path: '/' })
             }).catch(() => {
-
+              this.$message.error({
+                message:"注册失败,请检查后重试",
+                showClose:true
+              })
+              this.$refs[formName].resetFields()
+              this.refreshCode()
             })
           }
         });

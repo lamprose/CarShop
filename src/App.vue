@@ -2,7 +2,7 @@
   <div id="app">
     <el-container>
       <el-container id="Main">
-        <el-header id="topBar"><router-view name="topBar"></router-view></el-header>
+        <el-header id="topBar"><router-view name="topBar" :key="topBarKey"></router-view></el-header>
         <el-container id="mainBox">
           <el-main>
             <router-view name="mainBox"></router-view>
@@ -36,7 +36,7 @@ export default {
   },
   methods:{
     toggle(data){
-      console.log(data);
+      /*console.log(data);*/
       let blank=document.getElementById("asideBarBlank")
       let side=document.getElementById("asideBar")
       let needOpen=(blank.style.width=="0px")
@@ -50,6 +50,11 @@ export default {
         blank.style.width="0px"
         side.style.right="0px"
       }
+    }
+  },
+  computed: {
+    topBarKey() {
+      return this.$route.name !== undefined? this.$route.name + +new Date(): this.$route + +new Date()
     }
   }
 }

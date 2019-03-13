@@ -22,11 +22,8 @@
       methods:{
         logout(){
           //TODO:实现注销功能
-          this.$cookie.clearCookie();
-        },
-        //清除cookie
-        clearCookie() {
-          window.document.cookie="" //账号密码置空，天数置0
+          this.$store.dispatch("LogOut");
+          this.props.show=false;
         }
       }
     }

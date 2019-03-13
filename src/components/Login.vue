@@ -1,14 +1,26 @@
 <template>
   <div>
-    <el-dialog :visible.sync="props.show" title="登录" center width="40%" @open="loginInit" @close="loginClose">
+    <el-dialog ref="loginForm" :model="loginForm" :visible.sync="props.show" title="登录" center width="40%" @open="loginInit" @close="loginClose">
       <el-form ref="form" :model="user" style="width: 350px;margin:auto;">
         <!--用户名输入-->
         <el-form-item>
-          <el-input v-model="user.id" placeholder="输入用户名"  class="input" clearable></el-input>
+          <el-input v-model="loginForm.id" placeholder="输入用户名"  class="input">
+            <span class="svg-container" slot="suffix">
+              <svg-icon icon-class="user" />
+            </span>
+          </el-input>
         </el-form-item>
         <!--密码输入-->
         <el-form-item>
-          <el-input v-model="user.password" placeholder="输入密码" type="password" class="input" clearable></el-input>
+          <el-input
+            v-model="loginForm.password"
+            placeholder="输入密码"
+            :type="passwordType"
+            class="input">
+            <span class="show-pwd" @click="showPwd" slot="suffix">
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            </span>
+          </el-input>
         </el-form-item>
         <!--是否记住密码-->
         <el-form-item>
@@ -33,13 +45,17 @@
 
 <script>
     import DragVerify from "vue-drag-verify/src/dragVerify";
-    import Crypto from 'crypto'
+    import {encryptMd5} from '@/utils/encrypt'
     export default {
       name: "Login",
       components: {DragVerify},
       props:['props','user'],
       data(){
           return{
+            loginForm:{
+              id: 'admin',
+              password: '1111111'
+            },
             //控制验证进度条属性
             identify:{
               show:true,
@@ -47,24 +63,38 @@
               height:40
             },
             loginDisabled:false,
+            passwordType:'password',
           }
       },
       methods:{
         onSubmit(){
-          let re=this.props.radio=='0'?"false":"true"
-          this.$cookie.setCookie(this.user.id,this.user.password,re,10);
+          /*let re=this.props.radio=='0'?"false":"true"
+          this.$cookie.setCookie(this.user.id,this.user.password,re,10);*/
           //TODO: 数据格式验证完毕，实现登录功能
           //console.log(this.user)
           //将用户名和token放入sessionStorage
+          this.loginForm.password=encryptMd5(this.loginForm.password)
+          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+            /*console.log(this.$store.getters.user);*/
+            /*this.$router.push({ path: '/' })*/
+          }).catch(() => {
 
+          })
           //console.log("in login image is " + sessionStorage.getItem("user"))
           //将用户信息放入vuex
-          this.$store.commit("setUser",this.user)
-          this.$store.commit("changeLoginStatus")
+          /*this.$store.commit("setUser",this.user)
+          this.$store.commit("changeLoginStatus")*/
           this.props.show=false;
         },
         toForgot(){
           //TODO:跳转忘记密码功能
+        },
+        showPwd() {
+          if (this.passwordType === 'password') {
+            this.passwordType = ''
+          } else {
+            this.passwordType = 'password'
+          }
         },
         //显示登陆窗口时初始化数据
         loginInit(){

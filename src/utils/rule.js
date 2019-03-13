@@ -1,4 +1,4 @@
-import ajax from 'axios'
+import {checkUser} from '@/api/user'
 
 let checkId= (rule, value, callback) =>{
   let rex=/^[a-zA-Z][a-zA-Z0-9]{5,15}$/
@@ -7,10 +7,9 @@ let checkId= (rule, value, callback) =>{
   }else{
     //console.log(data);
     //TODO:获取是否存在用户名
-    ajax.get('http://localhost:8088/pic')
-      .then((response)=> {
-        //console.log(response.data)
-        if(response.data.length!==0){
+    checkUser(value).then((response)=> {
+        /*console.log(response.data)*/
+        if(response.data!="success"){
           return callback(new Error('该用户名已被注册，请重新输入'));
         }else
           return callback();

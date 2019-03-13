@@ -4,9 +4,11 @@
       <el-form-item label="用户名" prop="id">
         <el-input v-model="registerUser.id" class="input"></el-input><br>
       </el-form-item>
-      <el-form-item label="登陆密码" prop="password" v-if="showPassword">
-        <el-input v-model="registerUser.password" :type="showPasswordType" class="input" @change="testPasswordStrength" id="password">
-          <i class="el-icon-view" slot="suffix" @click="showPasswordChange"></i>
+      <el-form-item label="登陆密码" prop="password">
+        <el-input v-model="registerUser.password" :type="passwordType" class="input" @change="testPasswordStrength" id="password">
+          <span class="show-pwd" @click="showPwd" slot="suffix">
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          </span>
         </el-input><br>
         <label class="placement" v-if="pwd" style="float: left">密码强度：</label>
         <el-rate
@@ -17,9 +19,11 @@
           v-if="pwd" style="float: left;margin-top: 10px">
         </el-rate>
       </el-form-item>
-      <el-form-item label="确认密码" prop="rePassword" v-if="showPassword">
-        <el-input v-model="registerUser.rePassword" :type="showPasswordType" class="input">
-          <i class="el-icon-view" slot="suffix" @click="showPasswordChange"></i>
+      <el-form-item label="确认密码" prop="rePassword">
+        <el-input v-model="registerUser.rePassword" :type="passwordType" class="input">
+          <span class="show-pwd" @click="showPwd" slot="suffix">
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          </span>
         </el-input>
       </el-form-item>
       <el-form-item label="验证码" prop="identifyText">
@@ -82,10 +86,8 @@
           identifyCode:'',
         },
         passwordStrength:null,
-        //控制是否显示密码
-        showPassword:true,
         //控制密码输入框的类型
-        showPasswordType:'password',
+        passwordType:'password',
         //控制交易条款弹窗是否显示
         argumentShow:false,
         //交易条款内容
@@ -117,21 +119,24 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             //TODO : 验证数据成功，实现注册
+            this.$store.dispatch('Register', this.registerUser).then(() => {
+              /*console.log(this.$store.getters.user);*/
+              this.$router.push({ path: '/' })
+            }).catch(() => {
+
+            })
           }
         });
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
-      showPasswordChange(){
-        if(this.showPasswordType=='password')
-          this.showPasswordType='text'
-        else
-          this.showPasswordType='password'
-        this.showPassword=!this.showPassword
-        if(!this.showPassword)
-          this.showPassword=!this.showPassword
-        //console.log(this.showPassword)
+      showPwd() {
+        if (this.passwordType === 'password') {
+          this.passwordType = ''
+        } else {
+          this.passwordType = 'password'
+        }
       },
       refreshCode() {
         this.identifyInfo.identifyCode = "";
@@ -169,7 +174,7 @@
             return;
           }
           leval[i].forEach((item)=>{
-            console.log(item+":")
+            /*console.log(item+":")*/
             //console.log(item.exec(this.registerUser.password))
             if(item.test(this.registerUser.password)){
               findFlag=true
@@ -203,9 +208,6 @@
 </script>
 
 <style scoped>
-  .input{
-    width: 300px;
-  }
   .main{
     width: 400px;
     margin: 100px auto;

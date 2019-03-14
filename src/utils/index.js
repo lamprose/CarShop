@@ -296,15 +296,13 @@ export function createUniqueString() {
   return (+(randomNum + timestamp)).toString(32)
 }
 
-export function goToElement(_that,scrollTo) {
+export function goToElement(scrollTo) {
   let timer = null
   cancelAnimationFrame(timer);
-  if(_that.scrollTop>scrollTo){
+  if(document.documentElement.scrollTop>scrollTo){
     timer = requestAnimationFrame(function fn() {
-      if (_that.scrollTop > scrollTo) {
-        _that.scrollTop -= 50;
-        document.body.scrollTop = document.documentElement.scrollTop =
-          _that.scrollTop;
+      if (document.documentElement.scrollTop > scrollTo) {
+        document.documentElement.scrollTop -= 40;
         timer = requestAnimationFrame(fn);
       } else {
         cancelAnimationFrame(timer);
@@ -312,10 +310,8 @@ export function goToElement(_that,scrollTo) {
     });
   }else{
     timer = requestAnimationFrame(function fn() {
-      if (_that.scrollTop < scrollTo) {
-        _that.scrollTop += 50;
-        document.body.scrollTop = document.documentElement.scrollTop =
-          _that.scrollTop;
+      if (document.documentElement.scrollTop < scrollTo) {
+        document.documentElement.scrollTop += 40;
         timer = requestAnimationFrame(fn);
       } else {
         cancelAnimationFrame(timer);

@@ -15,6 +15,7 @@ export const constantRouterMap = [
       'shopCartBlankBox': resolve => require(["@/components/ShopCart.vue"], resolve),
       'toolBlankBox': resolve => require(["@/components/Tool.vue"], resolve),
     },
+    redirect: "/home",
     children:[
       {
         path:'/home',
@@ -23,7 +24,7 @@ export const constantRouterMap = [
       },
       {
         path:'/search',
-        name:'search',
+        name:'Search',
         component: resolve => require(["@/views/SearchResult.vue"], resolve),
       },
       {

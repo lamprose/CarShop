@@ -57,20 +57,7 @@
       },
       //返回顶部
       goTop() {
-        goToElement(this,0)
-        /*let timer = null,
-          _that = this;
-        cancelAnimationFrame(timer);
-        timer = requestAnimationFrame(function fn() {
-          if (_that.scrollTop > 0) {
-            _that.scrollTop -= 50;
-            document.body.scrollTop = document.documentElement.scrollTop =
-              _that.scrollTop;
-            timer = requestAnimationFrame(fn);
-          } else {
-            cancelAnimationFrame(timer);
-          }
-        });*/
+        goToElement(0)
       },
     },
     //初始化绑定事件

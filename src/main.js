@@ -6,6 +6,7 @@ import router from './router'
 import elementUi from 'element-ui'
 import Cookies from 'js-cookie'
 import store from './store'//
+import anchor from './directive/anchor'
 
 import './mock' // simulation data
 import './permission' //
@@ -16,7 +17,7 @@ import './styles/style.css';
 import 'font-awesome/css/font-awesome.css';
 
 Vue.config.productionTip = false
-
+Vue.directive(anchor)
 Vue.use(elementUi, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
 })

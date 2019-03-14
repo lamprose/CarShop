@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" style="position: relative">
     <el-container>
       <el-container id="Main">
         <el-header id="topBar"><router-view name="topBar" :key="topBarKey"></router-view></el-header>
@@ -8,9 +8,9 @@
             <router-view name="mainBox"></router-view>
           </el-main>
         </el-container>
-        <el-footer><router-view name="bottomBar"></router-view></el-footer>
       </el-container>
-      <el-aside width="45px" class="aside" id="asideBar"><router-view name="asideBar" @toggleAsideBarBlankBox="toggle"></router-view></el-aside>
+      <el-footer id="bottomBar"><router-view name="bottomBar"></router-view></el-footer>
+      <el-aside width="45px" class="aside aside-close" id="asideBar"><router-view name="asideBar" @toggleAsideBarBlankBox="toggle"></router-view></el-aside>
       <el-scrollbar><!--隐藏滚动条-->
         <el-aside v-if="show" width="0px" class="aside" id="asideBarBlank">
           <router-view v-if="asideBarNow=='user'" name="userBlankBox"></router-view>
@@ -43,14 +43,19 @@ export default {
       let needClose=(data.id===this.asideBarNow&&!needOpen)
       if(needOpen){
         blank.style.width="300px"
-        side.style.right="300px"
+        side.classList.remove("aside-close")
+        side.classList.add("aside-open")
       }
       this.asideBarNow=data.id;
       if(needClose){
         blank.style.width="0px"
-        side.style.right="0px"
+        side.classList.remove("aside-open")
+        side.classList.add("aside-close")
       }
     }
+  },
+  mounted(){
+    document.getElementById("app").style.minWidth=(screen.width-20)+"px";
   },
   computed: {
     topBarKey() {
@@ -60,10 +65,13 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
   #Main{
     margin-left: 10%;
     margin-right: 10%;
+  }
+  .el-main{
+    padding: 0px;
   }
   #topBar{
     margin-top: 30px;
@@ -73,24 +81,42 @@ export default {
   }
   .aside{
     position: fixed;
-    right: 0px;
+    top:0px;
     height: calc(100% + 10px );
     z-index: 100000;
   }
   #asideBar{
-    right: 0px;
-    transition-property: right;
-    transition-duration: 1s;
+    transition-property: all;
+    transition-duration: 0.5s;
     height: calc(100% + 10px );
   }
+  .aside-close{
+    right: 0px;
+    height: 20px;
+    opacity: 0;
+    &:hover{
+      opacity: 1;
+    }
+  }
+  .aside-open{
+    right: 300px;
+    opacity: 1;
+  }
   #asideBarBlank{
+    right: 0px;
     transition-property: width;
-    transition-duration: 1s;
+    transition-duration: 0.5s;
   }
   .el-scrollbar__thumb {
     display: none;
   }
   .el-scrollbar__wrap {
     overflow-x: hidden;
+  }
+  #bottomBar{
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    padding: 0px;
   }
 </style>

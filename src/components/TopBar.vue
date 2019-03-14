@@ -4,16 +4,16 @@
       <el-row class="firstNav">
         <!--logo图片-->
         <el-col :span="4" ><div class="log">
-          <img class="logo" src="../assets/carshop-logo.jpg">
+          <a href="./home"><img class="logo" src="../assets/carshop-logo.jpg"></a>
         </div></el-col>
         <!--搜索栏-->
         <el-col :span="13"><div id="search">
           <el-autocomplete placeholder="搜索商品"
                            v-model="searchText"
                            :fetch-suggestions="querySearchAsync"
-                           class="searchInput">
+                           class="search" id="searchInput">
             <el-button v-for="(hot,index) in hotSearchText" slot="suffix" type="text" :key="index">{{hot}}</el-button>
-            <el-button slot="append" icon="el-icon-search" ></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="toSearchResult"></el-button>
           </el-autocomplete>
           <br>
         </div></el-col>
@@ -57,14 +57,7 @@
         </el-col>
       </el-row>
       <!--导航栏项-->
-      <div><el-menu default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-        <el-menu-item v-for="(o,index) in navigationBarItem" :key="index">
-          <el-button type="text" :id="o.id" @click="goToItem">{{o.text}}</el-button>
-        </el-menu-item>
-        <el-menu-item>
-          <label>400 866 999</label>
-        </el-menu-item>
-      </el-menu></div>
+
     </div>
     <!--登陆弹窗-->
     <login :props="loginProps" :user="user"></login>
@@ -88,6 +81,7 @@ export default {
   },
   data(){
       return{
+        re:"recommend",
         loginProps:{
           show:false,
           radio:'0',
@@ -116,14 +110,7 @@ export default {
         //
         searchSuggestions:[],
         showHotSearch:true,
-        //导航栏内容
-        navigationBarItem:[
-          {text:"首页",to:"/home",id:"top-home"},
-          {text:"享推荐",to:"/price",id:"top-recommend"},
-          {text:"品牌旗舰店",to:"/shop",id:"top-shop"},
-          {text:"全国实体店",to:"/shop",id:"top-shop-local"},
-          {text:"贷款购车",to:"/tool",id:"top-loan"},
-        ],
+
         qrCodeShow:false,
       }
   },
@@ -135,7 +122,9 @@ export default {
       }else if(id==="top-loan"){
 
       }else{
-
+        let loc=document.getElementById("recommend").offsetTop;
+        console.log(loc);
+        goToElement(this,loc)
       }
     },
     toAdmin(){
@@ -143,10 +132,6 @@ export default {
     },
     toRegister(){
       this.$router.push({name:'Register'});
-    },
-    handleSelect(key, keyPath) {
-      this.typeIndex = key
-      //console.log(key, keyPath);
     },
     //TODO:实现搜索建议下拉的数据写入
     querySearchAsync(queryString, cb) {
@@ -173,17 +158,18 @@ export default {
     },
     //TODO:实现搜索跳转功能
     toSearchResult(){
-      if(this.searchText==''){
+      if(this.searchText===''){
         this.$message.error({
           message:"搜索内容不能为空",
           showClose:true
         });
         return
+      }else{
+        this.$router.push({
+          name:'Search',
+          query:{queryString:this.searchText}
+        })
       }
-      this.$router.push({
-        name:'Search',
-        params:{queryString:this.searchText}
-      })
     },
     //TODO:加载热门搜索
     loadSearchSuggestion(){
@@ -199,7 +185,7 @@ export default {
   },
   mounted(){
     this.loadSearchSuggestion();
-    this.searchText=this.searchSuggestions[0,3];
+    /*this.searchText=this.searchSuggestions[0,3];*/
   },
   watch:{
     //监控搜索框的内容
@@ -245,26 +231,10 @@ export default {
     margin-left: 20px;
     min-width: 275px;
   }
-  .searchInput{
+  .search{
     width: 100%;
   }
-  .el-menu-demo{
-    width: 710px;
-    margin-left: calc( 50% - 305px ) ;
-    border: none;
-    min-width: 710px;
-  }
-  .el-menu-demo li a{
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: bold;
-  }
-  .el-menu-demo li:first-child a{
-    color: red;
-  }
-  .el-menu-demo li a:hover{
-    color: red;
-  }
+
   .top-button{
     margin-left:calc(50% - 132px);
     min-width: 264px;

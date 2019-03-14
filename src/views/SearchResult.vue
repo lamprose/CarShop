@@ -46,9 +46,15 @@
 </template>
 
 <script>
-    export default {
-        name: "SearchResult"
+  export default {
+    name: "SearchResult",
+    watch: {
+      $route(to,from){
+        //TODO:监控路由变化获取搜索数据
+        console.log(this.$route.query.queryString)
+      }
     }
+  }
 </script>
 
 <style lang="less" scoped>

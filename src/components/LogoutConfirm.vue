@@ -25,7 +25,8 @@
           this.$store.dispatch("LogOut").then(()=>{
             /*window.location.reload()*/
             document.getElementById("asideBarBlank").style.width="0px"
-            document.getElementById("asideBar").style.right="0px"
+            document.getElementById("float").style.right="10px"
+            document.getElementById("top").style.right=this.showTop?"10px":"-36px"
           })
           this.props.show=false;
         }

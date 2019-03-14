@@ -87,7 +87,7 @@
 
 <style lang="less" scoped>
   #scrollbar-table{
-    height:90%;
+    height:80%;
     background-color: #fff;
     overflow-y: visible;
     z-index: 1;

@@ -8,7 +8,7 @@ export const constantRouterMap = [
     path: '/',
     components: {
       'topBar': resolve => require(["@/components/TopBar.vue"], resolve),
-      'asideBar': resolve => require(["@/components/AsideBar.vue"], resolve),
+      'asideBar': resolve => require(["@/components/Float.vue"], resolve),
       'bottomBar': resolve => require(["@/components/BottomBar.vue"], resolve),
       'mainBox': resolve => require(["@/components/MainBox.vue"], resolve),
       'userBlankBox': resolve => require(["@/components/User.vue"], resolve),

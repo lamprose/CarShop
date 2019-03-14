@@ -8,5 +8,7 @@ const getters = {
   status: state => state.user.status,
   roles: state => state.user.roles,
   addRouters: state => state.permission.addRouters,
+  keepId: state => state.app.keepId,
+  keepPassword: state => state.app.keepPassword,
 }
 export default getters

@@ -84,9 +84,10 @@
   }
   #reason{
     background: black;
+    margin-top: 30px;
     & h2{
       position: absolute;
-      top: 30px;
+      top: 70px;
       left: 10%;
       font-size: 25px;
       color: white;

@@ -60,7 +60,7 @@
 
     </div>
     <!--登陆弹窗-->
-    <login :props="loginProps" :user="user"></login>
+    <login :props="loginProps"></login>
     <!--注销弹窗-->
     <logout-confirm :props="logoutProps"></logout-confirm>
     <el-dialog :visible.sync="qrCodeShow" width="30%">

@@ -8,16 +8,9 @@ const userMap = {
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Super Admin'
   },
-  editor: {
-    roles: ['editor'],
-    token: 'editor',
-    introduction: '我是编辑',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: 'Normal Editor'
-  },
-  normalUser: {
-    roles: ['editor'],
-    token: 'normalUser',
+  normal: {
+    roles: ['user'],
+    token: 'normal',
     introduction: '我是普通用户',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Normal User'

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog ref="loginForm" :model="loginForm" :visible.sync="props.show" title="登录" center width="40%" @open="loginInit" @close="loginClose">
-      <el-form ref="form" :model="user" style="width: 350px;margin:auto;">
+      <el-form ref="form" :model="loginForm" style="width: 350px;margin:auto;">
         <!--用户名输入-->
         <el-form-item>
           <el-input v-model="loginForm.id" placeholder="输入用户名"  class="input">
@@ -25,7 +25,7 @@
         <!--是否记住密码-->
         <el-form-item>
           <label>记住密码</label>
-          <el-radio-group v-model="props.radio">
+          <el-radio-group v-model="radio">
             <el-radio label='1'>是</el-radio><el-radio label='0'>否</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -37,7 +37,7 @@
       <!--底部登陆忘记密码按钮-->
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" round :disabled=loginDisabled @click="onSubmit">立即登录</el-button>
-        <el-button type="primary" round >忘记密码</el-button>
+        <el-button type="primary" round>忘记密码</el-button>
       </span>
     </el-dialog>
   </div>
@@ -49,7 +49,7 @@
     export default {
       name: "Login",
       components: {DragVerify},
-      props:['props','user'],
+      props:['props'],
       data(){
           return{
             loginForm:{
@@ -64,29 +64,32 @@
             },
             loginDisabled:false,
             passwordType:'password',
+            warnShow:false,
+            radio:'0'
           }
       },
       methods:{
         onSubmit(){
-          /*let re=this.props.radio=='0'?"false":"true"
-          this.$cookie.setCookie(this.user.id,this.user.password,re,10);*/
-          //TODO: 数据格式验证完毕，实现登录功能
-          //console.log(this.user)
-          //将用户名和token放入sessionStorage
-          this.loginForm.password=encryptMd5(this.loginForm.password)
-          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-            /*console.log(this.$store.getters.user);*/
-            /*window.location.reload()*/
-          }).catch(() => {
+          //数据格式验证完毕，实现登录功能
+          if(!this.$refs.Verity.isPassing){
             this.$message.error({
-              message:"登录失败,请检查后重试",
+              message:"验证失败,请拉拽到右边以验证",
               showClose:true
+            });
+            return
+          }else{
+            this.$store.dispatch('LoginByUsername', {id:this.loginForm.id,password:encryptMd5(this.loginForm.password)}).then(() => {
+              if(this.radio==='1')
+                this.$store.dispatch('KeepUser',this.loginForm);
+              else
+                this.$store.dispatch('ClearUser');
+            }).catch(() => {
+              this.$message.error({
+                message:"登录失败,请检查后重试",
+                showClose:true
+              })
             })
-          })
-          //console.log("in login image is " + sessionStorage.getItem("user"))
-          //将用户信息放入vuex
-          /*this.$store.commit("setUser",this.user)
-          this.$store.commit("changeLoginStatus")*/
+          }
           this.props.show=false;
         },
         toForgot(){
@@ -101,10 +104,11 @@
         },
         //显示登陆窗口时初始化数据
         loginInit(){
-          this.props.radio='0'
+          this.radio='0'
           this.identify.show=true
-          if(this.user.id!==''&&this.user.password!=='')
+          if(this.loginForm.id!==''&&this.loginForm.password!=='')
             this.loginDisabled=false
+          this.passwordType = 'password'
         },
         //关闭登陆窗口时清除数据
         loginClose(){
@@ -112,21 +116,25 @@
         },
       },
       mounted(){
-        if(this.$store.state.remember){
-          this.user.id=this.$store.state.user.id;
-          this.user.password=this.$store.state.user.password;
+        if(this.$store.getters.keepId!==''){
+          this.loginForm.id=this.$store.getters.keepId
+          this.loginForm.password=this.$store.getters.keepPassword
         }
       },
-      computed:{
-        loginStatus(){
-          //TODO:获取当前用户登录状态
-
-        },
-        keepId(){
-          return sessionStorage.getItem("keepId")?sessionStorage.getItem("keepId"):''
-        },
-        keepPassword(){
-          return sessionStorage.getItem("keepPassword")?sessionStorage.getItem("keepPassword"):''
+      watch:{
+        radio(){
+          if(this.radio=='1'){
+            this.$confirm('此操作将记住密码,请确保密码不会泄露,是否继续?', '提示',{
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
+              center: true,
+              roundButton:true
+            }).then(_ => {
+                this.radio='1';
+              })
+              .catch(_ => {this.radio='0'});
+          }
         }
       }
     }

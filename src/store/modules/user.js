@@ -5,7 +5,7 @@ import {register} from "@/api/user";
 const user = {
   state: {
     id: '',
-    token: getToken(),
+    token: getToken('token'),
     status: false,
     name: '',
     avatar: '',
@@ -57,13 +57,20 @@ const user = {
 
   actions: {
     // 用户名登录
-    LoginByUsername({ commit }, userInfo) {
-      const username = userInfo.id.trim()
+    LoginByUsername({ commit }, loginInfo) {
+      const id = loginInfo.id.trim()
       return new Promise((resolve, reject) => {
-        loginByUsername(username, userInfo.password).then(response => {
+        loginByUsername(id, loginInfo.password).then(response => {
           const data = response.data
           commit('SET_USER',data)
-          setToken(response.data.token)
+          setToken('token',response.data.token)
+          if(loginInfo.radio==='1'){
+            setToken('id',id)
+            setToken('password',loginInfo.password)
+          }else{
+            removeToken('id')
+            removeToken('password')
+          }
           resolve()
         }).catch(error => {
           reject(error)
@@ -100,7 +107,7 @@ const user = {
         register(username, userInfo.password).then(response => {
           const data = response.data
           commit('SET_USER',data)
-          setToken(response.data.token)
+          setToken('token',response.data.token)
           resolve()
         }).catch(error => {
           reject(error)
@@ -129,7 +136,7 @@ const user = {
           commit('SET_TOKEN', '')
           commit('SET_STATUS',false)
           commit('CLEAR_USER', [])
-          removeToken()
+          removeToken('token')
           resolve()
         }).catch(error => {
           reject(error)
@@ -141,13 +148,14 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
-        removeToken()
+        commit('SET_STATUS',false)
+        removeToken('token')
         resolve()
       })
     },
 
     // 动态修改权限
-    ChangeRoles({ commit, dispatch }, role) {
+    /*ChangeRoles({ commit, dispatch }, role) {
       return new Promise(resolve => {
         commit('SET_TOKEN', role)
         setToken(role)
@@ -161,7 +169,7 @@ const user = {
           resolve()
         })
       })
-    }
+    }*/
   }
 }
 

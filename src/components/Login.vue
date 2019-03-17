@@ -45,7 +45,8 @@
 
 <script>
     import DragVerify from "vue-drag-verify/src/dragVerify";
-    import {encryptMd5} from '@/utils/encrypt'
+    import {getToken} from "@/utils/auth";
+
     export default {
       name: "Login",
       components: {DragVerify},
@@ -53,8 +54,8 @@
       data(){
           return{
             loginForm:{
-              id: 'admin',
-              password: '1111111'
+              id: getToken('id'),
+              password: getToken('password')
             },
             //控制验证进度条属性
             identify:{
@@ -78,11 +79,8 @@
             });
             return
           }else{
-            this.$store.dispatch('LoginByUsername', {id:this.loginForm.id,password:encryptMd5(this.loginForm.password)}).then(() => {
-              if(this.radio==='1')
-                this.$store.dispatch('KeepUser',this.loginForm);
-              else
-                this.$store.dispatch('ClearUser');
+            this.$store.dispatch('LoginByUsername', {id:this.loginForm.id,password:this.loginForm.password,radio:this.radio}).then(() => {
+
             }).catch(() => {
               this.$message.error({
                 message:"登录失败,请检查后重试",
@@ -106,6 +104,8 @@
         loginInit(){
           this.radio='0'
           this.identify.show=true
+          this.loginForm.id=getToken('id')
+          this.loginForm.password=getToken('password')
           if(this.loginForm.id!==''&&this.loginForm.password!=='')
             this.loginDisabled=false
           this.passwordType = 'password'
@@ -115,16 +115,10 @@
           this.identify.show=false
         },
       },
-      mounted(){
-        if(this.$store.getters.keepId!==''){
-          this.loginForm.id=this.$store.getters.keepId
-          this.loginForm.password=this.$store.getters.keepPassword
-        }
-      },
       watch:{
         radio(){
           if(this.radio=='1'){
-            this.$confirm('此操作将记住密码,请确保密码不会泄露,是否继续?', '提示',{
+            this.$confirm('此操作将记住密码,请确保此电脑是私人电脑,密码不会泄露,是否继续?', '提示',{
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning',

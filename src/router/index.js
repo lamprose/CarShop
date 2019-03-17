@@ -7,84 +7,97 @@ export const constantRouterMap = [
   {
     path: '/',
     components: {
-      'topBar': resolve => require(["@/components/TopBar.vue"], resolve),
-      'asideBar': resolve => require(["@/components/Float.vue"], resolve),
-      'bottomBar': resolve => require(["@/components/BottomBar.vue"], resolve),
-      'mainBox': resolve => require(["@/components/MainBox.vue"], resolve),
-      'userBlankBox': resolve => require(["@/components/User.vue"], resolve),
-      'shopCartBlankBox': resolve => require(["@/components/ShopCart.vue"], resolve),
-      'toolBlankBox': resolve => require(["@/components/Tool.vue"], resolve),
+      'default':resolve => require(["@/components/Layout/MainLayout"], resolve),
     },
-    redirect: "/home",
     children:[
       {
-        path:'/home',
-        name:'Home',
-        component:resolve => require(["@/views/Home.vue"], resolve),
-      },
-      {
-        path:'/search',
-        name:'Search',
-        component: resolve => require(["@/views/SearchResult.vue"], resolve),
-      },
-      {
-        path:'/product/:id',
-        name:'Goods',
-        components:{
-          'default':resolve => require(["@/views/ProductInfo.vue"], resolve),
-        }
-      },
-      {
-        path:'/shop/:id',
-        name:'Shop',
-        components:{
-          'default':resolve => require(["@/views/Shop.vue"], resolve),
-        }
-      },
-      {
-        path:'/forgot',
-        name:'Forgot',
-        components:{
-          'default':resolve => require(["@/views/Forgot.vue"], resolve),
-        }
-      },
-      {
-        path:'/register',
-        name:'Register',
-        components:{
-          'default':resolve => require(["@/views/Register.vue"], resolve),
-        }
-      },
-      {
-        path:'/user/:id',
-        name:'User',
-        components:{
-          'default':resolve => require(["@/views/User.vue"], resolve),
-        }
+        path:'/',
+        redirect: "/home",
+        components: {
+          'topBar': resolve => require(["@/views/Main/TopBar.vue"], resolve),
+          'bottomBar': resolve => require(["@/views/Main/BottomBar.vue"], resolve),
+          'mainBox': resolve => require(["@/views/Main/MainBox.vue"], resolve),
+          'userBlankBox': resolve => require(["@/views/Main/User.vue"], resolve),
+          'shopCartBlankBox': resolve => require(["@/views/Main/ShopCart.vue"], resolve),
+          'toolBlankBox': resolve => require(["@/views/Main/Tool.vue"], resolve),
+        },
+        children: [
+          {
+            path:'/home',
+            name:'Home',
+            component:resolve => require(["@/views/Home.vue"], resolve),
+          },
+          {
+            path:'/search',
+            name:'Search',
+            component: resolve => require(["@/views/SearchResult.vue"], resolve),
+          },
+          {
+            path:'/product/:id',
+            name:'Goods',
+            components:{
+              'default':resolve => require(["@/views/ProductInfo.vue"], resolve),
+            }
+          },
+          {
+            path:'/shop/:id',
+            name:'Shop',
+            components:{
+              'default':resolve => require(["@/views/Shop.vue"], resolve),
+            }
+          },
+          {
+            path:'/forgot',
+            name:'Forgot',
+            components:{
+              'default':resolve => require(["@/views/Forgot.vue"], resolve),
+            }
+          },
+          {
+            path:'/register',
+            name:'Register',
+            components:{
+              'default':resolve => require(["@/views/Register.vue"], resolve),
+            }
+          },
+          {
+            path:'/user/:id',
+            name:'User',
+            components:{
+              'default':resolve => require(["@/views/User.vue"], resolve),
+            }
+          }
+        ]
       }
     ]
   },
   {
-    path: '/admin',
-    name:'admin',
-    component: resolve => require(["@/views/admin"], resolve),
+    path:'/',
+    component: resolve => require(["@/components/Layout/AdminLayout"], resolve),
+    children:[
+      {
+        path: '/admin',
+        name:'admin',
+        components: {
+          'adminHeader': resolve => require(["@/views/Admin/AdminHeader.vue"], resolve),
+          'adminAside': resolve => require(["@/views/Admin/AdminAside.vue"], resolve),
+          'adminMain': resolve => require(["@/views/Admin/AdminMain.vue"], resolve),
+        },
+      }
+    ]
   },
   {
     path: '/401',
     name:'401',
-    component: resolve => require(["@/views/errorPage/401.vue"], resolve),
+    component: resolve => require(["@/views/ErrorPage/401.vue"], resolve),
   },
   {
-    path:'/404',
+    path:'*',
     name:'404',
-    component: resolve => require(["@/views/errorPage/404.vue"], resolve),
+    component: resolve => require(["@/views/ErrorPage/404.vue"], resolve),
     meta:{
       title: '404 not found'
     }
-  },
-  {
-    path: "*", // 此处需特别注意置于最底部
-    redirect: "/404"
   }
 ]
 
@@ -93,24 +106,3 @@ export default new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
-
-export const adminRouterMap = [
-  {
-    path: '/admin',
-    name:'admin',
-    component: resolve => require(["@/views/admin"], resolve),
-  }
-]
-export const userRouterMap = [
-  {
-    path: '/admin',
-    name:'admin',
-    component: resolve => require(["@/views/errorPage/401.vue"], resolve),
-  }
-]
-export const defalutRouterMap = [
-  {
-    path: "*", // 此处需特别注意置于最底部
-    redirect: "/404"
-  }
-]

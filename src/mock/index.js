@@ -1,6 +1,7 @@
 import Mock from 'mockjs'
 import userAPI from './user'
 import searchAPI from './search'
+import adminAPI from './admin'
 
 // 修复在使用 MockJS 情况下，设置 withCredentials = true，且未被拦截的跨域请求丢失 Cookies 的问题
 // https://github.com/nuysoft/Mock/issues/300
@@ -25,5 +26,7 @@ Mock.mock(/\/user\/info\.*/, 'get', userAPI.getUserInfo)
 
 Mock.mock(/\/search\/getHotSearch/, 'get', searchAPI.getHotSearch)
 Mock.mock(/\/search\/searchByText/, 'get', searchAPI.searchByText)
+
+Mock.mock(/\/admin\/getUserListPage/, 'get', adminAPI.getUserListPage)
 
 export default Mock

@@ -40,6 +40,11 @@
     height: 150px;
     border-radius:50%;
     margin-left: 0px;
+    transition-property: all;
+    transition-duration: 0.8s;
+    &:hover{
+      transform: rotate(360deg);
+    }
   }
   #avatar{
     width: 150px;

@@ -6,8 +6,10 @@
 # 后端
 后端采用MVC框架,用JAVA语言与MySQL一起写的.[后端源代码](https://github.com/lipses/CarShop/tree/server)
 
+---
+
 ## 前序准备
-你需要在本地安装 node 和 git。本项目技术栈基于 ES2015+、vue、vuex、vue-router 、axios 和 element-ui，所有的请求数据都使用Mock.js模拟，提前了解和学习这些知识会对使用本项目有很大的帮助。
+你需要在本地安装 node 和 git。本项目技术栈基于 ES2015+、vue、vuex、vue-router 、axios 和 element-ui,提前了解和学习这些知识会对使用本项目有很大的帮助。
 
 ## 目录结构
 本项目差不多算一个完整的开发框架，提供了涵盖中后台开发的各类功能，下面是整个项目的目录结构
@@ -39,3 +41,18 @@
 ├── index.html                 // html模板
 └── package.json               // package.json
 ```
+## 开发
+```text
+# clone the project
+git clone -b browser https://github.com/lipses/CarShop.git
+
+# install dependency
+npm install
+
+# develop
+npm run dev
+```
+浏览器访问[http://localhost:8080](http://localhost:8080).
+## License
+[MIT](https://github.com/lipses/CarShop/blob/browser/LICENSE)  
+Copyright (c) 2017-present lipses

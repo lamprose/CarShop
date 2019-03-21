@@ -58,8 +58,8 @@
 </template>
 
 <script>
-  import identify from '../components/Identify'
-  import rule from "../utils/rule";
+  import identify from '@/components/Identify'
+  import rule from "@/utils/rule";
   export default {
     components: {identify},
     data() {

@@ -11,10 +11,10 @@
       </el-container>
       <el-footer id="bottomBar"><router-view name="bottomBar"></router-view></el-footer>
       <el-scrollbar><!--隐藏滚动条-->
-        <el-aside v-if="show" width="0px" class="aside" id="asideBarBlank">
-          <router-view v-if="asideBarNow=='hover-user'" name="userBlankBox"></router-view>
-          <router-view v-if="asideBarNow=='hover-shop-cart'" name="shopCartBlankBox"></router-view>
-          <router-view v-if="asideBarNow=='hover-tool'" name="toolBlankBox"></router-view>
+        <el-aside v-if="show" width="300px" id="asideBarBlank">
+            <router-view v-if="asideBarNow=='hover-user'" name="userBlankBox"></router-view>
+            <router-view v-if="asideBarNow=='hover-shop-cart'" name="shopCartBlankBox"></router-view>
+            <router-view v-if="asideBarNow=='hover-tool'" name="toolBlankBox"></router-view>
         </el-aside>
       </el-scrollbar>
     </el-container>
@@ -65,18 +65,16 @@
         let blank=document.getElementById("asideBarBlank")
         let float=document.getElementById("float")
         let top=document.getElementById("top")
-        let needOpen=(blank.style.width==="0px")
+        let needOpen=(blank.style.right==="-300px")
         let needClose=(data.id===this.asideBarNow&&!needOpen)
         if(needOpen){
-          blank.style.width="300px"
+          blank.style.right="10px"
           float.style.right="310px"
-          top.style.right=this.showTop?"310px":"0px"
         }
         this.asideBarNow=data.id;
         if(needClose){
-          blank.style.width="0px"
+          blank.style.right="-300px"
           float.style.right="10px"
-          top.style.right=this.showTop?"10px":"-36px"
         }
       },
       //监控滑动 是否显示返回顶部按钮
@@ -86,7 +84,7 @@
           this.showTop=true
         else
           this.showTop=false
-        document.getElementById("asideBarBlank").style.width="0px"
+        document.getElementById("asideBarBlank").style.right="-300px"
         document.getElementById("float").style.right="10px"
         document.getElementById("top").style.right=this.showTop?"10px":"-36px"
       },
@@ -136,16 +134,18 @@
   #mainBox{
     margin-top: 20px;
   }
-  .aside{
-    position: fixed;
-    top:0px;
-    height: calc(100% + 10px );
-    z-index: 100000;
-  }
   #asideBarBlank{
-    right: 0px;
-    transition-property: width;
+    right: -300px;
+    transition-property: all;
     transition-duration: 0.5s;
+    border-radius:10px;
+    height: 90%;
+    position: fixed;
+    top:10px;
+    z-index: 100000;
+    &:hover{
+      box-shadow: 5px 5px 10px #888888;
+    }
   }
   .el-scrollbar__thumb {
     display: none;

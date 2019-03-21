@@ -1,5 +1,5 @@
 <template>
-  <div class="main" style="min-width: 300px;">
+  <div class="main" style="">
     <el-scrollbar style="min-width: 300px" id="scrollbar-table">
       <el-table :data="tableData" style="width: 300px;" @selection-change="selected">
         <!--选择方框-->
@@ -101,8 +101,10 @@
     display: none!important;
   }
   .main{
+
     height: 100%;
     background-color: #ffffff;
+    min-width: 300px;
     #scrollbar-operate{
       position: absolute;
       width: 300px;
@@ -120,11 +122,11 @@
         height: 21px;
         #amount{
           position: absolute;
-          left: 0px;
+          left: 10px;
         }
         #totalPrice{
           position: absolute;
-          right: 0px;
+          right: 10px;
         }
       }
       #balance{

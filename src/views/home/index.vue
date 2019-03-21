@@ -58,7 +58,7 @@
           </div>
           <div v-for="i in 4">
             <div class="clear-fix">
-              <img src="../assets/reTab1.jpg" width="1190px">
+              <img src="../../assets/reTab1.jpg" width="1190px">
               <div class="goods-box">
                 <ul class="custom-list-car">
                   <li v-for="i in 3">

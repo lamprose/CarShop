@@ -15,7 +15,7 @@
     props:{
       active:{
         required:true,
-        default:1
+        default:0
       },
     },
     components: {
@@ -31,7 +31,7 @@
   .table{
     position: absolute;
     top:10px;
-    left: 0px;
+    left: 0;
     width: 100%;
     transition-duration: 0.3s;
     transition-property: all

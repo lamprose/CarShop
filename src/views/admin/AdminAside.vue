@@ -1,6 +1,6 @@
 <template>
     <div>
-      <el-menu default-active="1" :collapse-transition="true" :collapse="iscollapse" @select="handleSelect">
+      <el-menu default-active="0" :collapse-transition="true" :collapse="iscollapse" @select="handleSelect">
         <el-menu-item v-for="(o,i) in menuItem" :index="i+''" :key="i">
           <svg-icon :icon-class="o.icon"></svg-icon>
           <span slot="title">{{o.title}}</span>
@@ -34,5 +34,7 @@
 </script>
 
 <style scoped>
-
+  .el-menu{
+    border: none;
+  }
 </style>

@@ -32,9 +32,10 @@
 
 <style lang="less" scoped>
   .main{
-    margin-top: -20px;
+    margin: -20px auto;
     background-color: #fff;
     height: 100%;
+    width: 100%;
     position: relative;
   }
   .icon{
@@ -42,11 +43,12 @@
   }
   .item{
     position: absolute;
-    width: 140px;
+    width: 230px;
   }
   h2{
     left: 40px;
     top:50px;
+    margin-left: 0px;
   }
   ul{
     margin-top: 80px;
@@ -55,6 +57,7 @@
       width: 50%;
       text-align: center;
       margin-top: 40px;
+      height: 120px;
       &:hover{
         color: red;
       }

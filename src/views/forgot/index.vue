@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%">
     <div style="margin: auto;width: 260px">
-    <img src="../assets/congratulations.png" style="width: 260px">
+    <img src="../../assets/congratulations.png" style="width: 260px">
     </div>
     <el-steps :active="activeStep" finish-status="success" class="stepStatus">
       <el-step title="填写用户名" description="填写忘记密码的用户名"></el-step>
@@ -57,7 +57,7 @@
         </div>
       </el-form>
       <div class="mainBox" v-if="activeStep==3">
-        <img src="../assets/congratulations.png" width="200px">
+        <img src="../../assets/congratulations.png" width="200px">
         恭喜！修改密码成功
         <div class="submitButton">
           <el-button round type="primary" @click="thirdToCompleted">{{contentAutoLogin}}</el-button>
@@ -69,7 +69,7 @@
 
 <script>
   import DragVerify from "vue-drag-verify/src/dragVerify";
-  import rule from "../utils/rule";
+  import rule from "@/utils/rule";
     export default {
       name: "ForgotPassword",
       components: {DragVerify},

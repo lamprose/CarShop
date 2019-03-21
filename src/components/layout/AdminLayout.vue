@@ -19,7 +19,7 @@
     data(){
       return{
         isCollapse:false,
-        defaultActive:1,
+        defaultActive:0,
       }
     },
     methods:{
@@ -43,7 +43,7 @@
 
 <style lang="less" scoped>
   #admin-header{
-    position: relative;
+
     height: 80px;
     width: 100%;
     background-color: #409eff;
@@ -55,6 +55,7 @@
     background-color: white;
     position: fixed;
     top:80px;
+    border-right: solid 2px #e6e6e6;
     transition-property: all;
     transition-duration: 0.5s;
   }

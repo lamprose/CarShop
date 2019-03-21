@@ -7,64 +7,64 @@ export const constantRouterMap = [
   {
     path: '/',
     components: {
-      'default':resolve => require(["@/components/Layout/MainLayout"], resolve),
+      'default':resolve => require(["@/components/layout/MainLayout"], resolve),
     },
     children:[
       {
         path:'/',
         redirect: "/home",
         components: {
-          'topBar': resolve => require(["@/views/Main/TopBar.vue"], resolve),
-          'bottomBar': resolve => require(["@/views/Main/BottomBar.vue"], resolve),
-          'mainBox': resolve => require(["@/views/Main/MainBox.vue"], resolve),
-          'userBlankBox': resolve => require(["@/views/Main/User.vue"], resolve),
-          'shopCartBlankBox': resolve => require(["@/views/Main/ShopCart.vue"], resolve),
-          'toolBlankBox': resolve => require(["@/views/Main/Tool.vue"], resolve),
+          'topBar': resolve => require(["@/views/main/topBar"], resolve),
+          'bottomBar': resolve => require(["@/views/main/bottomBar"], resolve),
+          'mainBox': resolve => require(["@/views/main/mainBox"], resolve),
+          'userBlankBox': resolve => require(["@/views/main/aside/user"], resolve),
+          'shopCartBlankBox': resolve => require(["@/views/main/aside/shopCart"], resolve),
+          'toolBlankBox': resolve => require(["@/views/main/aside/tool"], resolve),
         },
         children: [
           {
             path:'/home',
             name:'Home',
-            component:resolve => require(["@/views/Home.vue"], resolve),
+            component:resolve => require(["@/views/home"], resolve),
           },
           {
             path:'/search',
             name:'Search',
-            component: resolve => require(["@/views/SearchResult.vue"], resolve),
+            component: resolve => require(["@/views/searchResult"], resolve),
           },
           {
             path:'/product/:id',
             name:'Goods',
             components:{
-              'default':resolve => require(["@/views/ProductInfo.vue"], resolve),
+              'default':resolve => require(["@/views/productInfo"], resolve),
             }
           },
           {
             path:'/shop/:id',
             name:'Shop',
             components:{
-              'default':resolve => require(["@/views/Shop.vue"], resolve),
+              'default':resolve => require(["@/views/shop"], resolve),
             }
           },
           {
             path:'/forgot',
             name:'Forgot',
             components:{
-              'default':resolve => require(["@/views/Forgot.vue"], resolve),
+              'default':resolve => require(["@/views/forgot"], resolve),
             }
           },
           {
             path:'/register',
             name:'Register',
             components:{
-              'default':resolve => require(["@/views/Register.vue"], resolve),
+              'default':resolve => require(["@/views/register"], resolve),
             }
           },
           {
             path:'/user/:id',
             name:'User',
             components:{
-              'default':resolve => require(["@/views/User.vue"], resolve),
+              'default':resolve => require(["@/views/userInfo"], resolve),
             }
           }
         ]
@@ -73,15 +73,15 @@ export const constantRouterMap = [
   },
   {
     path:'/',
-    component: resolve => require(["@/components/Layout/AdminLayout"], resolve),
+    component: resolve => require(["@/components/layout/AdminLayout"], resolve),
     children:[
       {
         path: '/admin',
         name:'admin',
         components: {
-          'adminHeader': resolve => require(["@/views/Admin/AdminHeader.vue"], resolve),
-          'adminAside': resolve => require(["@/views/Admin/AdminAside.vue"], resolve),
-          'adminMain': resolve => require(["@/views/Admin/AdminMain.vue"], resolve),
+          'adminHeader': resolve => require(["@/views/admin/AdminHeader"], resolve),
+          'adminAside': resolve => require(["@/views/admin/AdminAside"], resolve),
+          'adminMain': resolve => require(["@/views/admin/AdminMain"], resolve),
         },
       }
     ]
@@ -89,12 +89,12 @@ export const constantRouterMap = [
   {
     path: '/401',
     name:'401',
-    component: resolve => require(["@/views/ErrorPage/401.vue"], resolve),
+    component: resolve => require(["@/views/errorPage/401"], resolve),
   },
   {
     path:'*',
     name:'404',
-    component: resolve => require(["@/views/ErrorPage/404.vue"], resolve),
+    component: resolve => require(["@/views/errorPage/404"], resolve),
     meta:{
       title: '404 not found'
     }

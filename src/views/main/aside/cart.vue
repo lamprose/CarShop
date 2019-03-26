@@ -6,9 +6,11 @@
         <el-table-column type="selection" width="50"> </el-table-column>
         <!--显示商品信息-->
         <el-table-column label="商品名称" width="250">
-          <template slot-scope="scope"><div style="margin-left: 50px">
-            ![](scope.row.goods.img)
-            <span style="font-size: 18px;padding-left: 200px;">{{scope.row.description}}</span>
+          <template slot-scope="scope"><div style="position: relative">
+            <img :src="scope.row.img" width="90px" style="display: inline">
+            <span style="font-size: 18px;position: absolute;top: 10px;left: 100px">{{scope.row.name}}</span>
+            <span style="font-size: 18px;position: absolute;top: 30px;left: 100px">{{scope.row.price}}</span>
+            <el-input-number style="position: absolute;top:50px;left: 100px" size="mini" v-model="scope.row.amount" @change="handleChange" :min="1" :max="10" label="描述文字"></el-input-number>
           </div></template>
         </el-table-column>
       </el-table>
@@ -19,7 +21,7 @@
         <div id="totalInfo">
           <label id="amount">已选{{amount}}件</label><label id="totalPrice">￥{{totalPrice}}</label>
         </div>
-        <div id="balance"><el-button>结算</el-button></div>
+        <div id="balance"><el-button @click="balance">结算</el-button></div>
       </div>
     </el-scrollbar>
   </div>
@@ -33,40 +35,57 @@
           //TODO:获取用户购物车商品信息
           tableData:[
             {
+              name:'123',
+              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
               price:120,
-              description:"123"
+              amount:0
             },
             {
+              name:'123',
+              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
               price:120,
-              description:"123"
+              amount:2
             },
             {
+              name:'1234',
+              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
               price:120,
-              description:"123"
+              amount:1
             },
             {
+              name:'12',
+              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
               price:120,
-              description:"123"
+              amount:3
             },
             {
+              name:'132',
+              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
               price:120,
-              description:"123"
+              amount:1
             },
             {
+              name:'12312',
+              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
               price:120,
-              description:"123"
+              amount:3
             },
             {
+              name:'1231',
+              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
               price:120,
-              description:"123"
+              amount:2
             },
             {
+              name:'1231',
+              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
               price:120,
-              description:"123"
+              amount:1
             },
           ],
           amount:0,
           totalPrice:0,
+          selItems:[],
         }
       },
       methods:{
@@ -80,6 +99,13 @@
           }
           this.amount=totalGoods
           this.totalPrice=totalPrice
+          this.selItems=val
+        },
+        balance(){
+          this.$router.push({
+            name:'Balance',
+            params:{data:this.selItems}
+          })
         }
       }
     }

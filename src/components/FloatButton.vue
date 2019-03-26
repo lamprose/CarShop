@@ -1,17 +1,16 @@
 <template>
   <div>
     <div id="hover-button">
-      <el-tooltip v-for="(o,index) in float" placement="left" :key="index">
-        <div slot="content">{{o.tag}}</div>
-        <el-button circle class="hover-button-close"
-                   :id="o.id"
-                   type="primary"
-                   size="medium"
-                   :key="index"
-                   @click="toggle">
-          <svg-icon :icon-class="o.icon"></svg-icon>
-        </el-button>
-      </el-tooltip>
+      <el-badge :hidden="floatTotal===0?true:!floatHide" :value="floatTotal">
+        <el-tooltip v-for="(o,index) in float" placement="left" :key="index">
+          <div slot="content">{{o.tag}}</div>
+          <el-badge :hidden="o.val===0?true:floatHide" :id="o.id" :class="floatHide?'hover-button-close':'hover-button-open'" :value="o.val">
+            <el-button circle type="primary" size="medium" :key="index" @click="toggle(o.id)">
+              <svg-icon :icon-class="o.icon"></svg-icon>
+            </el-button>
+          </el-badge>
+        </el-tooltip>
+      </el-badge>
     </div>
   </div>
 </template>
@@ -24,28 +23,20 @@
     },
     data(){
       return{
-        floatStatus:false
+        floatHide:true,
       }
     },
     methods:{
       hoverEnter(){
-        this.float.forEach(item=>{
-          document.getElementById(item.id).classList.remove("hover-button-close");
-          document.getElementById(item.id).classList.add("hover-button-open");
-
-        })
+        this.floatHide=false
         document.getElementById("hover-button").style.height="320px"
       },
       hoverLeave(){
-        this.float.forEach(item=>{
-          document.getElementById(item.id).classList.add("hover-button-close");
-          document.getElementById(item.id).classList.remove("hover-button-open");
-        })
+        this.floatHide=true
         document.getElementById("hover-button").style.height="40px"
       },
-      toggle(){
-        let id=event.currentTarget.id
-        if(id=="hover-phone"||id=="hover-locate")
+      toggle(id){
+        if(id==="hover-phone"||id==="hover-locate")
           return;
         else if(!this.$store.getters.status&&(id==="hover-login"||id==="hover-register")){
           this.$message.error({
@@ -59,6 +50,16 @@
     mounted() {
       document.getElementById("hover-button").addEventListener("mouseenter",this.hoverEnter);
       document.getElementById("hover-button").addEventListener("mouseleave",this.hoverLeave);
+    },
+    computed:{
+      floatTotal(){
+        return this.float.reduce(function (prev, cur) {
+          if(typeof(cur.val)!=="undefined")
+            return prev + cur.val;
+          else
+            return prev
+        },0)
+      }
     }
   }
 </script>
@@ -82,7 +83,7 @@
     margin-left: 0px;
 
   }
-  #hover-shop-cart{
+  #hover-cart{
     transition-property: margin-top;
     transition-duration: 0.2s;
   }

@@ -34,23 +34,11 @@
           </el-form-item>
           <el-button round type="primary" @click="secondToThird">提交验证</el-button>
         </div>
-        <el-form-item v-if="activeStep==2" prop="password" label="输入新密码:">
-          <el-input v-model="newUser.password" :type="showPasswordType" class="input" id="password">
-            <i
-              class="el-icon-view"
-              slot="suffix"
-              @click="showPasswordChange">
-            </i>
-          </el-input>
+        <el-form-item v-if="activeStep==2" prop="password" label="输入新密码:" class="input-form">
+          <el-input v-model="newUser.password" :type="showPasswordType" id="password" :show-password="true"></el-input>
         </el-form-item>
-        <el-form-item v-if="activeStep==2" prop="rePassword" label="确认新密码:">
-          <el-input v-model="newUser.rePassword" :type="showPasswordType" class="input">
-            <i
-              class="el-icon-view"
-              slot="suffix"
-              @click="showPasswordChange">
-            </i>
-          </el-input>
+        <el-form-item v-if="activeStep==2" prop="rePassword" label="确认新密码:" class="input-form">
+          <el-input v-model="newUser.rePassword" :type="showPasswordType" :show-password="true"></el-input>
         </el-form-item>
         <div class="submitButton" v-if="activeStep==2">
           <el-button round type="primary" @click="thirdToCompleted('form')">提交</el-button>
@@ -70,7 +58,9 @@
 <script>
   import DragVerify from "vue-drag-verify/src/dragVerify";
   import rule from "@/utils/rule";
-    export default {
+  import {checkHaveSecret,checkCorrectSecret} from "@/api/user";
+
+  export default {
       name: "ForgotPassword",
       components: {DragVerify},
       data() {
@@ -79,7 +69,7 @@
             password:rule.Password,
             rePassword:rule.RePassword,
           },
-          activeStep:0,
+          activeStep:2,
           //自动登陆按钮内容
           contentAutoLogin:'s后自动登陆',
           //倒计时时间
@@ -146,8 +136,16 @@
             });
             return
           }
-          this.activeStep=1;
-          //TODO:忘记密码第一步验证用户名是否存在以及用户密保问题是否设置
+          //忘记密码第一步验证用户名是否存在以及用户密保问题是否设置
+          checkHaveSecret(this.newUser.id).then(data=>{
+            if(data==='success')
+              this.activeStep=1
+            else
+              this.$message.error({
+                message:"用户不存在或未设置密保问题",
+                showClose:true
+              })
+          })
         },
         secondToThird(){
           console.log(this.user)
@@ -166,8 +164,16 @@
             });
             return
           }
-          //TODO:验证密保问题答案是否正确
-          this.activeStep=2;
+          //验证密保问题答案是否正确
+          checkCorrectSecret(this.newUser.id,this.newUser.secretOption,this.newUser.secret).then(data=>{
+            if(data==='success')
+              this.activeStep=2;
+            else
+              this.$message.error({
+                message:'密保问题错误',
+                showClose:true
+              })
+          })
         },
         thirdToCompleted(formName){
           this.$refs[formName].validate((valid) => {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="min-height: 1000px">
     <router-view v-if="isRouterAlive"></router-view>
   </div>
 </template>

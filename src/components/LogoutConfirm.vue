@@ -21,12 +21,10 @@
       props:['props'],
       methods:{
         logout(){
-          //TODO:实现注销功能
+          //实现注销功能
           this.$store.dispatch("LogOut").then(()=>{
             /*window.location.reload()*/
-            document.getElementById("asideBarBlank").style.width="0px"
-            document.getElementById("float").style.right="10px"
-            document.getElementById("top").style.right=this.showTop?"10px":"-36px"
+            this.$router.push({path:'/home'})
           })
           this.props.show=false;
         }

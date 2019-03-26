@@ -1,5 +1,5 @@
 <template>
-  <div id="app" @click="refreshTime">
+  <div id="app" @click="refreshTime"><!--长时间未操作注销登陆-->
     <router-view/>
   </div>
 </template>
@@ -17,7 +17,7 @@
     methods:{
       //点击页面刷新当前时间
       refreshTime () {
-        this.lTime = this.cTime  //当界面被点击更新点击时间
+        this.lTime = this.cTime = 0 //当界面被点击更新点击时间
       },
       tTime() {
         this.cTime += 1
@@ -30,6 +30,8 @@
               confirmButtonText: '确定',
               type: 'error',
               center: true,
+            }).then(()=>{
+              this.$router.push({path:'/home'})
             });
             document.getElementById("asideBarBlank").style.width="0px"
             document.getElementById("float").style.right="10px"

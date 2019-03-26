@@ -21,10 +21,102 @@ a{
   font-size: 100%;
   vertical-align: baseline;
   background: transparent;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 }
 ul{
   list-style: none;
 }
 aside#asideBarBlank{
   overflow-x: hidden;
+}
+.avatar{
+  width: 150px;
+  height: 150px;
+  border-radius:50%;
+}
+/*地址选择框css*/
+.area-select-wrap{
+  display: flex;
+  z-index: 10000;
+}
+.area-select.medium{
+  width: 150px;
+}
+.area-select-wrap .area-select:first-child{
+  margin-left: 0px;
+}
+.area-selected-trigger{
+  padding: 0px !important;
+  z-index: 100;
+}
+.area-select-wrap .area-select+.area-select{
+  margin-left: 10px!important;
+}
+
+
+
+ .el-input__inner{
+  border-radius: 20px!important;
+}
+.list .el-input__inner{
+  padding: 0 10px;
+  width: 100%;
+  font-size: 12px;
+  color: #fff;
+  height: 30px;
+  line-height: 30px;
+  border: solid 1px #3a3a3a;
+  border-radius: 4px;
+  outline: none;
+  background-color: #26292E;
+}
+
+.list .el-input__suffix{
+  top:-3px;
+  right: 14px;
+}
+
+.clear-btn .delete{
+  display: block;
+}
+
+.danger.el-icon-delete{
+  color:white;
+}
+.danger.el-icon-delete:hover{
+  color:red;
+}
+
+
+
+
+/*样式改变代码-----------------------------------------------------*/
+/* 滚动条整体部分 */
+::-webkit-scrollbar
+{
+  width:10px;
+  height:10px;
+  border-radius: 10px;
+  background-color:#d0cdc7;
+}
+/* scroll轨道背景 */
+::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  border-radius: 10px;
+  background-color:#a09d9d;
+}
+
+/* 滚动条中能上下移动的小块 */
+::-webkit-scrollbar-thumb
+{
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  background-color:#d0cdc7;
+}
+/*样式改变代码-----------------------------------------------------*/
+
+
+.input-form .el-form-item__content{
+  width: 350px;
 }

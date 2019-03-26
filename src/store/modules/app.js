@@ -1,7 +1,8 @@
 const app = {
   state: {
     keepId:'',
-    keepPassword:''
+    keepPassword:'',
+    tempRoles:''
   },
 
   mutations: {
@@ -9,6 +10,9 @@ const app = {
       state.keepId = keepUser.id
       state.keepPassword = keepUser.password
     },
+    SET_TEMP_ROLES:(state,roles)=>{
+      state.tempRoles=roles
+    }
   },
 
   actions: {
@@ -23,6 +27,16 @@ const app = {
         commit("SET_KEEPUSER",{id:'',password:''})
       })
     },
+    SetTempRoles({commit},roles){
+      return new Promise((resolve, reject) => {
+        commit("SET_TEMP_ROLES",roles)
+      })
+    },
+    ClearTempRoles({commit}){
+      return new Promise((resolve, reject) => {
+        commit("SET_TEMP_ROLES",'')
+      })
+    }
   }
 }
 

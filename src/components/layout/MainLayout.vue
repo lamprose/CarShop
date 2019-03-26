@@ -2,24 +2,28 @@
   <div id="mainLayout" style="position: relative">
     <el-container>
       <el-container id="Main">
+        <!--顶部栏-->
         <el-header id="topBar"><router-view name="topBar" :key="topBarKey"></router-view></el-header>
+        <!--主体部分-->
         <el-container id="mainBox">
           <el-main>
             <router-view name="mainBox"></router-view>
           </el-main>
         </el-container>
       </el-container>
+      <!--底部footer-->
       <el-footer id="bottomBar"><router-view name="bottomBar"></router-view></el-footer>
       <el-scrollbar><!--隐藏滚动条-->
-        <el-aside v-if="show" width="300px" id="asideBarBlank">
-            <router-view v-if="asideBarNow=='hover-user'" name="userBlankBox"></router-view>
-            <router-view v-if="asideBarNow=='hover-shop-cart'" name="shopCartBlankBox"></router-view>
-            <router-view v-if="asideBarNow=='hover-tool'" name="toolBlankBox"></router-view>
+        <el-aside v-if="show&&this.$route.path!=='/balance'" width="300px" id="asideBarBlank">
+          <aside-layout :asideBarNow="asideBarNow"></aside-layout>
         </el-aside>
       </el-scrollbar>
     </el-container>
+    <!--其他-->
     <router-view></router-view>
-    <float id="float" :float="status?floatLogin:floatNoLogin" @toggleAsideBarBlankBox="toggle"></float>
+    <!--侧边悬浮栏-->
+    <float v-if="this.$route.path!=='/balance'" id="float" :float="status?floatLogin:floatNoLogin" @toggleAsideBarBlankBox="toggle"></float>
+    <!--右下角返回顶部按钮-->
     <el-button id="top" type="primary" circle @click="toTop">
       <svg-icon icon-class="angle-up"></svg-icon>
     </el-button>
@@ -32,6 +36,7 @@
     name: 'MainLayout',
     components:{
       'float':resolve => require(["@/components/FloatButton.vue"], resolve),
+      'asideLayout':resolve => require(["@/components/layout/AsideLayout.vue"], resolve),
     },
     data(){
       return{
@@ -41,8 +46,9 @@
         clientHeight:0,
         showTop:false,
         floatLogin:[
-          {id:"hover-user",icon:"user",tag:"我的"},
-          {id:"hover-shop-cart",icon:"shopping-cart",tag:"购物车"},
+          {id:"hover-user",icon:"user",tag:"我的",val:2},
+          {id:"hover-cart",icon:"shopping-cart",tag:"购物车"},
+          {id:"hover-chat",icon:"comments",tag:"聊天室",val:0},
           {id:"hover-tool",icon:"wrench",tag:"工具箱"},
           {id:"hover-phone",icon:"phone",tag:"客服电话"},
           {id:"hover-locate",icon:"map-marker",tag:"定位"},
@@ -69,7 +75,7 @@
         let needClose=(data.id===this.asideBarNow&&!needOpen)
         if(needOpen){
           blank.style.right="10px"
-          float.style.right="310px"
+          float.style.right="320px"
         }
         this.asideBarNow=data.id;
         if(needClose){
@@ -84,11 +90,13 @@
           this.showTop=true
         else
           this.showTop=false
-        document.getElementById("asideBarBlank").style.right="-300px"
-        document.getElementById("float").style.right="10px"
-        document.getElementById("top").style.right=this.showTop?"10px":"-36px"
+        if(document.getElementById("asideBarBlank"))
+          document.getElementById("asideBarBlank").style.right="-300px"
+        if(document.getElementById("float"))
+          document.getElementById("float").style.right="10px"
+        if(document.getElementById("top"))
+          document.getElementById("top").style.right=this.showTop?"10px":"-36px"
       },
-
     },
     //主页初始化
     mounted(){
@@ -98,6 +106,10 @@
       this.clientHeight=document.documentElement.clientHeight
       //为浏览器滑动绑定事件以达到滑动半屏显示返回顶部按钮
       window.addEventListener("scroll",this.scroll)
+      this.floatLogin[2].val=this.totalUnread
+    },
+    destroyed(){
+      window.removeEventListener('scroll',this.scroll)
     },
     computed: {
       topBarKey() {
@@ -105,6 +117,11 @@
       },
       status(){
         return this.$store.getters.status
+      },
+      totalUnread(){
+        return this.$store.getters.userSessions.reduce(function (prev, cur) {
+          return prev+cur.unread
+        },0)
       }
     },
     watch:{
@@ -115,6 +132,9 @@
           top.style.right="10px"
         else
           top.style.right="-36px"
+      },
+      totalUnread(val){
+        this.floatLogin[2].val=this.totalUnread
       }
     }
   }

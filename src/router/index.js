@@ -17,9 +17,6 @@ export const constantRouterMap = [
           'topBar': resolve => require(["@/views/main/topBar"], resolve),
           'bottomBar': resolve => require(["@/views/main/bottomBar"], resolve),
           'mainBox': resolve => require(["@/views/main/mainBox"], resolve),
-          'userBlankBox': resolve => require(["@/views/main/aside/user"], resolve),
-          'shopCartBlankBox': resolve => require(["@/views/main/aside/shopCart"], resolve),
-          'toolBlankBox': resolve => require(["@/views/main/aside/tool"], resolve),
         },
         children: [
           {
@@ -28,7 +25,7 @@ export const constantRouterMap = [
             component:resolve => require(["@/views/home"], resolve),
           },
           {
-            path:'/search',
+            path:'/search/:query',
             name:'Search',
             component: resolve => require(["@/views/searchResult"], resolve),
           },
@@ -61,10 +58,24 @@ export const constantRouterMap = [
             }
           },
           {
-            path:'/user/:id',
+            path:'/updateUser',
             name:'User',
             components:{
               'default':resolve => require(["@/views/userInfo"], resolve),
+            }
+          },
+          {
+            path:'/balance',
+            name:'Balance',
+            components:{
+              'default':resolve => require(["@/views/balance"], resolve),
+            }
+          },
+          {
+            path:'/my',
+            name:'My',
+            components:{
+              'default':resolve => require(["@/views/myInfo"], resolve),
             }
           }
         ]

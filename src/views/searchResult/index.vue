@@ -14,7 +14,7 @@
             <span class="name">2018款 Health Plus定制版</span>
             <span class="price">裸车价  <span>¥10.29万</span></span>
           </div>
-          <div class="color">
+          <!--<div class="color">
             <span>&nbsp</span>
             <div class="color-info">
               <span class="item-title" style="float: left">车身颜色</span>
@@ -32,7 +32,7 @@
               </ul>
             </span>
             </div>
-          </div>
+          </div>-->
           <div class="operate">
             <span>&nbsp</span>
             <span class="show-info"><el-button>查看详情</el-button></span>
@@ -46,12 +46,21 @@
 </template>
 
 <script>
+  import {search} from "@/api/car";
+
   export default {
     name: "SearchResult",
+    mounted(){
+      search(this.$route.params.query).then(data=>{
+        console.log(this.$route.params.query)
+      })
+    },
     watch: {
       $route(to,from){
         //TODO:监控路由变化获取搜索数据
-        console.log(this.$route.query.queryString)
+        search(this.$route.params.query).then(data=>{
+          console.log(this.$route.params.query)
+        })
       }
     }
   }

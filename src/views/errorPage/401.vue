@@ -8,7 +8,7 @@
         <ul class="list-unstyled">
           <li>或者你可以去:</li>
           <li class="link-type">
-            <router-link to="/">回首页</router-link>
+            <router-link :to="{name:'Home'}">回首页</router-link>
           </li>
           <li><a href="#" @click.prevent="dialogVisible=true">点我看图</a></li>
         </ul>

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './modules/user'
 import app from './modules/app'
+import chat from './modules/chat'
 import getters from './getters'
 
 //用sessionStorage使vuex持久化，保存至本次回话结束，防止刷新导致前端反复向后端请求数据
@@ -16,8 +17,9 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
+    chat,
     app,
-    user
+    user,
   },
   getters,
   plugins: [handleStore]

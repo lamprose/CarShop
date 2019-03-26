@@ -18,7 +18,7 @@ Mock.XHR.prototype.send = function() {
 // })
 
 // 登录相关
-Mock.mock(/\/user\/login/, 'post', userAPI.loginByUsername)
+Mock.mock(/\/user\/login/, 'post', userAPI.loginById)
 Mock.mock(/\/user\/logout/, 'post', userAPI.logout)
 Mock.mock(/\/user\/register/, 'post', userAPI.register)
 Mock.mock(/\/user\/check/, 'post', userAPI.checkedUser)
@@ -28,5 +28,11 @@ Mock.mock(/\/search\/getHotSearch/, 'get', searchAPI.getHotSearch)
 Mock.mock(/\/search\/searchByText/, 'get', searchAPI.searchByText)
 
 Mock.mock(/\/admin\/getUserListPage/, 'get', adminAPI.getUserListPage)
-
+Mock.mock(/\/admin\/editUser/, 'get', adminAPI.returnTrue)
+Mock.mock(/\/admin\/removeUser/, 'get', adminAPI.returnTrue)
+Mock.mock(/\/admin\/addUser/, 'get', adminAPI.returnTrue)
+Mock.mock(/\/admin\/getShopListPage/, 'get', adminAPI.getShopListPage)
+Mock.mock(/\/admin\/editShop/, 'get', adminAPI.returnTrue)
+Mock.mock(/\/admin\/removeShop/, 'get', adminAPI.returnTrue)
+Mock.mock(/\/admin\/addShop/, 'get', adminAPI.returnTrue)
 export default Mock

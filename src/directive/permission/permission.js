@@ -4,13 +4,16 @@ import store from '@/store'
 export default{
   inserted(el, binding, vnode) {
     const { value } = binding
-    const roles = store.getters && store.getters.roles
-
+    let roles = store.getters && store.getters.roles
+    const tempRoles= store.getters && store.getters.tempRoles
+    if(tempRoles&&tempRoles instanceof String && tempRoles.length>0){
+      roles="admin"
+    }
     if (value && value instanceof Array && value.length > 0) {
       const permissionRoles = value
 
-      const hasPermission = roles.some(role => {
-        return permissionRoles.includes(role)
+      const hasPermission = permissionRoles.some(role => {
+        return role===roles
       })
 
       if (!hasPermission) {

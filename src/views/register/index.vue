@@ -1,15 +1,11 @@
-<template>
+ <template>
   <div class="register" >
     <el-form ref="registerUser" status-icon :rules="registerRule" :model="registerUser" label-width="80px" label-position="left" class="main">
       <el-form-item label="用户名" prop="id">
         <el-input v-model="registerUser.id" class="input"></el-input><br>
       </el-form-item>
       <el-form-item label="登陆密码" prop="password">
-        <el-input v-model="registerUser.password" :type="passwordType" class="input" @change="testPasswordStrength" id="password">
-          <span class="show-pwd" @click="showPwd" slot="suffix">
-              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
-        </el-input><br>
+        <el-input v-model="registerUser.password" :show-password="true" class="input" @change="testPasswordStrength" id="password"></el-input><br>
         <label class="placement" v-if="pwd" style="float: left">密码强度：</label>
         <el-rate
           v-model="passwordStrength"
@@ -20,11 +16,7 @@
         </el-rate>
       </el-form-item>
       <el-form-item label="确认密码" prop="rePassword">
-        <el-input v-model="registerUser.rePassword" :type="passwordType" class="input">
-          <span class="show-pwd" @click="showPwd" slot="suffix">
-              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
-        </el-input>
+        <el-input v-model="registerUser.rePassword" :show-password="true" class="input"></el-input>
       </el-form-item>
       <el-form-item label="验证码" prop="identifyText">
         <div style="float: left">
@@ -60,6 +52,8 @@
 <script>
   import identify from '@/components/Identify'
   import rule from "@/utils/rule";
+  import {encryptMd5} from "../../utils/encrypt";
+
   export default {
     components: {identify},
     data() {
@@ -119,6 +113,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             //TODO : 验证数据成功，实现注册
+            this.registerUser.password=encryptMd5(this.registerUser.password)
             this.$store.dispatch('Register', this.registerUser).then(() => {
               /*console.log(this.$store.getters.user);*/
               this.$router.push({ path: '/' })

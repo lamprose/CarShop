@@ -4,7 +4,7 @@
       <el-row class="firstNav">
         <!--logo图片-->
         <el-col :span="4" ><div class="log">
-          <a href="./home"><img class="logo" src="../../assets/carshop-logo.jpg"></a>
+          <router-link :to="{name:'Home'}"><img class="logo" src="../../assets/carshop-logo.jpg"></router-link>
         </div></el-col>
         <!--搜索栏-->
         <el-col :span="13"><div id="search">
@@ -13,7 +13,7 @@
                            :fetch-suggestions="querySearchAsync"
                            class="search" id="searchInput">
             <el-button v-for="(hot,index) in hotSearchText" slot="suffix" type="text" :key="index">{{hot}}</el-button>
-            <el-button slot="append" icon="el-icon-search" @click="toSearchResult"></el-button>
+            <i slot="suffix" class="top-bar el-icon-search" @click="toSearchResult"></i>
           </el-autocomplete>
           <br>
         </div></el-col>
@@ -25,14 +25,14 @@
             <label v-if="status">
               <el-dropdown>
                 <i style="color: #409EFF">
-                  {{username}}
+                  {{loginUser.name}}
                 </i>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>
                     <el-button type="text">我的</el-button>
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <el-button type="text" @click="toAdmin">管理</el-button>
+                    <el-button v-if="loginUser.role!=='normal'" type="text" @click="toAdmin">管理</el-button>
                   </el-dropdown-item>
                   <el-dropdown-item>
                     <el-button type="text" @click="logoutProps.show=true" style="color: #f78989">注销</el-button>
@@ -52,7 +52,6 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </label>
-            <el-button type="text">商户中心</el-button>
           </div>
         </el-col>
       </el-row>
@@ -110,23 +109,10 @@ export default {
         //
         searchSuggestions:[],
         showHotSearch:true,
-
         qrCodeShow:false,
       }
   },
   methods:{
-    goToItem(){
-      let id=event.currentTarget.id
-      if(id==="top-home"){
-        this.$router.push({path:'/home'})
-      }else if(id==="top-loan"){
-
-      }else{
-        let loc=document.getElementById("recommend").offsetTop;
-        console.log(loc);
-        goToElement(this,loc)
-      }
-    },
     toAdmin(){
       this.$router.push({name:'admin'});
     },
@@ -167,7 +153,7 @@ export default {
       }else{
         this.$router.push({
           name:'Search',
-          query:{queryString:this.searchText}
+          params:{query:this.searchText}
         })
       }
     },
@@ -184,7 +170,7 @@ export default {
     }
   },
   mounted(){
-    this.loadSearchSuggestion();
+    /*this.loadSearchSuggestion();*/
     /*this.searchText=this.searchSuggestions[0,3];*/
   },
   watch:{
@@ -214,8 +200,8 @@ export default {
     status(){
       return this.$store.getters.status;
     },
-    username(){
-      return this.$store.getters.name;
+    loginUser(){
+      return this.$store.getters.user;
     }
   }
 }
@@ -239,5 +225,9 @@ export default {
     margin-left:calc(50% - 132px);
     min-width: 264px;
     float: left;
+  }
+  .top-bar{
+    padding-top: 10px;
+    padding-right: 10px;
   }
 </style>

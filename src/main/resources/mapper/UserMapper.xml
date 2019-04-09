@@ -24,7 +24,16 @@
     </insert>
 
     <update id="updateStatusById">
-        UPDATE user SET status = "online" WHERE id = #{id}
+        UPDATE user
+        <set>
+            <if test="status=='offline'">
+                status = "online",
+            </if>
+            <if test="status=='online'">
+                status = "offline",
+            </if>
+        </set>
+        WHERE id = #{id}
     </update>
 
     <update id="updateAvatarById">

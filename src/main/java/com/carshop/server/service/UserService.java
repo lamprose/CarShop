@@ -14,7 +14,7 @@ public interface UserService {
 
     List<User> selectAllNameSimilar(String name);
 
-    void updateStatusById(String id);
+    void updateStatusById(String id, String status);
 
     void updateAvatarById(String avatarPath, String id);
 

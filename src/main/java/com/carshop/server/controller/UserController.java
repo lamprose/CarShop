@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -34,12 +35,12 @@ public class UserController {
 
     //用户登录
     @PostMapping("/login")
-    public Map<String,Object> login(HttpServletRequest request){
+    public Map<String,Object> login(@RequestBody Map<String ,String> params){
 
 
-        String id = request.getParameter("id");
-        String password = request.getParameter("password");
-        String role = request.getParameter("role");
+        String id = params.get("id");
+        String password = params.get("password");
+        String role = params.get("role");
 
         String token = RSA.tokenEncrypt(id, password);      //对账号密码字符串token进行RSA加密,获取token
         password = RSA.passwordEncrypt(password);           //对密码进行RSA加密，获取password
@@ -66,7 +67,7 @@ public class UserController {
                 data.put("code", Enum.Code.ERR_TOKEN.getValue());           //主code:非法token
                 datas.put("code", Enum.Code.ERR_TOKEN.getValue());          //次code:非法token
             } else{
-                //userService.updateStatusById(user.getId());                 //修改登陆状态
+                userService.updateStatusById(user.getId(),user.getStatus());                 //修改登陆状态
                 user.setStatus("online");
 
                 datas.put("role",role);                                      //封装数据，用户角色
@@ -90,7 +91,7 @@ public class UserController {
                 data.put("code", Enum.Code.ERR_TOKEN.getValue());           //主code:非法token
                 datas.put("code", Enum.Code.ERR_TOKEN.getValue());          //次code:非法token
             } else{
-                //adminService.updateStatusByShopId(shop.getShopId());        //修改登陆状态
+                adminService.updateStatusByShopId(shop.getShopId(),shop.getStatus());        //修改登陆状态
                 shop.setStatus("online");
 
                 datas.put("role",shop.getShopId().equals("superAdmin")?"superAdmin":"admin");                                      //封装数据，用户角色
@@ -106,11 +107,11 @@ public class UserController {
 
     //用户注册
     @PostMapping("/register")
-    public Map<String,Object> register(HttpServletRequest request){
+    public Map<String,Object> register(@RequestBody Map<String ,String> params){
 
 
-        String id = request.getParameter("id");
-        String password = request.getParameter("password");
+        String id = params.get("id");
+        String password = params.get("password");
 
         String token = RSA.tokenEncrypt(id, password);      //对账号密码字符串token进行RSA加密,获取token
         password = RSA.passwordEncrypt(password);           //对密码进行RSA加密，获取password
@@ -123,15 +124,42 @@ public class UserController {
         userService.insertOneUser(u);
 
         Map<String, Object> data=new HashMap<String, Object>();
-        data.put("data", u);
+        Map<String, Object> datas=new HashMap<String, Object>();
+        datas.put("code",Enum.Code.COMMON.getValue());
+        datas.put("data", u);
+        datas.put("role", "normal");
+        data.put("code",Enum.Code.COMMON.getValue());
+        data.put("datas",datas);
+        return data;
+    }
+
+    //检测注册用户是否已存在
+    @PostMapping("/check")
+    public Map<String ,Object> check(@RequestBody Map<String ,String> params){
+
+
+        String id = params.get("id");
+        User user;
+        Shops shop;
+        shop= adminService.selectOneById(id);
+        user= userService.selectOneById(id);
+        Map<String ,Object> data = new HashMap<String, Object>();
+        data.put("code",Enum.Code.COMMON.getValue());
+
+        if(user == null&&shop == null){
+            data.put("datas","success");
+        }
+        else {
+            data.put("datas","fail");
+        }
         return data;
     }
 
     //获取用户(普通用户，商户，超管)信息
     @PostMapping("/getInfo")
-    public Map<String,Object> getInfo(HttpServletRequest request){
+    public Map<String,Object> getInfo(@RequestBody Map<String ,String> params){
 
-        String token = request.getParameter("token");
+        String token = params.get("token");
         //String token = request.getQueryString().substring(0);   //解决参数中含有+问题，token => token=...
         //token = token.substring(6);                             //取去除前六个字符token=的子串，即为参数token
 
@@ -195,6 +223,30 @@ public class UserController {
             System.out.println("上传失败");
             e.printStackTrace();
         }
+        return data;
+    }
+
+    //用户注销
+    @PostMapping("/logout")
+    public Map<String,Object>  logout(HttpServletRequest request){
+
+        String token = request.getHeader("Token");          //获取当前登录账户的token
+        User user;
+        Shops shop;
+        user = userService.selectOneByToken(token);
+        shop = adminService.selectOneByToken(token);
+        Map<String, Object> data=new HashMap<String, Object>();
+
+        HttpSession session = request.getSession();             //获取当前session
+        session.invalidate();                                   //关闭session
+        if(user !=null){                                        //普通用户登录状态点击了注销
+            userService.updateStatusById(user.getId(),user.getStatus());         //改变账号状态
+        }
+        else{                                                   //管理员用户登录状态点击了注销
+            adminService.updateStatusByShopId(shop.getShopId(),shop.getStatus());//改变账号状态
+        }
+        data.put("code",Enum.Code.COMMON.getValue());
+        data.put("datas","success");
         return data;
     }
 }

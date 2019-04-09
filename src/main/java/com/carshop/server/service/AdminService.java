@@ -7,7 +7,7 @@ public interface AdminService {
 
     Shops selectOneByToken(String token);
 
-    void updateStatusByShopId(String shopId);
+    void updateStatusByShopId(String shopId, String status);
 
 
 }

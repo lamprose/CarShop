@@ -37,8 +37,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateStatusById(String id){
-        userMapper.updateStatusById(id);
+    public void updateStatusById(String id, String status){
+        userMapper.updateStatusById(id, status);
     }
 
     @Override

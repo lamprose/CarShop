@@ -11,6 +11,15 @@
     </select>
 
     <update id="updateStatusByShopId">
-        UPDATE shops SET status = "online" WHERE shopId = #{shopId}
+        UPDATE shops
+        <set>
+            <if test="status=='offline'">
+                status = "online",
+            </if>
+            <if test="status=='online'">
+                status = "offline",
+            </if>
+        </set>
+        WHERE shopId = #{shopId}
     </update>
 </mapper>

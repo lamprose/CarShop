@@ -21,7 +21,7 @@ public interface UserMapper {
 
     List<User> selectAllNameSimilar(String name);
 
-    void updateStatusById(String id);
+    void updateStatusById(@Param("id")String id, @Param("status") String status);
 
     //多个参数需要用@Param
     void updateAvatarById(@Param("avatarPath")String avatarPath,@Param("id") String id);

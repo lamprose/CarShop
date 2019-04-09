@@ -22,7 +22,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void updateStatusByShopId(String shopId){
-        adminMapper.updateStatusByShopId(shopId);
+    public void updateStatusByShopId(String shopId, String status){
+        adminMapper.updateStatusByShopId(shopId,status);
     }
 }

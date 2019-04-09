@@ -2,8 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.carshop.server.dao.UserMapper" >
 
-    <select id="selectUserByName" resultType="User">
-        SELECT * FROM user WHERE username = #{name}
+    <select id="selectOneById" resultType="User">
+        SELECT * FROM user WHERE id = #{id}
     </select>
+
+    <select id="selectOneByToken" resultType="User">
+        SELECT * FROM user WHERE token = #{token}
+    </select>
+
+    <select id="selectAll" resultType="User">
+        SELECT * FROM user
+    </select>
+
+    <!--根据用户名进行模糊查询-->
+    <select id="selectAllNameSimilar" resultType="User">
+        SELECT * FROM user WHERE name LIKE '%${value}%'
+    </select>
+
+    <insert id="insertOne">
+        INSERT INTO user VALUES(#{id}, #{name}, #{password}, #{sex}, #{phone}, #{loc}, #{token}, #{status}, #{avatar})
+    </insert>
+
+    <update id="updateStatusById">
+        UPDATE user SET status = "online" WHERE id = #{id}
+    </update>
+
+    <update id="updateAvatarById">
+        UPDATE user SET avatar = #{avatarPath} WHERE id = #{id}
+    </update>
 
 </mapper>

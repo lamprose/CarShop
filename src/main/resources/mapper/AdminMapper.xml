@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.carshop.server.dao.AdminMapper" >
+
+    <select id="selectOneById" resultType="Shops">
+        SELECT * FROM shops WHERE shopId = #{shopId}
+    </select>
+
+    <select id="selectOneByToken" resultType="Shops">
+        SELECT * FROM shops WHERE token = #{token}
+    </select>
+
+    <update id="updateStatusByShopId">
+        UPDATE shops SET status = "online" WHERE shopId = #{shopId}
+    </update>
+</mapper>

@@ -38,4 +38,14 @@ public class Brands {
     public void setLogo(String logo) {
         this.logo = logo;
     }
+
+    @Override
+    public String toString() {
+        return "Brands{" +
+                "brandId='" + brandId + '\'' +
+                ", brandName='" + brandName + '\'' +
+                ", display='" + display + '\'' +
+                ", logo='" + logo + '\'' +
+                '}';
+    }
 }

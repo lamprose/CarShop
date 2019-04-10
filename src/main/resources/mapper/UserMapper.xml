@@ -40,4 +40,8 @@
         UPDATE user SET avatar = #{avatarPath} WHERE id = #{id}
     </update>
 
+    <update id="updateUserById">
+        UPDATE user SET name = #{name},sex = #{sex},phone = #{phone},loc = #{loc} WHERE id = #{id}
+    </update>
+
 </mapper>

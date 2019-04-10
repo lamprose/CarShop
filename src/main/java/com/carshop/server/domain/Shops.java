@@ -65,4 +65,17 @@ public class Shops {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "Shops{" +
+                "shopId='" + shopId + '\'' +
+                ", shopName='" + shopName + '\'' +
+                ", password='" + password + '\'' +
+                ", brand=" + brand +
+                ", phone='" + phone + '\'' +
+                ", token='" + token + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

@@ -1,5 +1,7 @@
 package com.carshop.server.interceptor;
 
+import com.carshop.server.dao.AdminMapper;
+import com.carshop.server.dao.UserMapper;
 import com.carshop.server.domain.Shops;
 import com.carshop.server.domain.User;
 import com.carshop.server.service.AdminService;
@@ -20,10 +22,10 @@ import java.io.PrintWriter;
 public class Interceptor implements HandlerInterceptor {
 
     @Autowired
-    UserService userService;
+    UserMapper userMapper;
 
     @Autowired
-    AdminService adminService;
+    AdminMapper adminMapper;
 
     //目标方法执行之前
     @Override
@@ -42,8 +44,8 @@ public class Interceptor implements HandlerInterceptor {
            return false;
         }
 
-        User user = userService.selectOneByToken(token);
-        Shops shop = adminService.selectOneByToken(token);
+        User user = userMapper.selectOneByToken(token);
+        Shops shop = adminMapper.selectOneByToken(token);
         if(user==null&&shop==null)
             return false;
         return true;

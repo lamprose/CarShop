@@ -1,22 +1,19 @@
 package com.carshop.server.service;
 
-import com.carshop.server.domain.User;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
+import java.util.Map;
 
 public interface UserService {
-    User selectOneById(String id);
+    Map<String,Object> login(String id, String password, String role);
 
-    User selectOneByToken(String token);
+    Map<String,Object> register(String id, String password);
 
-    List<User> selectAllUser();
+    Map<String,Object> check(String id);
 
-    List<User> selectAllNameSimilar(String name);
+    Map<String,Object> getInfo(String token);
 
-    void updateStatusById(String id, String status);
+    Map<String,Object> avatar(String id, String tempPath, MultipartFile picture);
 
-    void updateAvatarById(String avatarPath, String id);
-
-    User insertOneUser(User u);
+    Map<String,Object> logout(String token);
 }

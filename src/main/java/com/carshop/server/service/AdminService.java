@@ -2,12 +2,10 @@ package com.carshop.server.service;
 
 import com.carshop.server.domain.Shops;
 
+import java.util.Map;
+
 public interface AdminService {
-    Shops selectOneById(String shopId);
 
-    Shops selectOneByToken(String token);
-
-    void updateStatusByShopId(String shopId, String status);
-
+    Map<String,Object> getUserListPage(Integer page,String name);
 
 }

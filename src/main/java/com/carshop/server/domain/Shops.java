@@ -5,7 +5,7 @@ public class Shops {
     private String shopId;      //商户ID
     private String shopName;    //商户名
     private String password;    //密码
-    private String brandId;     //品牌ID
+    private Brands brand;     //品牌ID
     private String phone;       //联系电话
     private String token;       //token
     private String status;      //登陆状态
@@ -34,12 +34,12 @@ public class Shops {
         this.password = password;
     }
 
-    public String getBrandId() {
-        return brandId;
+    public Brands getBrand() {
+        return brand;
     }
 
-    public void setBrandId(String brandId) {
-        this.brandId = brandId;
+    public void setBrand(Brands brand) {
+        this.brand = brand;
     }
 
     public String getPhone() {

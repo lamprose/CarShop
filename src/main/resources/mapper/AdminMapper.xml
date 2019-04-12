@@ -21,6 +21,15 @@
         SELECT * FROM shops WHERE token = #{token}
     </select>
 
+    <select id="selectAll" resultMap="ShopsMap">
+        SELECT * FROM shops WHERE shopId!='superAdmin'
+    </select>
+
+    <!--根据店铺名进行模糊查询-->
+    <select id="selectAllNameSimilar" resultMap="ShopsMap">
+        SELECT * FROM shops WHERE shopName LIKE '%${value}%' AND shopId!='superAdmin'
+    </select>
+
     <update id="updateStatusByShopId">
         UPDATE shops
         <set>
@@ -33,4 +42,26 @@
         </set>
         WHERE shopId = #{shopId}
     </update>
+
+    <update id="updateTokenByShopId">
+        UPDATE shops SET token = #{token} WHERE shopId = #{shopId}
+    </update>
+
+    <update id="updateStatusToOnlineByToken">
+        UPDATE shops SET status = 'online' WHERE token = #{token}
+    </update>
+
+    <insert id="insertOneShop">
+        INSERT INTO shops VALUES(#{shopId}, #{shopName}, #{password}, #{brand.brandId}, #{phone}, #{token}, #{status})
+    </insert>
+
+    <!--批量删除商铺-->
+    <delete id="deleteShopsByIds">
+        DELETE FROM
+        shops
+        WHERE shopId in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.shopId}
+        </foreach>
+    </delete>
 </mapper>

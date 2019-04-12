@@ -2,6 +2,7 @@ package com.carshop.server.service.impl;
 
 import com.carshop.server.dao.AdminMapper;
 import com.carshop.server.dao.UserMapper;
+import com.carshop.server.domain.Brands;
 import com.carshop.server.domain.Shops;
 import com.carshop.server.domain.User;
 import com.carshop.server.encrypt_decrypt.RSA;
@@ -101,6 +102,95 @@ public class AdminServiceImpl implements AdminService {
             data.put("datas","success");
         }
         catch (Exception e){
+            data.put("datas","fail");
+        }
+        return data;
+    }
+
+    @Override
+    public Map<String,Object> removeUser(List<Map<String,String>> params){
+        Map<String,Object> data = new HashMap<>();
+        System.out.println(params);
+        data.put("code",Enum.Code.COMMON.getValue());
+        try{
+            userMapper.deleteUsersByIds(params);
+            data.put("datas","success");
+        }
+        catch (Exception e){
+            System.out.println(e);
+            data.put("datas","fail");
+        }
+        return data;
+    }
+
+    @Override
+    public Map<String,Object> getShopListPage(Map<String,String> params){
+        Integer page = Integer.parseInt(params.get("page"));//页码
+        String name = params.get("name");//名字查询
+        Map<String, Object> data=new HashMap<String, Object>();
+        Map<String, Object> dataTemp=new HashMap<String, Object>();
+        List<Shops> shopsList;
+        List<Shops> subShopsList;
+
+        if(name.equals("")){
+            shopsList = adminMapper.selectAll();
+            subShopsList = shopsList.subList((page-1)*20,page*20<shopsList.size()?page*20:shopsList.size());
+            dataTemp.put("data",subShopsList);
+        }
+        else{
+            shopsList = adminMapper.selectAllNameSimilar(name);
+            subShopsList = shopsList.subList((page-1)*20,page*20<shopsList.size()?page*20:shopsList.size());
+            dataTemp.put("data",subShopsList);
+        }
+
+        dataTemp.put("total", shopsList.size());
+        data.put("datas", dataTemp);
+        data.put("code", Enum.Code.COMMON.getValue());
+        return data;
+    }
+
+    @Override
+    public Map<String,Object> addShop(Map<String,String> params){
+        String shopId = params.get("shopId");
+        String shopName = params.get("shopName");
+        String password = shopId;                       //初始密码默认为id
+        String brandId = params.get("brandId");
+
+        String token = RSA.tokenEncrypt(shopId, password);      //对账号密码字符串token进行RSA加密,获取token
+        password = RSA.passwordEncrypt(password);           //对密码进行RSA加密，获取password
+
+        Shops shop = new Shops();
+        Brands brand = new Brands();
+        shop.setShopId(shopId);
+        shop.setShopName(shopName);
+        shop.setPassword(password);
+        shop.setToken(token);
+        shop.setStatus("offline");
+        brand.setBrandId(brandId);
+        shop.setBrand(brand);
+
+        Map<String,Object> data = new HashMap<>();
+        data.put("code",Enum.Code.COMMON.getValue());
+        try{
+            adminMapper.insertOneShop(shop);
+            data.put("datas","success");
+        }
+        catch (Exception e){
+            data.put("datas","fail");
+        }
+        return data;
+    }
+
+    @Override
+    public Map<String,Object> removeShop(List<Map<String,String>> params){
+        Map<String,Object> data = new HashMap<>();
+        data.put("code",Enum.Code.COMMON.getValue());
+        try{
+            adminMapper.deleteShopsByIds(params);
+            data.put("datas","success");
+        }
+        catch (Exception e){
+            System.out.println(e);
             data.put("datas","fail");
         }
         return data;

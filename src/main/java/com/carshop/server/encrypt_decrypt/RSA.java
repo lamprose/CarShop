@@ -3,7 +3,9 @@ package com.carshop.server.encrypt_decrypt;
 import java.security.*;
 import java.security.interfaces.*;
 import java.math.*;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
 
 public class RSA {
     //公钥(e,n)   私钥(d,n)
@@ -58,7 +60,10 @@ public class RSA {
 
     public static String tokenEncrypt(String id, String password){
 
-        String token = id +'&'+ password;
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmmss");
+        String date = sdf.format(d);
+        String token = id +'&'+ password + '&' + date;
         try{    //对账号密码字符串token进行RSA加密,获取token
             RSA rsa = new RSA();
             byte[] data= rsa.encrypt(token.getBytes());

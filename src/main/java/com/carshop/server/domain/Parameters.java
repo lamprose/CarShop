@@ -92,4 +92,20 @@ public class Parameters {
     public void setMaxSpeed(String maxSpeed) {
         this.maxSpeed = maxSpeed;
     }
+
+    @Override
+    public String toString() {
+        return "Parameters{" +
+                "paraId='" + paraId + '\'' +
+                ", carSize='" + carSize + '\'' +
+                ", engine='" + engine + '\'' +
+                ", level='" + level + '\'' +
+                ", structure='" + structure + '\'' +
+                ", assurance='" + assurance + '\'' +
+                ", oilWear='" + oilWear + '\'' +
+                ", manufacturer='" + manufacturer + '\'' +
+                ", gearbox='" + gearbox + '\'' +
+                ", maxSpeed='" + maxSpeed + '\'' +
+                '}';
+    }
 }

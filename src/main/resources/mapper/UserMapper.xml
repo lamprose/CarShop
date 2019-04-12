@@ -40,8 +40,27 @@
         UPDATE user SET avatar = #{avatarPath} WHERE id = #{id}
     </update>
 
+    <update id="updateTokenById">
+        UPDATE user SET token = #{token} WHERE id = #{id}
+    </update>
+
     <update id="updateUserById">
         UPDATE user SET name = #{name},sex = #{sex},phone = #{phone},loc = #{loc} WHERE id = #{id}
     </update>
+
+    <update id="updateStatusToOnlineByToken">
+        UPDATE user SET status = 'online' WHERE token = #{token}
+    </update>
+
+    <!--批量删除Users-->
+    <delete id="deleteUsersByIds">
+        DELETE FROM
+        user
+        WHERE id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+
+    </delete>
 
 </mapper>

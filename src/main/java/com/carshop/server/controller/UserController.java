@@ -26,37 +26,25 @@ public class UserController {
     //用户登录
     @PostMapping("/login")
     public Map<String,Object> login(@RequestBody Map<String ,String> params){
-
-        String id = params.get("id");
-        String password = params.get("password");
-        String role = params.get("role");
-
-        return userService.login(id, password, role);
+        return userService.login(params);
     }
 
     //用户注册
     @PostMapping("/register")
     public Map<String,Object> register(@RequestBody Map<String ,String> params){
-
-        String id = params.get("id");
-        String password = params.get("password");
-        return userService.register(id, password);
+        return userService.register(params);
     }
 
     //检测注册用户是否已存在
     @PostMapping("/check")
     public Map<String ,Object> check(@RequestBody Map<String ,String> params){
-
-        String id = params.get("id");
-        return userService.check(id);
+        return userService.check(params);
     }
 
     //获取用户(普通用户，商户，超管)信息
     @PostMapping("/getInfo")
     public Map<String,Object> getInfo(@RequestBody Map<String ,String> params){
-
-        String token = params.get("token");
-        return userService.getInfo(token);
+        return userService.getInfo(params);
     }
 
     //静态资源路径
@@ -80,5 +68,12 @@ public class UserController {
         session.invalidate();                                   //关闭session
 
         return userService.logout(token);
+    }
+
+    //检查token是否合法
+    @PostMapping("/checkSession")
+    public Map<String,Object> checkSession(HttpServletRequest request){
+        String token = request.getHeader("Token");
+        return userService.checkSession(token);
     }
 }

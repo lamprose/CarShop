@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.carshop.server.dao.CarsMapper">
+    <resultMap id="CarsMap" type="Cars">
+        <id column="carId" property="carId"/>
+        <result column="carName" property="carName"/>
+        <result column="price" property="price"/>
+        <result column="image" property="image"/>
+        <result column="evaluation" property="evaluation"/>
+        <association column="brandId" property="brand"
+                     select="com.carshop.server.dao.BrandsMapper.selectOneById" javaType="Brands"/>
+        <association column="paraId" property="param"
+                     select="com.carshop.server.dao.ParametersMapper.selectOneById" javaType="Parameters"/>
+    </resultMap>
+    <select id="selectAllByBrandId" resultMap="CarsMap">
+        SELECT * FROM cars WHERE brandId = #{brandId}
+    </select>
+
+    <!--根据车名进行模糊查询-->
+    <select id="selectAllNameSimilar" resultMap="CarsMap">
+        SELECT * FROM cars WHERE carName LIKE '%${carName}%' AND brandId = #{brandId}
+    </select>
+
+    <select id="selectOneByCarId" resultMap="CarsMap">
+        SELECT * FROM cars WHERE carId = #{carId}
+    </select>
+
+    <update id="updateOneByCarId">
+        UPDATE cars set
+        carName = #{carName},
+        price = #{price},
+        brandId = #{brand.brandId},
+        paraId = #{param.paraId}
+        WHERE carId = #{carId}
+    </update>
+
+    <insert id="insertOneByCars">
+        INSERT INTO cars VALUES(#{carId},#{carName},#{price},#{image},#{evaluation},#{brand.brandId},#{param.paraId})
+    </insert>
+
+    <delete id="deleteCarsByIds">
+        DELETE FROM
+        cars
+        WHERE carId in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.carId}
+        </foreach>
+    </delete>
+</mapper>

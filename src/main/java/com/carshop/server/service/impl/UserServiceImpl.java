@@ -28,17 +28,47 @@ public class UserServiceImpl implements UserService {
     @Autowired
     AdminMapper adminMapper;
 
+
     @Override
-    public Map<String, Object> login(String id, String password,String role){
+    public Map<String, Object> login(Map<String ,String> params){
 
-        String token = RSA.tokenEncrypt(id, password);      //对账号密码字符串token进行RSA加密,获取token
-        password = RSA.passwordEncrypt(password);           //对密码进行RSA加密，获取password
-        User user;
-        Shops shop;
-
+        String token = params.get("token");
         //封装返回数据
         Map<String,Object> data=new HashMap<String, Object>();
         Map<String,Object> datas=new HashMap<String, Object>();
+        User user;
+        Shops shop;
+
+        if(token!=null){                                //通过token登录
+            user = userMapper.selectOneByToken(token);
+            shop = adminMapper.selectOneByToken(token);
+            if(user==null&&shop==null){
+                data.put("code",Enum.Code.ERR_TOKEN.getValue());
+            }else {
+                data.put("code",Enum.Code.COMMON.getValue());
+                if(user!=null){
+                    userMapper.updateStatusById(user.getId(),user.getStatus());
+                    user.setStatus("online");
+                    datas.put("data",user);
+                    datas.put("role","normal");
+                    data.put("datas",datas);
+                }else {
+                    adminMapper.updateStatusByShopId(shop.getShopId(),shop.getStatus());
+                    shop.setStatus("online");
+                    datas.put("data",shop);
+                    datas.put("role",shop.getShopId().equals("superAdmin")?"superAdmin":"admin");
+                    data.put("datas",datas);
+                }
+            }
+            return data;
+        }
+
+        String id = params.get("id");                //通过账号密码登录
+        String password = params.get("password");
+        String role = params.get("role");
+
+        token = RSA.tokenEncrypt(id, password);      //对账号密码字符串token进行RSA加密,获取token
+        password = RSA.passwordEncrypt(password);           //对密码进行RSA加密，获取password
 
         if("normal".equals(role)) {
             user = userMapper.selectOneById(id);   //普通用户登录
@@ -51,12 +81,11 @@ public class UserServiceImpl implements UserService {
             } else if(user.getStatus().equals("online")){
                 data.put("code", Enum.Code.ERR_ONLINE.getValue());          //主code:非法token
                 datas.put("code", Enum.Code.ERR_ONLINE.getValue());         //次code:用户已在线
-            } else if(user.getToken()==token){
-                data.put("code", Enum.Code.ERR_TOKEN.getValue());           //主code:非法token
-                datas.put("code", Enum.Code.ERR_TOKEN.getValue());          //次code:非法token
-            } else{
-                userMapper.updateStatusById(user.getId(),user.getStatus());                 //修改登陆状态
+            }else{
+                userMapper.updateStatusById(id,user.getStatus());           //修改登陆状态
+                userMapper.updateTokenById(id,token);                       //更新token
                 user.setStatus("online");
+                user.setToken(token);
 
                 datas.put("role",role);                                      //封装数据，用户角色
                 data.put("code", Enum.Code.COMMON.getValue());              //主code:合法token
@@ -65,6 +94,7 @@ public class UserServiceImpl implements UserService {
                 data.put("datas",datas);
             }
         } else if("admin".equals(role)){
+
             shop = adminMapper.selectOneById(id);   //管理用户登录
             if(shop==null){
                 data.put("code", Enum.Code.COMMON.getValue());              //主code:合法token
@@ -75,13 +105,11 @@ public class UserServiceImpl implements UserService {
             } else if(shop.getStatus().equals("online")){
                 data.put("code", Enum.Code.ERR_ONLINE.getValue());          //主code:非法token
                 datas.put("code", Enum.Code.ERR_ONLINE.getValue());         //次code:用户已在线
-            } else if(shop.getToken()==token){
-                data.put("code", Enum.Code.ERR_TOKEN.getValue());           //主code:非法token
-                datas.put("code", Enum.Code.ERR_TOKEN.getValue());          //次code:非法token
-            } else{
-                adminMapper.updateStatusByShopId(shop.getShopId(),shop.getStatus());        //修改登陆状态
+            }else{
+                adminMapper.updateStatusByShopId(id,shop.getStatus());      //修改登陆状态
+                adminMapper.updateTokenByShopId(id,token);                  //更新token
                 shop.setStatus("online");
-
+                shop.setToken(token);
                 datas.put("role",shop.getShopId().equals("superAdmin")?"superAdmin":"admin");                                      //封装数据，用户角色
                 data.put("code", Enum.Code.COMMON.getValue());              //主code:合法token
                 datas.put("code", Enum.Code.COMMON.getValue());             //次code:正常登录
@@ -93,8 +121,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> register(String id,String password) {
+    public Map<String, Object> register(Map<String ,String> params) {
 
+        String id = params.get("id");
+        String password = params.get("password");
         String token = RSA.tokenEncrypt(id, password);      //对账号密码字符串token进行RSA加密,获取token
         password = RSA.passwordEncrypt(password);           //对密码进行RSA加密，获取password
 
@@ -116,7 +146,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String,Object> check(String id){
+    public Map<String,Object> check(Map<String ,String> params){
+
+        String id = params.get("id");
         User user;
         Shops shop;
         shop= adminMapper.selectOneById(id);
@@ -134,10 +166,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String,Object> getInfo(String token){
+    public Map<String,Object> getInfo(Map<String ,String> params){
         //String token = request.getQueryString().substring(0);   //解决参数中含有+问题，token => token=...
         //token = token.substring(6);                             //取去除前六个字符token=的子串，即为参数token
 
+        String token = params.get("token");
         Map<String, Object> data=new HashMap<String, Object>();
         Map<String, Object> datas=new HashMap<String, Object>();
         User user = userMapper.selectOneByToken(token);
@@ -195,6 +228,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String,Object> logout(String token){
+        System.out.println("12311");
         User user;
         Shops shop;
         user = userMapper.selectOneByToken(token);
@@ -209,6 +243,26 @@ public class UserServiceImpl implements UserService {
         }
         data.put("code",Enum.Code.COMMON.getValue());
         data.put("datas","success");
+        return data;
+    }
+
+    @Override
+    public Map<String, Object> checkSession(String token) {
+        Map<String, Object> data=new HashMap<String, Object>();
+
+        data.put("code",Enum.Code.COMMON.getValue());
+        User user = userMapper.selectOneByToken(token);
+        try{
+            if(user==null){
+                adminMapper.updateStatusToOnlineByToken(token);
+            }else{
+                userMapper.updateStatusToOnlineByToken(token);
+            }
+            data.put("datas","success");
+        }
+        catch (Exception e){
+            data.put("datas","fail");
+        }
         return data;
     }
 }

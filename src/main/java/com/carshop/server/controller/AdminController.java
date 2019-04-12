@@ -2,10 +2,12 @@ package com.carshop.server.controller;
 
 import com.carshop.server.service.AdminService;
 import com.carshop.server.service.UserService;
+import jdk.nashorn.internal.ir.RuntimeNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +24,9 @@ public class AdminController {
 
     //获取全部用户信息
     @PostMapping("/getUserListPage")
-    public Map<String, Object> getUserListPage(@RequestBody Map<String,String> params){
-
+    public Map<String, Object> getUserListPage(@RequestBody Map<String,String> params, HttpServletResponse response){
+        if(response.getStatus()==298)
+            return null;
         Integer page = Integer.parseInt(params.get("page"));//页码
         String name = params.get("name");//名字查询
         return adminService.getUserListPage(page,name);
@@ -31,7 +34,9 @@ public class AdminController {
 
     //编辑用户
     @PostMapping("/editUser")
-    public Map<String,Object> editUser(@RequestBody Map<String,String> params){
+    public Map<String,Object> editUser(@RequestBody Map<String,String> params, HttpServletResponse response){
+        if(response.getStatus()==298)
+            return null;
         return adminService.editUser(params);
     }
 
@@ -44,13 +49,26 @@ public class AdminController {
     //移除用户
     @PostMapping("/removeUser")
     public Map<String,Object> removeUser(@RequestBody List<Map<String,String>> params){
-        System.out.println(params.size());
-        return null;
+        return adminService.removeUser(params);
     }
 
     //获取全部商户
     @PostMapping("/getShopListPage")
     public Map<String,Object> getShopListPage(@RequestBody Map<String,String> params){
-        return null;//adminService.getShopListPage(params);
+        return adminService.getShopListPage(params);
     }
+
+    //新增商户
+    @PostMapping("/addShop")
+    public Map<String,Object> addShop(@RequestBody Map<String,String> params){
+        return adminService.addShop(params);
+    }
+
+    //移除商户
+    @PostMapping("/removeShop")
+    public Map<String,Object> removeShop(@RequestBody List<Map<String,String>> params){
+        return adminService.removeShop(params);
+    }
+
+    
 }

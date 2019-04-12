@@ -2,25 +2,25 @@ package com.carshop.server.domain;
 
 public class Orders {
 
-    private String id;          //用户ID
-    private String carId;       //车辆ID
+    private User user;          //用户ID
+    private Cars car;       //车辆ID
     private Integer amount;      //数量
     private String orderStatus; //订单状态
 
-    public String getId() {
-        return id;
+    public User getUser() {
+        return user;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getCarId() {
-        return carId;
+    public Cars getCar() {
+        return car;
     }
 
-    public void setCarId(String carId) {
-        this.carId = carId;
+    public void setCar(Cars car) {
+        this.car = car;
     }
 
     public Integer getAmount() {

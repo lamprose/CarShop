@@ -2,7 +2,7 @@
   <div>
     <div id="hover-button">
       <el-badge :hidden="floatTotal===0?true:!floatHide" :value="floatTotal">
-        <el-tooltip v-for="(o,index) in float" placement="left" :key="index">
+        <el-tooltip v-for="(o,index) in float" placement="left" :key="index" v-if="showPermissionFloat(o.authority)">
           <div slot="content">{{o.tag}}</div>
           <el-badge :hidden="o.val===0?true:floatHide" :id="o.id" :class="floatHide?'hover-button-close':'hover-button-open'" :value="o.val">
             <el-button circle type="primary" size="medium" :key="index" @click="toggle(o.id)">
@@ -16,6 +16,8 @@
 </template>
 
 <script>
+  import {showPermission} from "../utils";
+
   export default {
     name: "FloatButton",
     props:{
@@ -46,6 +48,11 @@
         }else
           this.$emit("toggleAsideBarBlankBox",{id:id})
       },
+      showPermissionFloat(auth){
+        let role = this.$store.getters && this.$store.getters.role
+        const tempRoles= this.$store.getters && this.$store.getters.tempRoles
+        return showPermission(auth,role,tempRoles)
+      }
     },
     mounted() {
       document.getElementById("hover-button").addEventListener("mouseenter",this.hoverEnter);

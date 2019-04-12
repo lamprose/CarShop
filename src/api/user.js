@@ -16,6 +16,19 @@ export function loginById(id, password,role) {
   })
 }
 
+export function loginByToken(token){
+  return request({
+    url: '/user/login',
+    method: 'post',
+    headers:{
+      'Content-Type': 'application/json'
+    },
+    data: {
+      token:token
+    }
+  })
+}
+
 export function logout() {
   return request({
     url: '/user/logout',

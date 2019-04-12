@@ -1,4 +1,4 @@
-import { loginById, logout, getUserInfo,checkSession } from '@/api/user'
+import { loginById,loginByToken, logout, getUserInfo,checkSession } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import {register} from "@/api/user";
 import {baseUrl} from "../../api";
@@ -85,7 +85,7 @@ const user = {
       const id = loginInfo.id.trim()
       return new Promise((resolve, reject) => {
         let err=""
-        loginById(id, loginInfo.password,loginInfo.role).then(data => {
+        loginById(id, loginInfo.encryptPassword,loginInfo.role).then(data => {
           if(data.code===401)
             err="用户名或密码错误"
           else if(data.code===402)
@@ -96,9 +96,11 @@ const user = {
             if(loginInfo.radio==='1'){
               setToken('id',id)
               setToken('password',loginInfo.password)
+              setToken('role',loginInfo.role)
             }else{
               removeToken('id')
               removeToken('password')
+              removeToken('role')
             }
           }
           resolve(err)
@@ -111,7 +113,7 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(data => {
+        loginByToken(state.token).then(data => {
           // 由于mockjs 不支持自定义状态码只能这样hack
           console.log(data)
           if (!data) {
@@ -177,7 +179,9 @@ const user = {
     // 前端 登出
     FedLogOut({ commit }) {
       return new Promise(resolve => {
-        commit('SET_STATUS',false)
+        logout().then(data=>{
+          commit('SET_STATUS',false)
+        })
         resolve()
       })
     },

@@ -53,7 +53,8 @@
           loginForm:{
             id: getToken('id'),
             password: getToken('password'),
-            role:'normal',
+            encryptPassword:'',
+            role:getToken('role')?getToken('role'):'normal',
             radio:'0'
           },
           //控制验证进度条属性
@@ -78,7 +79,7 @@
           });
           return
         }else{
-          this.loginForm.password=encryptMd5(this.loginForm.password)
+          this.loginForm.encryptPassword=encryptMd5(this.loginForm.password)
           this.$store.dispatch('loginById', this.loginForm).then(() => {
 
           }).catch(() => {

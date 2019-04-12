@@ -9,8 +9,8 @@
           <template slot-scope="scope"><div style="position: relative">
             <img :src="scope.row.img" width="90px" style="display: inline">
             <span style="font-size: 18px;position: absolute;top: 10px;left: 100px">{{scope.row.name}}</span>
-            <span style="font-size: 18px;position: absolute;top: 30px;left: 100px">{{scope.row.price}}</span>
-            <el-input-number style="position: absolute;top:50px;left: 100px" size="mini" v-model="scope.row.amount" @change="handleChange" :min="1" :max="10" label="描述文字"></el-input-number>
+            <span style="font-size: 18px;position: absolute;top: 30px;left: 100px">{{scope.row.price}}</span><!--@change="handleChange"-->
+            <el-input-number style="position: absolute;top:50px;left: 100px" size="mini" v-model="scope.row.amount"  :min="1" :max="10" label="描述文字"></el-input-number>
           </div></template>
         </el-table-column>
       </el-table>

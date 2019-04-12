@@ -24,7 +24,7 @@ import 'font-awesome/css/font-awesome.css';
 
 import * as filters from './filters' // global filters
 
-import {checkUser} from "./api/user";
+import {getToken} from "./utils/auth";
 
 Vue.config.productionTip = false
 Vue.directive(anchor)
@@ -48,10 +48,11 @@ new Vue({
   template: '<App/>'*/
   render: h => h(App),
   mounted(){
-    if(store.getters.token)
+    if(getToken('token'))
       store.dispatch("CheckSession")
     window.addEventListener("beforeunload",e=>{
-      /*store.dispatch("LogOut")*/
+      if(getToken('token'))
+        store.dispatch("FedLogOut")
     })
   }
 })

@@ -22,7 +22,7 @@
     <!--其他-->
     <router-view></router-view>
     <!--侧边悬浮栏-->
-    <float v-if="this.$route.path!=='/balance'" id="float" :float="status?floatLogin:floatNoLogin" @toggleAsideBarBlankBox="toggle"></float>
+    <float v-if="this.$route.path!=='/balance'" id="float" :float="floatLogin" @toggleAsideBarBlankBox="toggle"></float>
     <!--右下角返回顶部按钮-->
     <el-button id="top" type="primary" circle @click="toTop">
       <svg-icon icon-class="angle-up"></svg-icon>
@@ -46,9 +46,9 @@
         clientHeight:0,
         showTop:false,
         floatLogin:[
-          {id:"hover-user",icon:"user",tag:"我的",val:2},
-          {id:"hover-cart",icon:"shopping-cart",tag:"购物车"},
-          {id:"hover-chat",icon:"comments",tag:"聊天室",val:0},
+          {id:"hover-user",icon:"user",tag:"我的",authority:['superAdmin','admin','normal'],val:2},
+          {id:"hover-cart",icon:"shopping-cart",authority:['normal'],tag:"购物车"},
+          {id:"hover-chat",icon:"comments",tag:"聊天室",authority:['superAdmin','admin','normal'],val:0},
           {id:"hover-tool",icon:"wrench",tag:"工具箱"},
           {id:"hover-phone",icon:"phone",tag:"客服电话"},
           {id:"hover-locate",icon:"map-marker",tag:"定位"},
@@ -58,7 +58,6 @@
           {id:"hover-phone",icon:"phone",tag:"客服电话"},
           {id:"hover-locate",icon:"map-marker",tag:"定位"},
         ],
-
       }
     },
     methods:{

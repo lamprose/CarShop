@@ -336,3 +336,14 @@ export function unique(arr) {
   const res = new Map();
   return arr.filter((arr) => !res.has(arr) && res.set(arr, 1))
 }
+
+export  function showPermission(authority,role,tempRoles){
+  if(!authority)
+    return true
+  if(tempRoles && tempRoles.length>0){
+    role="admin"
+  }
+  return authority.some(roleItem => {
+    return roleItem===role
+  })
+}

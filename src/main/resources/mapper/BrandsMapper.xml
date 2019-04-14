@@ -4,4 +4,33 @@
     <select id="selectOneById" resultType="Brands">
         SELECT * FROM brands WHERE brandId = #{brandId}
     </select>
+
+    <select id="selectAll" resultType="Brands">
+        SELECT * FROM brands WHERE brandId!='superAdmin'
+    </select>
+
+    <!--根据用户名进行模糊查询-->
+    <select id="selectAllNameSimilar" resultType="Brands">
+        SELECT * FROM brands WHERE brandName LIKE '%${value}%' AND brandId!='superAdmin'
+    </select>
+
+    <update id="updateBrandsById">
+        UPDATE brands SET brandName = #{brandName},display = #{display},logo = #{logo} WHERE brandId = #{brandId}
+    </update>
+
+    <insert id="insertOne">
+        INSERT INTO brands VALUES(#{brandId}, #{brandName}, #{display}, #{logo})
+    </insert>
+
+    <!--批量删除Brands-->
+    <delete id="deleteUsersByIds">
+    DELETE FROM
+    brands
+    WHERE brandId in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+        #{item.brandId}
+    </foreach>
+
+    </delete>
+
 </mapper>

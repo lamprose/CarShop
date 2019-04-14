@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.carshop.server.dao.OrderMapper">
+
+    <resultMap id="OrdersMap" type="Orders">
+        <id column="orderId" property="orderId"/>
+        <result column="amount" property="amount"/>
+        <result column="orderStatus" property="orderStatus"/>
+        <result column="orderTime" property="orderTime"/>
+        <association column="id" property="user"
+                     select="com.carshop.server.dao.UserMapper.selectOneById" javaType="User"/>
+        <association column="carId" property="car"
+                     select="com.carshop.server.dao.CarsMapper.selectOneByCarId" javaType="Cars"/>
+    </resultMap>
+    <select id="selectAll" resultMap="OrdersMap">
+        SELECT * FROM orders WHERE carId IN
+        (SELECT carId FROM cars WHERE brandId = #{brandId})
+    </select>
+
+    <!--根据用户id查询订单-->
+    <select id="selectAllNameSimilar" resultMap="OrdersMap">
+        SELECT * FROM orders
+        WHERE (id LIKE '%${name}%' OR orderId LIKE '%${name}%')
+        AND carId IN
+        (SELECT carId FROM cars WHERE brandId = #{brandId})
+    </select>
+
+    <update id="updateOrderStatusById">
+        UPDATE orders SET orderStatus = #{orderStatus} WHERE orderId = #{orderId}
+    </update>
+
+    <insert id="insertOneByOrder">
+        INSERT orders (id, carId, amount, orderStatus, orderTime)
+        VALUES(#{user.id},#{car.carId},#{amount},#{orderStatus},#{orderTime})
+    </insert>
+
+    <delete id="deleteOrdersByIds">
+        DELETE FROM
+        orders
+        WHERE orderId in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.orderId}
+        </foreach>
+    </delete>
+</mapper>

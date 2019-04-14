@@ -2,22 +2,22 @@ package com.carshop.server.domain;
 
 public class Parameters {
 
-    private String paraId;          //参数ID
+    private Integer paraId;          //参数ID
     private String carSize;         //车身尺寸
     private String engine;          //发动机
     private String level;           //级别
     private String structure;       //车身结构
     private String assurance;       //整车质保
-    private String oilWear;         //油耗
+    private double oilWear;         //油耗
     private String manufacturer;    //厂商
     private String gearbox;         //变速箱
-    private String maxSpeed;        //最高车速
+    private Integer maxSpeed;        //最高车速
 
-    public String getParaId() {
+    public Integer getParaId() {
         return paraId;
     }
 
-    public void setParaId(String paraId) {
+    public void setParaId(Integer paraId) {
         this.paraId = paraId;
     }
 
@@ -61,11 +61,11 @@ public class Parameters {
         this.assurance = assurance;
     }
 
-    public String getOilWear() {
+    public double getOilWear() {
         return oilWear;
     }
 
-    public void setOilWear(String oilWear) {
+    public void setOilWear(double oilWear) {
         this.oilWear = oilWear;
     }
 
@@ -85,11 +85,11 @@ public class Parameters {
         this.gearbox = gearbox;
     }
 
-    public String getMaxSpeed() {
+    public Integer getMaxSpeed() {
         return maxSpeed;
     }
 
-    public void setMaxSpeed(String maxSpeed) {
+    public void setMaxSpeed(Integer maxSpeed) {
         this.maxSpeed = maxSpeed;
     }
 

@@ -7,7 +7,7 @@ import java.util.Map;
 public interface UserService {
     Map<String,Object> checkSession(String token);
 
-    Map<String,Object> login(Map<String ,String> params);
+    Map<String,Object> login(Map<String ,String> params,String token);
 
     Map<String,Object> register(Map<String ,String> params);
 

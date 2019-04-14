@@ -154,6 +154,7 @@ public class AdminServiceImpl implements AdminService {
         String shopId = params.get("shopId");
         String shopName = params.get("shopName");
         String password = shopId;                       //初始密码默认为id
+        String phone = params.get("phone");
         String brandId = params.get("brandId");
 
         String token = RSA.tokenEncrypt(shopId, password);      //对账号密码字符串token进行RSA加密,获取token
@@ -164,6 +165,7 @@ public class AdminServiceImpl implements AdminService {
         shop.setShopId(shopId);
         shop.setShopName(shopName);
         shop.setPassword(password);
+        shop.setPhone(phone);
         shop.setToken(token);
         shop.setStatus("offline");
         brand.setBrandId(brandId);

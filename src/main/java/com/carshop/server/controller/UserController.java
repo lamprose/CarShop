@@ -25,8 +25,9 @@ public class UserController {
 
     //用户登录
     @PostMapping("/login")
-    public Map<String,Object> login(@RequestBody Map<String ,String> params){
-        return userService.login(params);
+    public Map<String,Object> login(@RequestBody Map<String ,String> params, HttpServletRequest request){
+        String token=request.getHeader("Token");
+        return userService.login(params,token);
     }
 
     //用户注册

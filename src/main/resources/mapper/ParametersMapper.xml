@@ -6,4 +6,25 @@
         SELECT * FROM parameters WHERE paraId = #{paraId}
     </select>
 
+    <update id="updateOneById">
+        UPDATE parameters SET
+            carSize = #{carSize},
+            engine = #{engine},
+            level = #{level},
+            structure = #{structure},
+            assurance = #{assurance},
+            oilWear = #{oilWear},
+            manufacturer = #{manufacturer},
+            gearbox = #{gearbox},
+            maxSpeed = #{maxSpeed}
+        WHERE paraId = #{paraId}
+    </update>
+    
+    <insert id="insertOneByParam" parameterType="Parameters">
+        <selectKey order="AFTER" keyProperty="paraId" resultType="Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO parameters(carSize,engine,level,structure,assurance,oilWear,manufacturer,gearbox,maxSpeed)
+        VALUES(#{carSize},#{engine},#{level},#{structure},#{assurance},#{oilWear},#{manufacturer},#{gearbox},#{maxSpeed})
+    </insert>
 </mapper>

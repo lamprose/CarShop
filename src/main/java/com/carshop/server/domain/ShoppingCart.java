@@ -2,9 +2,18 @@ package com.carshop.server.domain;
 
 public class ShoppingCart {
 
-    private String id;      //用户ID账号
-    private String carId;   //车辆ID
-    private Integer amount;  //数量
+    private Integer cartId;     //购物车ID
+    private String id;          //用户ID账号
+    private String carId;       //车辆ID
+    private Integer amount;     //数量
+
+    public Integer getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(Integer cartId) {
+        this.cartId = cartId;
+    }
 
     public String getId() {
         return id;

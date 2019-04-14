@@ -65,4 +65,17 @@ public class Cars {
     public void setParam(Parameters param) {
         this.param = param;
     }
+
+    @Override
+    public String toString() {
+        return "Cars{" +
+                "carId='" + carId + '\'' +
+                ", carName='" + carName + '\'' +
+                ", price=" + price +
+                ", image='" + image + '\'' +
+                ", evaluation='" + evaluation + '\'' +
+                ", brand=" + brand +
+                ", param=" + param +
+                '}';
+    }
 }

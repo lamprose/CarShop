@@ -1,5 +1,6 @@
 package com.carshop.server.controller;
 
+import com.carshop.server.domain.Cars;
 import com.carshop.server.service.CarsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,24 +27,24 @@ public class CarsController {
 
     //编辑车辆信息,以brandIdji
     @PostMapping("/editCar")
-    public Map<String,Object> editCar(@RequestBody Map<String,String> params){
-        return carsService.editCar(params);
+    public Map<String,Object> editCar(@RequestBody Cars car){
+        return carsService.editCar(car);
     }
 
     //添加车辆
     @PostMapping("/addCar")
-    public Map<String,Object> addCar(@RequestBody Map<String,String> params){
+    public Map<String,Object> addCar(@RequestBody Map<String, String> params){
         return carsService.addCar(params);
     }
 
     //添加车辆时检查车辆carId是否已存在
-    @PostMapping("/checkCarId")
+    @PostMapping("/check")
     public Map<String,Object> checkCarId(@RequestBody Map<String,String> params){
         return carsService.checkCarId(params);
     }
 
     //批量移除车辆
-    @PostMapping("/removeCars")
+    @PostMapping("/removeCar")
     public Map<String,Object> removeCars(@RequestBody List<Map<String,String>> params){
         return carsService.removeCars(params);
     }

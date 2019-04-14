@@ -30,9 +30,9 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Map<String, Object> login(Map<String ,String> params){
+    public Map<String, Object> login(Map<String ,String> params,String token){
 
-        String token = params.get("token");
+        //String token = params.get("token");
         //封装返回数据
         Map<String,Object> data=new HashMap<String, Object>();
         Map<String,Object> datas=new HashMap<String, Object>();
@@ -91,7 +91,6 @@ public class UserServiceImpl implements UserService {
                 data.put("code", Enum.Code.COMMON.getValue());              //主code:合法token
                 datas.put("code", Enum.Code.COMMON.getValue());             //次code:正常登录
                 datas.put("data",user);
-                data.put("datas",datas);
             }
         } else if("admin".equals(role)){
 
@@ -99,6 +98,7 @@ public class UserServiceImpl implements UserService {
             if(shop==null){
                 data.put("code", Enum.Code.COMMON.getValue());              //主code:合法token
                 datas.put("code", Enum.Code.ERR_EMPTY.getValue());          //次code:空用户
+                System.out.println(datas.get("code"));
             } else if(!shop.getPassword().equals(password)){
                 data.put("code", Enum.Code.COMMON.getValue());              //主code:合法token
                 datas.put("code", Enum.Code.ERR_PASSWORD.getValue());       //次code:密码错误
@@ -114,9 +114,9 @@ public class UserServiceImpl implements UserService {
                 data.put("code", Enum.Code.COMMON.getValue());              //主code:合法token
                 datas.put("code", Enum.Code.COMMON.getValue());             //次code:正常登录
                 datas.put("data",shop);
-                data.put("datas",datas);
             }
         }
+        data.put("datas",datas);
         return data;
     }
 
@@ -212,7 +212,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             picture.transferTo(targetFile);                                 //将文件保存到本地指定位置
-            userMapper.updateAvatarById(fileName,id);                      //将用户头像路径保存到数据库中
+            userMapper.updateAvatarById("/UserAvatar/"+fileName,id);                      //将用户头像路径保存到数据库中
             System.out.println("上传成功");
 
             //将文件在服务器的存储路径返回
@@ -228,7 +228,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String,Object> logout(String token){
-        System.out.println("12311");
+
         User user;
         Shops shop;
         user = userMapper.selectOneByToken(token);

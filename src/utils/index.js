@@ -1,6 +1,7 @@
 /**
  * Created by jiachenpan on 16/11/18.
  */
+import {baseUrl} from "@/api";
 
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
@@ -340,10 +341,17 @@ export function unique(arr) {
 export  function showPermission(authority,role,tempRoles){
   if(!authority)
     return true
-  if(tempRoles && tempRoles.length>0){
+  if(role==='')
+    return false
+  if(role!=='normal'&&tempRoles && tempRoles.length>0){
     role="admin"
   }
   return authority.some(roleItem => {
     return roleItem===role
   })
 }
+
+export function strToUrlImage(str) {
+  return baseUrl+str
+}
+

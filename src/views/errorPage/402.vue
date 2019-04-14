@@ -3,8 +3,8 @@
     <el-row>
       <el-col :span="12">
         <h1 class="text-jumbo text-ginormous">Oops!</h1>
-        <h2>你没有权限去该页面</h2>
-        <h6>如有不满请联系你领导</h6>
+        <h2>未设置密保,没有权限购买车辆</h2>
+        <h6>请及时<router-link :to="{name:'User',params:{data:'secret'}}"><span style="text-decoration: underline;color: red">设置密保</span></router-link></h6>
         <ul class="list-unstyled">
           <li>或者你可以去:</li>
           <li class="link-type">
@@ -24,27 +24,27 @@
 </template>
 
 <script>
-import errGif from '@/assets/401_images/401.gif'
+  import errGif from '@/assets/401_images/401.gif'
 
-export default {
-  name: 'Page401',
-  data() {
-    return {
-      errGif: errGif + '?' + +new Date(),
-      ewizardClap: 'https://wpimg.wallstcn.com/007ef517-bafd-4066-aae4-6883632d9646',
-      dialogVisible: false
-    }
-  },
-  methods: {
-    back() {
-      if (this.$route.query.noGoBack) {
-        this.$router.push({ path: '/' })
-      } else {
-        this.$router.go(-1)
+  export default {
+    name: 'Page401',
+    data() {
+      return {
+        errGif: errGif + '?' + +new Date(),
+        ewizardClap: 'https://wpimg.wallstcn.com/007ef517-bafd-4066-aae4-6883632d9646',
+        dialogVisible: false
+      }
+    },
+    methods: {
+      back() {
+        if (this.$route.query.noGoBack) {
+          this.$router.push({ path: '/' })
+        } else {
+          this.$router.go(-1)
+        }
       }
     }
   }
-}
 </script>
 
 <style rel="stylesheet/scss" lang="less" scoped>

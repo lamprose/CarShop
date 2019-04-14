@@ -1,4 +1,7 @@
 import {  getUserInfo } from '@/api/user'
+import {baseUrl} from "@/api";
+
+const defaultAvatar=baseUrl+'/UserAvatar/default_avatar.png'
 
 const now = new Date();
 const chat = {
@@ -128,29 +131,35 @@ const chat = {
       })
     },
     ADD_SESSION(state,id){
-      getUserInfo(id).then(response => {
-        let msg=[]
-        console.log("add:"+id)
-        if(state.err!=='receive:fail')
-          msg.push({
-            content: '开始聊天吧^!^',
-            date: now,
-            self:false,
-            status:1
+      getUserInfo({id:id}).then(response => {
+        console.log(typeof(response.role)==="undefined")
+        console.log(response)
+        if(typeof(response.role)==="undefined"){
+          state.err='add:no user'
+        }else{
+          let msg=[]
+          console.log("add:"+id)
+          if(state.err!=='receive:fail')
+            msg.push({
+              content: '开始聊天吧^!^',
+              date: now,
+              self:false,
+              status:1
+            })
+          state.sessions.push({
+            key:response.role==='superAdmin'||response.role==='admin'?response.data.shopId:response.data.id,
+            user:{
+              id:response.role==='superAdmin'||response.role==='admin'?response.data.shopId:response.data.id,
+              name:response.role==='superAdmin'||response.role==='admin'?response.data.shopName:response.data.name===null?'用户':response.data.name,
+              avatar:response.role==='superAdmin'||response.role==='admin'?(response.data.brand.logo===null?defaultAvatar:baseUrl+response.data.brand.logo):(response.data.avatar===null?defaultAvatar:baseUrl+response.data.avatar),
+            },
+            date:new Date(),
+            unread:0,
+            messages:msg
           })
-        state.sessions.push({
-          key:response.id,
-          user:{
-            id:response.id,
-            name:response.name,
-            avatar:response.avatar
-          },
-          date:new Date(),
-          unread:0,
-          messages:msg
-        })
+        }
       })
-      if(state.err!=="receive:fail")
+      if(state.err!=='add:no user'&&state.err!=="receive:fail")
         state.currentSessionId=id
     },
     CLEAR_MESSAGES(state,key){
@@ -230,13 +239,21 @@ const chat = {
       })
     },
     AddSession({commit,state},id){
-      return new Promise(resolve => {
+      return new Promise((resolve,reject) => {
         commit('FIND_SESSION',{id:id,type:"add"})
         if(state.err==="add:fail"){
           commit('ADD_SESSION',id)
           commit('CHANGE_UPDATE')
+          console.log(state.err)
+          if(state.err==="add:fail")
+            state.err=''
         }
-        resolve(state.err)
+        if(state.err!==''){
+          state.err=''
+          reject(state.err)
+        }
+        else
+          resolve()
       })
     },
     StoreSessions({commit,rootState}){

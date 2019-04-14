@@ -112,7 +112,7 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            //TODO : 验证数据成功，实现注册
+            //验证数据成功，实现注册
             this.registerUser.password=encryptMd5(this.registerUser.password)
             this.$store.dispatch('Register', this.registerUser).then(() => {
               /*console.log(this.$store.getters.user);*/

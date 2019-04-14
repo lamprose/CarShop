@@ -7,10 +7,10 @@ import 'nprogress/nprogress.css'// progress bar style
 
 NProgress.configure({ showSpinner: false })// NProgress Configuration
 
-const NoLogin=['/home','/search','/register','/forgot','/product']
-const LoginNormal=['/home', '/search','/product','/user','/balance','/updateUser']
+const NoLogin=['/home','/search','/register','/forgot','/car']
+const LoginNormal=['/home', '/search','/car','/user','/balance','/updateUser','my']
 const LoginAdmin=['/admin','/shop','/updateUser']
-const whiteList = ['/home','/401','/404','/shop']//  白名单
+const whiteList = ['/home','/401','/402','/404','/shop']//  白名单
 const blackList= ['/user','/balance','/admin'] //未登录黑名单
 
 router.beforeEach((to, from, next) => {
@@ -18,8 +18,10 @@ router.beforeEach((to, from, next) => {
   if (getToken('token')) { // determine if there has token
     /* has token*/
     if (store.getters.role=== '') { // 判断当前用户是否已拉取完user_info信息
-      store.dispatch('GetUserInfo').then(res => { // 拉取user_info
-        next({ ...to, replace: true })
+      store.dispatch('GetUserInfo').then(() => { // 拉取user_info
+        store.dispatch('ClearTempRoles').then(()=>{
+          next({ ...to, replace: true })
+        })
       }).catch((err) => {
         store.dispatch('FedLogOut').then(() => { //拉取用户信息失败则清除token信息
           Message.error(err)
@@ -31,28 +33,30 @@ router.beforeEach((to, from, next) => {
       })!==-1)
         next()
       else{
-        if(store.getters.role==='admin'||store.getters.role==='superAdmin'){
-          if(LoginAdmin.findIndex(item=>{
-            return to.path.indexOf(item)!==-1
-          })!==-1)
+        if(!store.getters.secretStatus||(store.getters.role==='normal'&&store.getters.loc==='')){
+          if (to.path.indexOf('/updateUser')!==-1||to.path.indexOf('my')!==-1||NoLogin.findIndex(item=>{return to.path.indexOf(item)!==-1})!==-1)
             next()
           else
-            next('/401')
-        }
-        else if(store.getters.role==='normal'){
-          if(LoginNormal.findIndex(item=>{
-            return to.path.indexOf(item)!==-1
-          })!==-1)
-            next()
-          else
-            next('/401')
+            next('/402')
+        }else{
+          if(store.getters.role==='admin'||store.getters.role==='superAdmin'){
+            if(LoginAdmin.findIndex(item=>{
+              return to.path.indexOf(item)!==-1
+            })!==-1)
+              next()
+            else
+              next('/401')
+          }
+          else if(store.getters.role==='normal'){
+            if(LoginNormal.findIndex(item=>{
+              return to.path.indexOf(item)!==-1
+            })!==-1)
+              next()
+            else
+              next('/401')
+          }
         }
       }
-
-      /*if(store.getters.role==='normal'&&to.path==='/admin')//普通用户无权限访问管理员页面则重定向到401
-        next('/401')
-      else
-        next()*/
     }
   }else{
     /*has no token*/

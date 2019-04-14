@@ -1,6 +1,6 @@
 <template>
     <div style="height: 100%;width: 100%">
-      <user-aside v-show="asideBarNow==='hover-user'"></user-aside>
+      <user-aside @toggleOffUser="toggleOffAside" v-show="asideBarNow==='hover-user'"></user-aside>
       <cart-aside v-show="asideBarNow==='hover-cart'"></cart-aside>
       <tool-aside v-show="asideBarNow==='hover-tool'"></tool-aside>
       <chat-aside v-show="asideBarNow==='hover-chat'"></chat-aside>
@@ -21,6 +21,11 @@
         type:String,
         required:true,
         default:'hover-tool'
+      }
+    },
+    methods:{
+      toggleOffAside(data){
+        this.$emit('toggleOffAside',{id:data.id})
       }
     }
   }

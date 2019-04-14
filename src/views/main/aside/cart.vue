@@ -1,16 +1,17 @@
 <template>
   <div class="main" style="">
     <el-scrollbar style="min-width: 300px" id="scrollbar-table">
-      <el-table :data="tableData" style="width: 300px;" @selection-change="selected">
+      <el-table :data="tableData" style="width: 300px;" @selection-change="selItemsChange">
         <!--选择方框-->
         <el-table-column type="selection" width="50"> </el-table-column>
         <!--显示商品信息-->
         <el-table-column label="商品名称" width="250">
           <template slot-scope="scope"><div style="position: relative">
-            <img :src="scope.row.img" width="90px" style="display: inline">
-            <span style="font-size: 18px;position: absolute;top: 10px;left: 100px">{{scope.row.name}}</span>
-            <span style="font-size: 18px;position: absolute;top: 30px;left: 100px">{{scope.row.price}}</span><!--@change="handleChange"-->
-            <el-input-number style="position: absolute;top:50px;left: 100px" size="mini" v-model="scope.row.amount"  :min="1" :max="10" label="描述文字"></el-input-number>
+            <img :src="getImagUrl(scope.row['car']['image']+'right.jpg')" :alt="scope.row['car']['image']" width="90px" height="90px" style="display: inline">
+            <span style="font-size: 18px;position: absolute;top: 10px;left: 100px">{{scope.row['car']['carName']}}</span>
+            <span style="font-size: 18px;position: absolute;top: 30px;left: 100px;color: red;font-size: 13px">￥{{scope.row['car']['price']}}万元</span><!--@change="handleChange"-->
+            <el-button icon="el-icon-delete" type="text" style="position: absolute;top:0px;right: 10px" @click="handleDel(scope.$index, scope.row)"></el-button>
+            <el-input-number style="position: absolute;top:50px;left: 100px" size="mini" v-model="scope.row.amount"  :min="1" :max="10" label="描述文字" @change="countTotal"></el-input-number>
           </div></template>
         </el-table-column>
       </el-table>
@@ -19,96 +20,152 @@
       <div id="operate">
         <!--商品总价格-->
         <div id="totalInfo">
-          <label id="amount">已选{{amount}}件</label><label id="totalPrice">￥{{totalPrice}}</label>
+          <label id="amount">已选{{amount}}件</label><label id="totalPrice">￥{{totalPrice.toFixed(2)}}万元</label>
         </div>
-        <div id="balance"><el-button @click="balance">结算</el-button></div>
+        <div id="balance">
+          <el-button type="danger" style="left: 0px" @click="batchRemove" :disabled="this.selItems.length===0">批量删除</el-button>
+          <el-button style="margin-left: 0px" @click="balance" :disabled="this.selItems.length===0">结算</el-button>
+        </div>
       </div>
     </el-scrollbar>
   </div>
 </template>
 
 <script>
-    export default {
-      name: "ShopCart",
-      data(){
-        return{
-          //TODO:获取用户购物车商品信息
-          tableData:[
-            {
-              name:'123',
-              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-              price:120,
-              amount:0
-            },
-            {
-              name:'123',
-              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-              price:120,
-              amount:2
-            },
-            {
-              name:'1234',
-              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-              price:120,
-              amount:1
-            },
-            {
-              name:'12',
-              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-              price:120,
-              amount:3
-            },
-            {
-              name:'132',
-              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-              price:120,
-              amount:1
-            },
-            {
-              name:'12312',
-              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-              price:120,
-              amount:3
-            },
-            {
-              name:'1231',
-              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-              price:120,
-              amount:2
-            },
-            {
-              name:'1231',
-              img:"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-              price:120,
-              amount:1
-            },
-          ],
-          amount:0,
-          totalPrice:0,
-          selItems:[],
-        }
+  import {getCartInfo} from "@/api/shoppingCart";
+  import {getToken} from "@/utils/auth";
+  import {removeCart} from "@/api/shoppingCart";
+  import {strToUrlImage} from "@/utils";
+
+  export default {
+    name: "ShopCart",
+    data(){
+      return{
+        //用户购物车商品信息
+        tableData:[],
+        amount:0,
+        totalPrice:0,
+        selItems:[],
+      }
+    },
+    methods:{
+      selItemsChange(sels) {
+        this.selItems = sels;
       },
-      methods:{
-        selected(val){
-          let totalGoods = 0;
-          let totalPrice = 0;
-          for(let goods of val)
-          {
-            totalGoods += 1;
-            totalPrice += Number(goods.price);
-          }
-          this.amount=totalGoods
-          this.totalPrice=totalPrice
-          this.selItems=val
-        },
-        balance(){
-          this.$router.push({
-            name:'Balance',
-            params:{data:this.selItems}
-          })
+      countTotal(){
+        let totalGoods = 0;
+        let totalPrice = 0;
+        for(let goods of this.selItems)
+        {
+          totalGoods += 1;
+          totalPrice += Number(goods.amount)* Number(goods.car.price);
         }
+        this.amount=totalGoods
+        this.totalPrice=totalPrice
+        this.selItems=val
+      },
+      balance(){
+        this.$router.push({
+          name:'Balance',
+          params:{type:'submit',data:this.selItems}
+        })
+      },
+      //获取用户购物车商品信息
+      getCart(){
+        if(this.token&&this.loginUserId!=='')
+          getCartInfo(this.loginUserId).then(response=>{
+            this.tableData=response
+          })
+      },
+      //删除
+      handleDel(index, row) {
+        this.$confirm('确认删除该记录吗?', '提示', {
+          type: 'warning'
+        }).then(() => {
+          let para=[
+            {cartId:row['cartId']}
+          ]
+          removeCart(para).then((res) => {
+            if(res==='success'){
+              this.listLoading = false;
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              });
+              this.getCart();
+            }
+            else if(res==='fail'){
+              this.listLoading = false;
+              this.$message({
+                message: '删除失败',
+                type: 'warning'
+              });
+            }
+          });
+        }).catch(() => {
+
+        });
+      },
+      //批量删除
+      batchRemove() {
+        this.$confirm('确认删除选中记录吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          let para=[]
+          this.selItems.forEach(item=>{
+            let itemPara={}
+            itemPara['cartId']=item['cartId']
+            para.push(itemPara)
+          })
+          removeCart(para).then((res) => {
+            if(res==='success'){
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              });
+              this.getCart();
+            }
+            else if(res==='fail'){
+              this.$message({
+                message: '删除失败',
+                type: 'warning'
+              });
+            }
+          });
+        }).catch(() => {
+
+        });
+      },
+      getImagUrl(str){
+        return strToUrlImage(str)
+      }
+    },
+    computed:{
+      loginUserId(){
+        return this.$store.getters.id;
+      },
+      token(){
+        return getToken('token')
+      },
+      refreshCart(){
+        return this.$store.getters.refreshCart;
+      }
+    },
+    mounted() {
+      this.getCart()
+    },
+    watch:{
+      loginUserId(){
+        this.getCart()
+      },
+      refreshCart(val){
+        this.getCart()
+      },
+      selItems(val){
+        this.countTotal()
       }
     }
+  }
 </script>
 
 <style lang="less" scoped>
@@ -159,9 +216,10 @@
         position: absolute;
         width: 300px;
         button{
-          width: 100%;
+          width: 50%;
           top:10px;
           margin-top: 30px;
+          float: left;
         }
       }
     }

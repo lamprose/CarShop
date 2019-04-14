@@ -13,7 +13,7 @@ import scroll from './directive/scroll'
 import "animate.css/animate.min.css";
 
 /*import './mock' // simulation data*/
-import './permission' //
+import './permission'
 import './icons' // icon
 
 
@@ -52,7 +52,7 @@ new Vue({
       store.dispatch("CheckSession")
     window.addEventListener("beforeunload",e=>{
       if(getToken('token'))
-        store.dispatch("FedLogOut")
+        store.dispatch("SessionLogOut")
     })
   }
 })

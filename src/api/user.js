@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import axios from 'axios'
 
 export function loginById(id, password,role) {
   return request({
@@ -16,15 +15,12 @@ export function loginById(id, password,role) {
   })
 }
 
-export function loginByToken(token){
+export function loginByToken(){
   return request({
     url: '/user/login',
     method: 'post',
     headers:{
       'Content-Type': 'application/json'
-    },
-    data: {
-      token:token
     }
   })
 }
@@ -36,16 +32,14 @@ export function logout() {
   })
 }
 
-export function getUserInfo(token) {
+export function getUserInfo(data) {
   return request({
     url: '/user/getInfo',
     method: 'post',
     headers:{
       'Content-Type': 'application/json'
     },
-    data:{
-      token:token
-    }
+    data:data
   })
 }
 
@@ -93,34 +87,6 @@ export function avatarUpload(params,id) {
   })
 }
 
-export function checkHaveSecret(id) {
-  return request({
-    url: '/user/checkHaveSecret',
-    method: 'post',
-    headers:{
-      'Content-Type': 'application/json'
-    },
-    data:{
-      id:id,
-    }
-  })
-}
-
-export function checkCorrectSecret(id,option,secret) {
-  return request({
-    url: '/user/checkCorrectSecret',
-    method: 'post',
-    headers:{
-      'Content-Type': 'application/json'
-    },
-    data:{
-      id:id,
-      option:option,
-      secret:secret
-    }
-  })
-}
-
 export function checkSession() {
   return request({
     url: '/user/checkSession',
@@ -128,5 +94,19 @@ export function checkSession() {
     headers:{
       'Content-Type': 'application/json'
     },
+  })
+}
+
+export function changePassword(oldPassword,newPassword) {
+  return request({
+    url: '/user/changePassword',
+    method: 'post',
+    headers:{
+      'Content-Type': 'application/json'
+    },
+    data:{
+      oldPassword:oldPassword,
+      newPassword:newPassword
+    }
   })
 }

@@ -120,3 +120,8 @@ aside#asideBarBlank{
 .input-form .el-form-item__content{
   width: 350px;
 }
+
+
+.el-main{
+  overflow-x: hidden;
+}

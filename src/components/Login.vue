@@ -8,7 +8,7 @@
         </el-tabs>
         <!--用户名输入-->
         <el-form-item>
-          <el-input v-model="loginForm.id" placeholder="输入用户名"  class="input">
+          <el-input v-model.trim="loginForm.id" placeholder="输入用户名"  class="input">
             <span class="svg-container" slot="suffix">
               <svg-icon icon-class="user" />
             </span>
@@ -16,7 +16,7 @@
         </el-form-item>
         <!--密码输入-->
         <el-form-item>
-          <el-input v-model="loginForm.password" placeholder="输入密码" :show-password="true" class="input"></el-input>
+          <el-input v-model.trim="loginForm.password" placeholder="输入密码" :show-password="true" class="input"></el-input>
         </el-form-item>
         <!--是否记住密码-->
         <el-form-item>
@@ -80,11 +80,9 @@
           return
         }else{
           this.loginForm.encryptPassword=encryptMd5(this.loginForm.password)
-          this.$store.dispatch('loginById', this.loginForm).then(() => {
-
-          }).catch(() => {
+          this.$store.dispatch('loginById', this.loginForm).catch((err) => {
             this.$message.error({
-              message:"登录失败,请检查后重试",
+              message:err,/*"登录失败,请检查后重试"*/
               showClose:true
             })
           })

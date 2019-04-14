@@ -1,14 +1,27 @@
 import request from '@/utils/request'
 
-export function getCarInfo(productId) {
+export function checkCarId(data) {
   return request({
-    url: '/car/get',
+    url: '/cars/check',
     method: 'post',
     headers:{
       'Content-Type': 'application/json'
     },
     data:{
-      pId:productId
+      carId:data
+    }
+  })
+}
+
+export function getCarInfo(carId) {
+  return request({
+    url: '/cars/getCarInfo',
+    method: 'post',
+    headers:{
+      'Content-Type': 'application/json'
+    },
+    data:{
+      carId:carId
     }
   })
 }
@@ -21,7 +34,43 @@ export function search(query) {
       'Content-Type': 'application/json'
     },
     data:{
-      query:query
+      queryString:query
+    }
+  })
+}
+
+export function getHotSearch() {
+  return request({
+    url: '/cars/getHotSearch',
+    method: 'post',
+    headers:{
+      'Content-Type': 'application/json'
+    },
+  })
+}
+
+export function searchByText(text) {
+  return request({
+    url: '/cars/searchByText',
+    method: 'post',
+    headers:{
+      'Content-Type': 'application/json'
+    },
+    data:{
+      text:text
+    }
+  })
+}
+
+export function queryStringByText(text) {
+  return request({
+    url: '/cars/queryStringByText',
+    method: 'post',
+    headers:{
+      'Content-Type': 'application/json'
+    },
+    data:{
+      text:text
     }
   })
 }

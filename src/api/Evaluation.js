@@ -1,21 +1,8 @@
 import request from '@/utils/request'
 
-export function getCartInfo(uId) {
+export function getEvaluationListPage(data) {
   return request({
-    url: '/shoppingCart/getCartInfo',
-    method: 'post',
-    headers:{
-      'Content-Type': 'application/json'
-    },
-    data:{
-      id:uId
-    }
-  })
-}
-
-export function removeCart(data) {
-  return request({
-    url: '/shoppingCart/removeCart',
+    url: '/evaluation/getEvaluationListPage',
     method: 'post',
     headers:{
       'Content-Type': 'application/json'
@@ -24,17 +11,24 @@ export function removeCart(data) {
   })
 }
 
-export function addCart(id,carId,amount) {
+export function addEvaluation(data) {
   return request({
-    url: '/shoppingCart/addCart',
+    url: '/evaluation/addEvaluation',
     method: 'post',
     headers:{
       'Content-Type': 'application/json'
     },
-    data:{
-      id:id,
-      carId:carId,
-      amount:amount
-    }
+    data:data
+  })
+}
+
+export function editEvaluation(data) {
+  return request({
+    url: '/evaluation/editEvaluation',
+    method: 'post',
+    headers:{
+      'Content-Type': 'application/json'
+    },
+    data:data
   })
 }

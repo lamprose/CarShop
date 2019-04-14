@@ -15,7 +15,7 @@
       <el-footer id="bottomBar"><router-view name="bottomBar"></router-view></el-footer>
       <el-scrollbar><!--隐藏滚动条-->
         <el-aside v-if="show&&this.$route.path!=='/balance'" width="300px" id="asideBarBlank">
-          <aside-layout :asideBarNow="asideBarNow"></aside-layout>
+          <aside-layout :asideBarNow="asideBarNow" @toggleOffAside="toggle"></aside-layout>
         </el-aside>
       </el-scrollbar>
     </el-container>
@@ -32,6 +32,8 @@
 
 <script>
   import {goToElement} from '@/utils'
+  import {toggleAsideBar} from "@/utils/method";
+
   export default {
     name: 'MainLayout',
     components:{
@@ -46,18 +48,13 @@
         clientHeight:0,
         showTop:false,
         floatLogin:[
-          {id:"hover-user",icon:"user",tag:"我的",authority:['superAdmin','admin','normal'],val:2},
+          {id:"hover-user",icon:"user",tag:"我的",authority:['superAdmin','admin','normal']},
           {id:"hover-cart",icon:"shopping-cart",authority:['normal'],tag:"购物车"},
           {id:"hover-chat",icon:"comments",tag:"聊天室",authority:['superAdmin','admin','normal'],val:0},
           {id:"hover-tool",icon:"wrench",tag:"工具箱"},
           {id:"hover-phone",icon:"phone",tag:"客服电话"},
           {id:"hover-locate",icon:"map-marker",tag:"定位"},
-        ],
-        floatNoLogin:[
-          {id:"hover-tool",icon:"wrench",tag:"工具箱"},
-          {id:"hover-phone",icon:"phone",tag:"客服电话"},
-          {id:"hover-locate",icon:"map-marker",tag:"定位"},
-        ],
+        ]
       }
     },
     methods:{

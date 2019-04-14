@@ -1,18 +1,19 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <!--工具条-->
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
-        <el-form-item>
+        <el-form-item style="float: left">
           <el-button v-if="this.$store.getters.tempRoles!==''" type="primary" @click="goBack">返回</el-button>
+          <el-button v-else-if="tableType==='Evaluation'" type="primary" @click="goBackTemp">返回</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-input v-model="filters.name" placeholder="姓名"></el-input>
+        <el-form-item v-if="tableType!=='Evaluation'">
+          <el-input v-model="filters.name" :placeholder="searchText"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="tableType!=='Evaluation'">
           <el-button type="primary" @click="getData">查询</el-button>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="tableType!=='Order'&&tableType!=='Evaluation'">
           <el-button type="primary" @click="handleAdd">新增</el-button>
         </el-form-item>
       </el-form>
@@ -26,21 +27,31 @@
               height="480">
       <el-table-column type="selection" width="55">
       </el-table-column>
-      <el-table-column type="expand">
+      <el-table-column v-if="dataExpand.length!==0" type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-form-item v-for="o in dataExpand" :label="o.tag" :key="o.val?o.val:o.prop">
-              <template>
-                <label v-if="o.type==='label'?true:o.type==='input'" style="margin-left: 11px" >{{o.val?props.row[o.prop][o.val]:props.row[o.prop]}}</label>
-                <img v-else-if="o.type==='img'" :src="serverAvatarUrl(o.val?props.row[o.prop][o.val]:props.row[o.prop])" :alt="o.val?props.row[o.prop][o.val]:props.row[o.prop]" style="width: 50px;height: 50px">
+              <template v-if="o.val">
+                <label v-if="o.type==='label'" style="margin-left: 11px" >{{props.row[o.prop][o.val]}}</label>
+                <img v-else-if="o.type==='img'" :src="serverAvatarUrl(props.row[o.prop][o.val])" :alt="props.row[o.prop][o.val]" style="width: 50px;height: 50px">
+              </template>
+              <template v-else>
+                <label v-if="o.type==='label'" style="margin-left: 11px" >{{props.row[o.prop]}}</label>
+                <img v-else-if="o.type==='img'" :src="serverAvatarUrl(props.row[o.prop])" :alt="props.row[o.prop]" style="width: 50px;height: 50px">
               </template>
             </el-form-item>
           </el-form>
         </template>
       </el-table-column>
       <template v-for="o in dataSpread">
-        <el-table-column v-if="!o.val&&o.type==='label'||o.type==='input'" :prop="o.prop" :label="o.tag"></el-table-column>
-        <el-table-column v-else-if="o.type==='img'" :prop="o.prop" :label="o.tag">
+        <el-table-column v-if="!o.val&&o.prop==='evaluation'" :label="o.tag">
+          <div class="evaluation" slot-scope="scope">
+            <span>{{scope.row[o.prop]}}</span>
+            <el-button type="primary" @click="switchTable('evaluation',scope.row['carId'])">查看评价</el-button>
+          </div>
+        </el-table-column>
+        <el-table-column v-else-if="!o.val&&o.type==='label'" :prop="o.prop" :label="o.tag"></el-table-column>
+        <el-table-column v-else-if="!o.val&&o.type==='img'" :prop="o.prop" :label="o.tag">
           <template slot-scope="scope">
             <img :src="serverAvatarUrl(scope.row[o.prop])" :alt="scope.row[o.prop]" style="width: 50px;height: 50px">
           </template>
@@ -51,11 +62,11 @@
           </template>
         </el-table-column>
       </template>
-      <el-table-column label="操作" width="220" align="center" >
+      <el-table-column label="操作" width="220" align="center" v-if="loginUserRole!=='admin'||tableType!=='Evaluation'">
         <template slot-scope="scope">
           <el-button v-if="tableType==='Shop'" type="primary" size="mini" icon="el-icon-setting" @click="handleCheck(scope.$index, scope.row)">查看</el-button>
-          <el-button v-else type="primary" size="mini" icon="el-icon-setting" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+          <el-button v-else-if="tableType!=='Evaluation'" type="primary" size="mini" icon="el-icon-setting" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button  type="danger" size="small" icon="el-icon-delete" @click="handleDel(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -67,18 +78,15 @@
 
     <!--编辑界面-->
     <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item v-for="o in dataType" v-if="o.edit" :label="o.tag" :prop="o.val?o.val:o.prop" :key="o.val?o.val:o.prop">
-          <el-input v-if="o.val" v-model="editForm[o.val]"></el-input>
-          <el-input v-else v-model="editForm[o.prop]"></el-input>
-          <!--<el-upload v-else-if="o.type==='img'" action=""
-                     class="avatar-upload"
-                     list-type="picture">
-            <img width="50px" v-if="editForm[o.prop]" :src="serverAvatarUrl(editForm[o.prop])" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>-->
-          <label v-else-if="o.type==='label'">{{editForm[o.prop]}}</label>
-        </el-form-item>
+      <el-form v-if="editFormVisible" :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+        <template v-for="o in dataType" v-if="o.edit">
+          <el-form-item v-if="o.val" :label="o.tag" :prop="o.prop+'.'+o.val" :key="o.val">
+            <el-input v-model="editForm[o.prop][o.val]"></el-input>
+          </el-form-item>
+          <el-form-item v-else :label="o.tag" :prop="o.prop" :key="o.prop">
+            <el-input v-model="editForm[o.prop]"></el-input>
+          </el-form-item>
+        </template>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="editFormVisible = false">取消</el-button>
@@ -89,14 +97,18 @@
     <!--新增界面-->
     <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-form-item v-for="o in dataType" v-if="o.add" :label="o.tag" :prop="o.val?o.val:o.prop" :key="o.val?o.val:o.prop">
-          <el-input v-if="o.val" v-model="addForm[o.val]"></el-input>
-          <el-input v-else v-model="addForm[o.prop]"></el-input>
-        </el-form-item>
+        <template v-for="o in dataType" v-if="o.add">
+          <el-form-item v-if="o.val" :label="o.tag" :prop="o.val" :key="o.val">
+            <el-input v-model="addForm[o.val]"></el-input>
+          </el-form-item>
+          <el-form-item v-else :label="o.tag" :prop="o.prop" :key="o.prop">
+            <el-input v-model="addForm[o.prop]"></el-input>
+          </el-form-item>
+        </template>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
+        <el-button type="primary" @click="addSubmit" :loading="addLoading">提交</el-button>
       </div>
     </el-dialog>
   </div>
@@ -106,7 +118,7 @@
   import * as dataFunc from '@/api/admin'
   import * as dataAdd from '@/utils/object'
   import {uniqueTableProp} from "@/utils";
-  import {serverAvatar} from "../api";
+  import {baseUrl} from "../api";
 
   export default {
     name: "ShowTable",
@@ -136,6 +148,10 @@
       addFormRules:{
         type:Object,
         required:false
+      },
+      searchText:{
+        type:String,
+        required:true
       }
     },
     data(){
@@ -166,6 +182,12 @@
       }
     },
     methods: {
+      switchTable(tableName,carId){
+        this.$emit('switchTable',{table:tableName,carId:carId})
+      },
+      goBackTemp(){
+        this.$emit('goBackTemp')
+      },
       handleCurrentChange(val) {
         this.page = val;
         this.getData();
@@ -177,18 +199,14 @@
       },
       //显示编辑界面
       handleEdit(index, row) {
-        this.editFormVisible = true;
         this.editForm = Object.assign({}, row);
+        this.editFormVisible = true;
       },
       handleCheck(index, row){
-        this.$store.dispatch('SetTempRoles',row[this.tableKey]).then(()=>{
-
-        })
+        this.$store.dispatch('SetTempRoles',row[this.tableKey])
       },
       goBack: function (index, row){
-        this.$store.dispatch('ClearTempRoles').then(()=>{
-
-        })
+        this.$store.dispatch('ClearTempRoles')
       },
       //编辑
       editSubmit() {
@@ -198,7 +216,6 @@
               this.editLoading = true;
               //NProgress.start();
               let para = Object.assign({}, this.editForm);
-              console.log(para)
               dataFunc[this.editFuc](para).then((res) => {
                 if(res==='success'){
                   this.editLoading = false;
@@ -217,18 +234,45 @@
                 this.editFormVisible = false;
                 this.getData();
               });
+            }).catch(err=>{
+              console.log(err)
             });
           }
         });
       },
-      getData(){
+      getData(carId){
         this.listLoading = true;
         //NProgress.start();
         let para = {
           page: this.page,
           name: this.filters.name
         };
+        if(this.tableType==='Car'||this.tableType==='Order'){
+          if(this.$store.getters.role==='superAdmin')
+            para["shopId"]=this.$store.getters.tempRoles
+          else
+            para["shopId"]=this.$store.getters.id
+        }else if(this.tableType==='Evaluation'){
+          para['carId']=carId
+        }
         dataFunc[this.getFuc](para).then((data) => {
+          if(this.tableType==='Brand')
+            data.data.forEach(item=>{
+              item['display']=item['display']+'display1.jpg'
+            })
+          else if(this.tableType==='Shop')
+            data.data.forEach(item=>{
+              item['brand']['display']=item['brand']['display']+'display1.jpg'
+            })
+          else if(this.tableType==='Car')
+            data.data.forEach(item=>{
+              item['image']=item['image']+'right.jpg'
+            })
+          else if(this.tableType==='User')
+            data.data.forEach(item=>{
+              if(item['avatar']===null)
+                item['avatar']='/UserAvatar/default_avatar.png'
+            })
           this.total = data.total;
           this.tableData = data.data;
           this.listLoading = false;
@@ -276,6 +320,12 @@
             this.$confirm('确认提交吗？', '提示', {}).then(() => {
               this.addLoading = true;
               let para = Object.assign({}, this.addForm);
+              if(this.tableType==='Car'||this.tableType==='Order'){
+                if(this.$store.getters.role==='superAdmin')
+                  para["shopId"]=this.$store.getters.tempRoles
+                else
+                  para["shopId"]=this.$store.getters.id
+              }
               dataFunc[this.addFuc](para).then((res) => {
                 if(res==='success'){
                   this.addLoading = false;
@@ -295,24 +345,25 @@
                 this.$refs['addForm'].resetFields();
                 this.addFormVisible = false;
               });
+            }).catch(err=>{
+              console.log(err)
             });
           }
         });
       },
       //批量删除
       batchRemove() {
-        let para=[]
-        this.selItems.forEach(item=>{
-          let itemPara={}
-          this.tableKey.forEach((key)=>{
-            itemPara[key]=item[key]
-          })
-          para.push(itemPara)
-        })
-        let ids = this.selItems.map(item => item.id).toString();
         this.$confirm('确认删除选中记录吗？', '提示', {
           type: 'warning'
         }).then(() => {
+          let para=[]
+          this.selItems.forEach(item=>{
+            let itemPara={}
+            this.tableKey.forEach((key)=>{
+              itemPara[key]=item[key]
+            })
+            para.push(itemPara)
+          })
           this.listLoading = true;
           dataFunc[this.removeFuc](para).then((res) => {
             if(res==='success'){
@@ -340,7 +391,7 @@
         this.selItems = sels;
       },
       serverAvatarUrl(url){
-        return serverAvatar+url
+        return baseUrl+url
       }
     },
     mounted() {
@@ -355,13 +406,34 @@
         return order.indexOf(a.type) - order.indexOf(b.type);
       })
       this.dataType=uniqueTableProp(this.dataType)
-      if(this.getFuc!=="")
-        this.getData()
+      /*if(this.getFuc!=="")
+        this.getData()*/
+    },
+    computed:{
+      loginUserRole(){
+        return this.$store.getters.role
+      }
     }
   }
 </script>
 
 <style lang="less" scoped>
+  .evaluation{
+    span{
+      display: block;
+    }
+    button{
+      display: none;
+    }
+    &:hover{
+      span{
+        display: none;
+      }
+      button{
+        display: block;
+      }
+    }
+  }
   .toolbar{
     position: relative;
     &>button{

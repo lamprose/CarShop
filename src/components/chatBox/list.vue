@@ -41,15 +41,17 @@
           return
         }
         this.$store.dispatch("AddSession",this.topInput).then((err)=>{
-          if(err!=="")
-            this.$message.error({
-              message:err,
-              showClose:true
-            })
-          else{
-            this.topInput=""
-            this.$emit("refresh")
-          }
+          this.$message.success({
+            message:'添加成功',
+            showClose:true
+          })
+          this.topInput=""
+          this.$emit("refresh")
+        }).catch(err=>{
+          this.$message.error({
+            message:err,
+            showClose:true
+          })
         })
       },
       clearMessages(key){

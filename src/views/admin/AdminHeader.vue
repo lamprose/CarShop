@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="logo" style="opacity: 1">
-      <img width="150px" :src="logo">
+      <router-link :to="{name:'Home'}"><img width="150px" :src="logo"></router-link>
     </div>
     <el-button medium type="text" id="collapse-button" @click="collapse">
       <svg-icon icon-class="align-justify"></svg-icon>
@@ -10,7 +10,7 @@
       <el-dropdown trigger="hover">
         <div class="user-info-inner">
           <span>{{user.name}}</span>
-          <img :src="user.avatar===''?defaultAvatar:user.avatar" />
+          <img :src=" user.avatar" />
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>

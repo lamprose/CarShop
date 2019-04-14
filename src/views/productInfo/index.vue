@@ -3,40 +3,35 @@
       <!--顶部面包屑-->
       <el-breadcrumb separator-class="el-icon-arrow-right" style="width: 100%">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/' }">{{productInfo.shop}}</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/' }">{{productInfo.series}}</el-breadcrumb-item>
-        <el-breadcrumb-item >{{productInfo.name}}</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/shop/'+carInfo.brand.brandId }">{{carInfo.brand.brandName}}</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/' }">{{carInfo.carName}}</el-breadcrumb-item>
       </el-breadcrumb>
       <!--商品信息-->
       <el-row :gutter="24" style="margin-top: 20px">
         <el-col :span="9">
-          <el-carousel id="product-large" indicator-position="outside">
-            <el-carousel-item v-for="item in 4" :key="item" style="background-color: #000">
-              <h3>{{ item }}</h3>
+          <el-carousel id="product-large" indicator-position="outside" height="260.6px">
+            <el-carousel-item v-for="item in carouselImg" :key="item" style="background-color: #000">
+              <img width="391" :src="item">
             </el-carousel-item>
           </el-carousel>
         </el-col>
         <el-col :span="15" class="info">
           <div class="info-item" style="margin-top: 20px">
-            <h1 class="car-name">{{productInfo.name}}</h1>
+            <h1 class="car-name">{{carInfo.carName}}</h1>
           </div>
           <div class="info-item" style="">
-            <div class="car-tag">{{productInfo.tag}}</div>
+            <div class="car-tag">{{carInfo.tag}}</div>
           </div>
           <el-form class="submit" style="width: 50%;margin: auto">
             <el-form-item label="裸车价">
-              <strong class="car-price"><span class="yen">￥</span><span>{{productInfo.price}}</span>万<span></span></strong>
-              <span class="car-guidingPrice">指导价<span>{{productInfo.guidingPrice}}</span>万</span>
+              <strong class="car-price"><span class="yen">￥</span><span>{{carInfo.price}}</span>万<span></span></strong>
             </el-form-item>
             <el-form-item label="服务承诺" class="promise">
               <span>官方车源</span><span>支付安全</span><span>全国联保</span>
             </el-form-item>
-            <!--<el-form-item label="提车区域">
-              <area-select id="area-select" v-model="area" type="text" :placeholders='placeholders' :level="2" :data="pcaa"></area-select>
-            </el-form-item>-->
             <el-form-item>
-              <el-button>立即购买</el-button>
-              <el-button>加入购物车</el-button>
+              <el-button @click="toBuy">立即购买</el-button>
+              <el-button @click="addCartItem">加入购物车</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -45,41 +40,45 @@
       <div>
         <!--侧边固定栏-->
         <div id="sideBar" :class="sideBarFixed === true ? 'isFixed' :''" style="float:left;width:200px;">
-          <img width="80%" height="150px" src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif"/>
+          <img width="100%" height="133.3px" :src="carouselImg[0]"/>
           <div style="position: relative;height: 40px;margin-top: 20px">
-            <strong class="car-price"><span class="yen">￥</span><span>{{productInfo.price}}</span>万<span></span></strong>
-            <span class="car-guidingPrice" style="top:5px">指导价<span>{{productInfo.guidingPrice}}</span>万</span>
+            <strong class="car-price"><span class="yen">￥</span><span>{{carInfo.price}}</span>万<span></span></strong>
           </div>
-          <el-button style="width: 100%">立即购买</el-button>
-          <el-button style="width: 100%;margin-left: 0px">加入购物车</el-button>
+          <el-button style="width: 100%" @click="toBuy">立即购买</el-button>
+          <el-button style="width: 100%;margin-left: 0px" @click="addCartItem">加入购物车</el-button>
         </div>
         <!--商品图片信息-->
-        <div  style="float:right;width:calc(100% - 220px);height: 1000px;background-color: white">
-          <el-menu :class="sideBarFixed === true ? 'isFixed' :''" style="width: 986px" default-active="1" class="el-menu-demo" mode="horizontal">
+        <div  style="float:right;width:calc(100% - 220px);background-color: white">
+          <el-menu :class="sideBarFixed === true ? 'isFixed' :''" style="width: 864px" default-active="1" class="el-menu-demo" mode="horizontal">
             <el-menu-item v-for="(o,index) in navigationBarItem" :key="index">
               <el-button type="text" v-anchor="o.anchor">{{o.text}}</el-button>
             </el-menu-item>
           </el-menu>
           <div id="anchor-introduce">
             <div class="header"><label>商品介绍</label></div>
+            <img v-for="o in displayImg" :src="o" width="864.81px">
           </div>
         </div>
-        <div  style="float:right;width:calc(100% - 220px);height: 1000px;background-color: red">
+        <div class="param">
           <span id="anchor-parameter"></span>
           <div class="header"><label>车辆参数</label></div>
-          <ul>
-            <li v-for="i in 13" style="margin-top: 30px"><label style="margin-right: 100px">你好</label><label>哈哈</label></li>
-          </ul>
+          <table style="width: 100%">
+            <template v-for="(o,index) in paramItem">
+              <tr class="param-item" :style="{backgroundColor:(index%2===0?'#f9f7f7':'#ffffff')}">
+                <td class="param-item-left">{{o.tag}}</td><td class="param-item-right">{{carInfo.param[o.prop]}}</td>
+              </tr>
+            </template>
+          </table>
           <div class="item-text" style="margin-bottom: 50px">注：以上参数配置信息仅供参考，实际参数配置信息以经销商销售车辆为准，解释权归生产厂家所有。</div>
         </div>
-        <div id="anchor-evaluate" style="float:right;width:calc(100% - 220px);height: 1000px;background-color: blue">
-          <div class="header"><label>商品评价</label></div>
+        <div id="anchor-evaluate" style="float:right;width:calc(100% - 220px);min-height: 800px">
+          <div class="header"><label>商品评价({{evaluateTotal}})</label></div>
           <ul>
-            <li v-for="o in evaluates">
+            <li v-for="o in evaluations">
               <div class="evaluate-info">
                 <div class="evaluate-user item-text">
-                  <div class="evaluate-user-name">{{o.id}}</div>
-                  <div class="evaluate-user-time">{{o.time}}</div>
+                  <div class="evaluate-user-name">{{o.user.id}}</div>
+                  <div class="evaluate-user-time">{{o.evaTime|StringToTime}}</div>
                 </div>
                 <div class="evaluate-rate item-text">
                   <div class="evaluate-rate-item"><el-rate v-model="o.grade" show-score disabled></el-rate></div>
@@ -95,22 +94,25 @@
 
 <script>
   import {getCarInfo} from "@/api/car";
+  import {addOrder} from "@/api/order";
+  import {addCart} from "@/api/shoppingCart";
   import { pca, pcaa } from "area-data";
+  import {getEvaluationListPage} from "@/api/Evaluation";
+  import {strToUrlImage} from "@/utils";
 
   export default {
     name: "GoodsInfo",
     data(){
       return{
-        productInfo:{
-          name:'上汽大众 凌渡 280TSI DSG米色内饰限量版',
-          shop:'上汽大众',
-          series:'凌渡',
-          tag:'【车享自营】综合优惠：46818元，手快抢10万公里免保',
+        carInfo:{
+          carId:'car1',
+          carName:'上汽大众 凌渡 280TSI DSG米色内饰限量版',
+          brand:{
+            brandName:'上汽大众'
+          },
+          param:{},
           price:'14.59',
-          guidingPrice:'18.49',
-          color:[
-            'red','black','gold'
-          ],
+          image:'',
         },
         offsetTop:0,
         sideBarFixed:false,
@@ -121,13 +123,33 @@
         ],
         area:[],
         areaLoc:'',
+        carouselImg:[],
+        displayImg:[],
+        carouselImgPath:[
+          ['right.jpg','front.jpg','left.jpg','after.jpg'],
+          ['display1.jpg','display2.jpg']
+        ],
         placeholders: ['选择省','选择市','选择区'],
         pcaa:pcaa,
-        evaluates:[
-          {id:'李**',time:"2019-04-07",grade:1,evaluate:'服务很好'},
-          {id:'饶**',time:"2019-04-08",grade:2,evaluate:'服务很好服务很好'},
-          {id:'宋**',time:"2019-04-09",grade:3,evaluate:'服务很好服务很好服务很好'},
-          {id:'谭**',time:"2019-04-10",grade:4,evaluate:'服务很好服务很好服务很好服务很好'},
+        evaluateTotal:0,
+        evaluations:[
+          {
+            user:{id:'李**'},
+            evaTime:'20190416181721',
+            evaluate:'',
+            grade:3,
+          },
+        ],
+        paramItem:[
+          {prop:'carSize',tag:"车身尺寸"},
+          {prop:'engine',tag:"发动机"},
+          {prop:'level',tag:"级别"},
+          {prop:'structure',tag:"车身结构"},
+          {prop:'assurance',tag:"整车质保"},
+          {prop:'oilWear',tag:"油耗"},
+          {prop:'manufacturer',tag:"厂商"},
+          {prop:'gearbox',tag:"变速箱"},
+          {prop:'maxSpeed',tag:"最高车速"},
         ]
       }
     },
@@ -137,20 +159,94 @@
         //let offsetTop = document.querySelector('#sideBar').offsetTop
         scrollTop > this.offsetTop? this.sideBarFixed = true : this.sideBarFixed = false
       },
+      toBuy(){
+        if(this.loginUser.status){
+          this.$router.push({
+            name:'Balance',
+            params:{type:'submit',data:[{amount:1,car:this.carInfo,user:this.loginUser}]}
+          })
+        }else
+          this.$message.error({
+            message:'未登录，请登陆后重试',
+            showClose:false
+          })
+      },
+      addCartItem(){
+        if(this.loginUser.status)
+          addCart(this.loginUser.id,this.carInfo.carId,1).then(response=>{
+            if(response==='success'){
+              this.$message.success({
+                message:'加入购物车成功',
+                showClose:false
+              })
+              this.$store.dispatch('ChangeRefreshCart')
+            }else {
+              this.$message.error({
+                message:'加入购物车失败，请稍后重试',
+                showClose:false
+              })
+            }
+          })
+        else
+          this.$message.error({
+            message:'未登录，请登陆后重试',
+            showClose:false
+          })
+      },
+      getImage(url){
+        return strToUrlImage(url)
+      }
     },
     mounted () {
       window.addEventListener('scroll', this.handleScroll)
       this.offsetTop=document.querySelector('#sideBar').offsetTop
-      getCarInfo(this.$route.params.id).then(data=>{
-        this.productInfo=data
+      getCarInfo(this.$route.params.id).then(response=>{
+        this.carInfo=response
+        this.carouselImgPath[0].forEach(item=>{
+          this.carouselImg.push(this.getImage(response.image+item))
+        })
+        this.carouselImgPath[1].forEach(item=>{
+          this.displayImg.push(this.getImage(response.image+item))
+        })
+        console.log(this.carouselImg)
+        getEvaluationListPage({carId:this.carInfo.carId,page:1}).then(response1=>{
+          this.evaluations=response1.data
+          this.evaluateTotal=response1.total
+        })
       })
     },
+    computed:{
+      loginUser(){
+        return this.$store.getters.user
+      }
+    }
   }
 </script>
 
 <style lang="less" scoped>
+  .param{
+    float:right;
+    width:calc(100% - 220px);
+    height: 500px;
+    .param-item{
+      width: 100%;
+      height: 36px;
+      .param-item-left{
+        padding:10px;
+        padding-right:50px;
+        text-align: right;
+        width: 50%;
+      }
+      .param-item-right{
+        padding:10px;
+        padding-left:50px;
+        text-align: left;
+        width: 50%;
+      }
+    }
+  }
   strong.car-price{
-    font-size: 24px;
+    font-size: 23px;
     color: #c71445;
     padding: 0 15px 0 7px;
     font-weight: 100;
@@ -172,7 +268,7 @@
   }
   .isFixed{
     position: fixed;
-    top:5px;
+    top:0px;
     z-index: 1000;
   }
   .item-text{
@@ -180,29 +276,37 @@
     margin-left: 40px;
   }
   .header{
-    background-color: #d0cdc7;
+    background-color: #f9f7f7;
     height: 60px;
     font-size: 20px;
     width: 100%;
     position: relative;
+    text-align: left;
     label{
-      width: 85px;
+      width: 100%;
       position: absolute;
       left: 35px;
       top: 20px;
     }
   }
   .evaluate-info{
-    margin-top: 40px;
+    border-top: 1px solid #e8e8e8;
+    padding-top:50px;
+    padding-bottom:50px;
     .evaluate-user{
       width: 80%;
-      .evaluate-user-name,.evaluate-user-time{
-        display: inline;
+      .evaluate-user-name{
+        float: left;
+      }
+      .evaluate-user-time{
+        float: right;
+        text-align: right;
+        margin-left: 40px;
       }
     }
     .evaluate-rate{
       width: 80%;
-      margin-top: 10px;
+      margin-top: 30px;
     }
     .evaluate-text{
       width: 100%;

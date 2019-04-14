@@ -4,6 +4,7 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 import { baseUrl } from '@/api'
 
+const tokenBlankList=['/user/register','/car/get']
 // 创建axios实例
 const service = axios.create({
   baseURL: baseUrl, // api 的 base_url
@@ -16,7 +17,7 @@ service.interceptors.request.use(
     // 发送请求时添加配置信息
     if(config.headers['Content-Type']==='application/json')
       config.data = JSON.stringify(config.data);
-    if (getToken('token')&&typeof(getToken('token'))!=="undefined") {
+    if (tokenBlankList.indexOf(config.url)===-1&&getToken('token')&&typeof(getToken('token'))!=="undefined") {
       // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
       config.headers['Token'] = getToken('token')
     }
@@ -58,7 +59,7 @@ service.interceptors.response.use(
     }
    },
   error => {
-    console.log('err' + error) // for debug
+    console.log(error) // for debug
     Message({
       message: error.message,
       type: 'error',

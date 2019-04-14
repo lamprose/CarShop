@@ -11,31 +11,18 @@
       <div style="height: 350px">
         <el-row >
           <!--显示分类列表-->
-          <el-col :span="5" class="classify">
-            <div class="classify-item">
-              <div style="height: 20%">
-                <span>品牌</span>
-                <el-popover
-                  placement="right-start"
-                  width="200"
-                  trigger="hover">
-                  <span style="margin-left: 150px" slot="reference">更多<svg-icon icon-class="right"></svg-icon></span>
-                    <ul>
-                      <li v-for="i in 20">hhh</li>
-                    </ul>
-                </el-popover>
+          <el-col :span="5" class="classify" :style="{backgroundImage:'url('+sideListBg+')'}">
 
-              </div>
-              <ul>
-                <li v-for="o in menuBrand" style="float: left;margin-left: 15px">{{o}}</li>
-              </ul>
-            </div>
-            <div class="classify-item">
+            <div class="classify-item" >
               <div style="height: 20%">
                 <span>品牌</span>
               </div>
               <ul>
-                <li v-for="o in menuBrand" style="float: left;margin-left: 15px">{{o}}</li>
+                <li v-for="o in shops" style="float: left;margin-left: 30px">
+                  <router-link class="header-brand" :to="o.link">
+                    {{o.short}}
+                  </router-link>
+                </li>
               </ul>
             </div>
           </el-col>
@@ -56,18 +43,18 @@
           <div class="slogan">
             <h2>享推荐</h2><span>为你所享，推荐所需</span>
           </div>
-          <div v-for="i in 4">
+          <div v-for="brand in brands">
             <div class="clear-fix">
               <img src="../../assets/reTab1.jpg" width="1190px">
               <div class="goods-box">
                 <ul class="custom-list-car">
-                  <li v-for="i in 3">
-                    <a href="//car.chexiang.com/product/1092403.htm" target="_blank" ca="v170727_cm-home_pc_customization_c2d1$凌渡$">
-                      <h3 class="goods-title">凌渡米色内饰限量版</h3>
-                      <p class="goods-subtitle">综合优惠4.68万元</p>
-                      <p class="goods-price">￥14.59万</p>
-                      <img class="lazy goods-img" width="180" height="120" data-original="//i1.cximg.com/cms/carmall/upload/resources/image/2018/05/25/65565.jpg" src="//i1.cximg.com/cms/carmall/upload/resources/image/2018/05/25/65565.jpg" style="display: inline;">
-                    </a>
+                  <li v-for="car in brand.topShop">
+                    <router-link :to="{path:'/car/'+car.carId}">
+                      <h3 class="goods-title">{{car.carName}}</h3>
+                      <p class="goods-subtitle">综合优惠{{(car.price * 0.05).toFixed(2)}}万元</p>
+                      <p class="goods-price">￥{{car.price}}万</p>
+                      <img class="lazy goods-img" width="180" height="120" :src="getImage(car.image+'right.jpg')" style="display: inline;">
+                    </router-link>
                   </li>
                 </ul>
               </div>
@@ -85,11 +72,11 @@
           <div>
             <ul class="shop-list">
               <li class="shop-item" v-for="shop in shops">
-                <a :href="shop.link">
+                <router-link :to="shop.link">
                   <img alt="" :src="shop.img" style="display: block;">
                   <h4>{{shop.title}}</h4>
                   <p>{{shop.tag}}</p>
-                </a>
+                </router-link>
               </li>
             </ul>
           </div>
@@ -122,84 +109,116 @@
 </template>
 
 <script>
-    export default {
-        name: "Home",
-      data(){
-          return{
-            carousel:[
-              require("@/assets/carousel/carousel-1.jpg"),
-              require("@/assets/carousel/carousel-2.jpg"),
-              require("@/assets/carousel/carousel-3.jpg"),
-              require("@/assets/carousel/carousel-4.jpg")
-            ],
-            menuBrand:[
-              "上汽大众","荣威","上汽大通","斯柯达","雪佛兰","宝骏","五菱","MG","凯迪拉克","别克","吉普"
-            ],
-            shops:[
-              {
-                link:'//c.chexiang.com/promotion/brands/volkswagen/index.htm',
-                img:'//i1.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44813.jpg',
-                title:'大众品牌旗舰店',tag:'最高30000元金融补贴'
-              },
-              {
-                link:'//c.chexiang.com/promotion/brands/buick/index.htm',
-                img:'//i2.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44811.jpg',
-                title:'别克品牌旗舰店',tag:'心静思远 志行千里'
-              },
-              {
-                link:'//c.chexiang.com/promotion/brands/chevrolet/index.htm',
-                img:'//i2.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44814.jpg',
-                title:'雪佛兰品牌旗舰店',tag:'最高2000元大礼包'
-              },
-              {
-                link:'//c.chexiang.com/promotion/brands/wuling/index.htm',
-                img:'//i2.cximg.com/cms/carmall/upload/resources/image/2017/08/01/45243.jpg',
-                title:'宝骏品牌旗舰店',tag:'国民爆款 畅销热卖'
-              },
-              {
-                link:'//c.chexiang.com/promotion/brands/skoda/index.htm',
-                img:'//i1.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44819.jpg',
-                title:'斯柯达品牌旗舰店',tag:'最高2年0利率'
-              },
-              {
-                link:'//c.chexiang.com/promotion/brands/roewe/index.htm',
-                img:'//i1.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44812.png',
-                title:'荣威品牌旗舰店',tag:'互联网汽车 领先典范'
-              },
-              {
-                link:'//c.chexiang.com/promotion/brands/mg/index.htm',
-                img:'//i1.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44816.jpg',
-                title:'MG品牌馆',tag:'年轻时尚 英伦潮流'
-              },
-              {
-                link:'//c.chexiang.com/promotion/brands/cadillac/index.htm',
-                img:'//i2.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44817.jpg',
-                title:'凯迪拉克品牌旗舰店',tag:'豪华美系 总统座驾'
-              },
-              {
-                link:'//c.chexiang.com/promotion/brands/wuling/index.htm',
-                img:'//i1.cximg.com/cms/carmall/upload/resources/image/2017/08/01/45242.jpg',
-                title:'五菱品牌旗舰店',tag:'家商两用 方便实惠'
-              },
-              {
-                link:'//c.chexiang.com/promotion/brands/maxus/index.htm',
-                img:'//i3.cximg.com/cms/carmall/upload/resources/image/2018/12/21/75205.jpg',
-                title:'大通品牌馆',tag:'大形象 大空间'
-              },
-            ],
-            //导航栏内容
-            navigationBarItem:[
-              {text:"享推荐",anchor:"recommend"},
-              {text:"品牌旗舰店",anchor:"brandShop"},
-              {text:"全国实体店",anchor:"localShop"},
-              {text:"贷款购车",anchor:"loan"},
-            ],
-          }
+  import {getEachShopTopNumberCars} from "@/api/shop";
+  import {strToUrlImage} from "@/utils";
+
+  export default {
+    name: "Home",
+    data(){
+      return{
+        carousel:[
+          require("@/assets/carousel/carousel-1.jpg"),
+          require("@/assets/carousel/carousel-2.jpg"),
+          require("@/assets/carousel/carousel-3.jpg"),
+          require("@/assets/carousel/carousel-4.jpg")
+        ],
+        sideListBg:require("@/assets/bg-side-list.jpg"),
+        brands:[
+          {brandName:"上汽大众",brandId:'Volkswagen',topShop:[]},
+          {brandName:"别克",brandId:'Buick',topShop:[]},
+          {brandName:"雪佛兰",brandId:'Chevrolet',topShop:[]},
+          {brandName:"宝骏",brandId:'BaoJun',topShop:[]},
+          {brandName:"斯柯达",brandId:'SKODA',topShop:[]},
+          {brandName:"荣威",brandId:'ROEWE',topShop:[]},
+          {brandName:"MG",brandId:'MG',topShop:[]},
+          {brandName:"凯迪拉克",brandId:'Cadillac',topShop:[]},
+          {brandName:"五菱",brandId:'SGMW',topShop:[]},
+          {brandName:"上汽大通",brandId:'MAXUS',topShop:[]}
+        ],
+
+        shops:[
+          {
+            link:{path:'/shop/Volkswagen'},
+            img:'//i1.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44813.jpg',
+            title:'大众品牌旗舰店',short:'上汽大众',tag:'最高30000元金融补贴'
+          },
+          {
+            link:{path:'/shop/Buick'},
+            img:'//i2.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44811.jpg',
+            title:'别克品牌旗舰店',short:'别克',tag:'心静思远 志行千里'
+          },
+          {
+            link:{path:'/shop/Chevrolet'},
+            img:'//i2.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44814.jpg',
+            title:'雪佛兰品牌旗舰店',short:'雪佛兰',tag:'最高2000元大礼包'
+          },
+          {
+            link:{path:'/shop/BaoJun'},
+            img:'//i2.cximg.com/cms/carmall/upload/resources/image/2017/08/01/45243.jpg',
+            title:'宝骏品牌旗舰店',short:'宝骏',tag:'国民爆款 畅销热卖'
+          },
+          {
+            link:{path:'/shop/SKODA'},
+            img:'//i1.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44819.jpg',
+            title:'斯柯达品牌旗舰店',short:'斯柯达',tag:'最高2年0利率'
+          },
+          {
+            link:{path:'/shop/ROEWE'},
+            img:'//i1.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44812.png',
+            title:'荣威品牌旗舰店',short:'荣威',tag:'互联网汽车 领先典范'
+          },
+          {
+            link:{path:'/shop/MG'},
+            img:'//i1.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44816.jpg',
+            title:'MG品牌馆',short:'MG',tag:'年轻时尚 英伦潮流'
+          },
+          {
+            link:{path:'/shop/Cadillac'},
+            img:'//i2.cximg.com/cms/carmall/upload/resources/image/2017/07/28/44817.jpg',
+            title:'凯迪拉克品牌旗舰店',short:'凯迪拉克',tag:'豪华美系 总统座驾'
+          },
+          {
+            link:{path:'/shop/SGMW'},
+            img:'//i1.cximg.com/cms/carmall/upload/resources/image/2017/08/01/45242.jpg',
+            title:'五菱品牌旗舰店',short:'五菱',tag:'家商两用 方便实惠'
+          },
+          {
+            link:{path:'/shop/MAXUS'},
+            img:'//i3.cximg.com/cms/carmall/upload/resources/image/2018/12/21/75205.jpg',
+            title:'大通品牌馆',short:'上汽大通',tag:'大形象 大空间'
+          },
+        ],
+        //导航栏内容
+        navigationBarItem:[
+          {text:"享推荐",anchor:"recommend"},
+          {text:"品牌旗舰店",anchor:"brandShop"},
+          {text:"全国实体店",anchor:"localShop"},
+          {text:"贷款购车",anchor:"loan"},
+        ],
+      }
+    },
+    mounted() {
+      getEachShopTopNumberCars().then(response=>{
+        this.brands.forEach(item=>{
+          item.topShop=response[item.brandId]
+        })
+      })
+    },
+    methods:{
+      getImage(url){
+        return strToUrlImage(url)
       }
     }
+  }
 </script>
 
 <style lang="less" scoped>
+  .header-brand{
+    color: white;
+    :visited{
+      color: aquamarine;
+    }
+  }
   el-col{
     border: solid;
   }
@@ -321,7 +340,7 @@
   }
   .classify{
     color: white;
-    background-color: red;
+    /*background-color: red;*/
     height: 350px;
     & .classify-item{
       width: 100%;

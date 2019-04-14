@@ -22,7 +22,6 @@ function addCar(){
   let Car={
     carName:'',
     price:'',
-    brandId: '',
     carSize:'',
     engine:'',
     level:'',
@@ -35,4 +34,12 @@ function addCar(){
   }
   return Car
 }
-export {addUser,addShop,addCar}
+
+function addBrand(){
+  let Brand={
+    brandId: '',
+    brandName: '',
+  }
+  return Brand
+}
+export {addUser,addShop,addCar,addBrand}

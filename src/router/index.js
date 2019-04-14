@@ -30,14 +30,14 @@ export const constantRouterMap = [
             component: resolve => require(["@/views/searchResult"], resolve),
           },
           {
-            path:'/product/:id',
-            name:'Goods',
+            path:'/car/:id',
+            name:'Car',
             components:{
               'default':resolve => require(["@/views/productInfo"], resolve),
             }
           },
           {
-            path:'/shop/:id',
+            path:'/shop/:shopId',
             name:'Shop',
             components:{
               'default':resolve => require(["@/views/shop"], resolve),
@@ -101,6 +101,11 @@ export const constantRouterMap = [
     path: '/401',
     name:'401',
     component: resolve => require(["@/views/errorPage/401"], resolve),
+  },
+  {
+    path: '/402',
+    name:'402',
+    component: resolve => require(["@/views/errorPage/402"], resolve),
   },
   {
     path:'*',

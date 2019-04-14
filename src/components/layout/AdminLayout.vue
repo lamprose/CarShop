@@ -35,7 +35,7 @@
     watch:{
       tempRoles(){
         if(this.tempRoles==='')
-          this.defaultActive='1'
+          this.defaultActive='2'
         else
           this.defaultActive='3'
       }
@@ -44,6 +44,9 @@
       tempRoles(){
         return this.$store.getters.tempRoles
       }
+    },
+    mounted() {
+      this.$store.dispatch('ClearTempRoles')
     }
   }
 </script>

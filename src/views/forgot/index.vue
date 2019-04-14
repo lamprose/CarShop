@@ -3,48 +3,47 @@
     <div style="margin: auto;width: 260px">
     <img src="../../assets/congratulations.png" style="width: 260px">
     </div>
-    <el-steps :active="activeStep" finish-status="success" class="stepStatus">
-      <el-step title="填写用户名" description="填写忘记密码的用户名"></el-step>
-      <el-step title="身份验证" description="选择密保问题并验证密保答案以确认身份"></el-step>
-      <el-step title="设置新密码" description="设置新的密码"></el-step>
-      <el-step title="完成并登陆" description="恭喜你！修改密码完成"></el-step>
+    <el-steps :active="activeStep" finish-status="success" class="stepStatus" simple>
+      <el-step title="填写用户名"></el-step>
+      <el-step title="密保验证"></el-step>
+      <el-step title="设置新密码"></el-step>
+      <el-step title="完成并登陆"></el-step>
     </el-steps>
     <div style="width: 100%">
       <el-form class="mainBox" :model="newUser" ref="form"  label-position="left" label-width="100px" :rules="formRule">
-        <div v-if="activeStep==0">
-          <el-form-item label="用户名:">
+        <div v-if="activeStep===0" style="width: 400px">
+          <el-form-item label="用户名:" prop="id">
             <el-input placeholder="请输入用户名" v-model="newUser.id"></el-input>
           </el-form-item>
-          <drag-verify v-if="identify.show" style="margin: 30px auto" text="拉拽到右边以验证" :width="identify.width" :height="identify.height" success-text="验证成功" ref="Verity"></drag-verify>
+          <drag-verify v-if="identify.show" style="margin: 30px auto" text="拉拽到右边以验证" :width="identify.width" :height="identify.height" success-text="验证成功" ref="Verify"></drag-verify>
           <el-button round type="primary" @click="firstToSecond">下一步</el-button>
         </div>
-        <div v-if="activeStep==1">
-          <el-form-item label="密保问题:" v-if="activeStep==1">
-            <el-select v-model="newUser.secretOption" placeholder="请选择" style="width: 350px">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="密保答案:" v-if="activeStep==1">
-            <el-input placeholder="请输入密保答案" v-model="newUser.secret"></el-input>
-          </el-form-item>
+        <div v-if="activeStep===1">
+          <div v-for="(o,index) in newUser.secret">
+            <el-form-item label="密保问题:" :prop="'secret['+index+'].question'">
+              <el-select v-model="o.question" placeholder="请选择" style="width: 350px" @change="optionChange">
+                <el-option v-for="item in nowOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="密保答案:" :prop="'secret['+index+'].answer'">
+              <el-input placeholder="请输入密保答案" v-model="o.answer"></el-input>
+            </el-form-item>
+          </div>
           <el-button round type="primary" @click="secondToThird">提交验证</el-button>
         </div>
-        <el-form-item v-if="activeStep==2" prop="password" label="输入新密码:" class="input-form">
-          <el-input v-model="newUser.password" :type="showPasswordType" id="password" :show-password="true"></el-input>
-        </el-form-item>
-        <el-form-item v-if="activeStep==2" prop="rePassword" label="确认新密码:" class="input-form">
-          <el-input v-model="newUser.rePassword" :type="showPasswordType" :show-password="true"></el-input>
-        </el-form-item>
-        <div class="submitButton" v-if="activeStep==2">
-          <el-button round type="primary" @click="thirdToCompleted('form')">提交</el-button>
+        <div v-if="activeStep===2">
+          <el-form-item prop="password" label="输入新密码:" class="input-form">
+            <el-input v-model="newUser.password" id="password" :show-password="true"></el-input>
+          </el-form-item>
+          <el-form-item prop="rePassword" label="确认新密码:" class="input-form">
+            <el-input v-model="newUser.rePassword" :show-password="true"></el-input>
+          </el-form-item>
+          <div class="submitButton">
+            <el-button round type="primary" @click="thirdToCompleted">提交</el-button>
+          </div>
         </div>
       </el-form>
-      <div class="mainBox" v-if="activeStep==3">
+      <div class="mainBox" v-if="activeStep===3">
         <img src="../../assets/congratulations.png" width="200px">
         恭喜！修改密码成功
         <div class="submitButton">
@@ -56,9 +55,10 @@
 </template>
 
 <script>
-  import DragVerify from "vue-drag-verify/src/dragVerify";
+  import DragVerify from "@/components/DragVerify";
   import rule from "@/utils/rule";
-  import {checkHaveSecret,checkCorrectSecret} from "@/api/user";
+  import {checkHaveSecret,checkCorrectSecret,changePassword} from "@/api/security";
+  import {encryptMd5} from "@/utils/encrypt";
 
   export default {
       name: "ForgotPassword",
@@ -66,21 +66,24 @@
       data() {
         return {
           formRule:{
+            id:[
+              {required:true,message:'请输入ID',trigger:['blur','change']}
+            ],
             password:rule.Password,
             rePassword:rule.RePassword,
+            'secret[0].question':rule.Question,
+            'secret[1].question':rule.Question,
+            'secret[2].question':rule.Question,
+            'secret[0].answer':rule.Answer,
+            'secret[1].answer':rule.Answer,
+            'secret[2].answer':rule.Answer,
           },
-          activeStep:2,
+          activeStep:0,
           //自动登陆按钮内容
           contentAutoLogin:'s后自动登陆',
           //倒计时时间
           totalTime:5,
           canClick:true,
-          //控制密码输入框下错误是否显示
-          showAlertPassword:false,
-          //控制是否显示密码
-          showPassword:true,
-          //控制密码输入框的类型
-          showPasswordType:'password',
           //控制验证进度条属性
           identify: {
             show: true,
@@ -91,112 +94,98 @@
             id: '',
             password: '',
             rePassword:'',
-            secretOption:null,
-            secret:''
+            secret:[
+              {question:null,answer:''},
+              {question:null,answer:''},
+              {question:null,answer:''}
+            ]
           },
           user:{},
-          options:[{
-            value:0,
-            label:'您初中班主任的名字是？'
-          },{
-            value:1,
-            label:'您的出生地是？'
-          },{
-            value:2,
-            label:'您的学号（或工号）是？'
-          },{
-            value:3,
-            label:'您父亲的生日是？'
-          },{
-            value:4,
-            label:'您高中班主任的名字是？'
-          },{
-            value:5,
-            label:'您母亲的生日是？'
-          },{
-            value:6,
-            label:'您小学班主任的名字是？'
-          }],
+          options:[
+            {value:0, label:'您初中班主任的名字是？'},
+            {value:1, label:'您的出生地是？'},
+            {value:2, label:'您的学号（或工号）是？'},
+            {value:3, label:'您父亲的生日是？'},
+            {value:4, label:'您高中班主任的名字是？'},
+            {value:5, label:'您母亲的生日是？'},
+            {value:6, label:'您小学班主任的名字是？'}],
+          nowOptions:[],
           value:'',
         }
       },
       methods:{
+        optionChange(event){
+          let now=this.options
+          this.newUser.secret.forEach(item=>{
+            now=now.filter(optionItem=>optionItem.value!==item.question)
+          })
+          this.nowOptions=now
+        },
         firstToSecond(){
-          if(this.newUser.id==''){
-            this.$message.error({
-              message:"用户名不能为空",
-              showClose:true
-            });
-            return
-          }
-          if(!this.$refs.Verity.isPassing){
-            this.$message.error({
-              message:"验证失败,请拉拽到右边以验证",
-              showClose:true
-            });
-            return
-          }
-          //忘记密码第一步验证用户名是否存在以及用户密保问题是否设置
-          checkHaveSecret(this.newUser.id).then(data=>{
-            if(data==='success')
-              this.activeStep=1
-            else
-              this.$message.error({
-                message:"用户不存在或未设置密保问题",
-                showClose:true
-              })
+          this.$refs['form'].validate(valid=>{
+              if(valid){
+                if(!this.$refs.Verify.isPassing){
+                  this.$message.error({
+                    message:"验证失败,请拉拽到右边以验证",
+                    showClose:true
+                  });
+                }else{
+                  //忘记密码第一步验证用户名是否存在以及用户密保问题是否设置
+                  checkHaveSecret(this.newUser.id).then(data=>{
+                    if(data==='success')
+                      this.activeStep=1
+                    else{
+                      this.$message.error({
+                        message:"用户不存在或未设置密保问题",
+                        showClose:true
+                      });
+                      this.$refs.Verify.init()
+                      this.$refs['form'].resetFields()
+                      console.log("123")
+                    }
+                  })
+
+                }
+              }else{
+                this.$refs.Verify.init()
+              }
+
           })
         },
         secondToThird(){
-          console.log(this.user)
-          if(this.newUser.secretOption==null){
-            this.$message.error({
-              message:"请选择密保问题",
-              showClose:true
-            });
-            console.log(this.newUser.secretOption)
-            return
-          }
-          if(this.newUser.secret==''){
-            this.$message.error({
-              message:"请填写密保答案",
-              showClose:true
-            });
-            return
-          }
-          //验证密保问题答案是否正确
-          checkCorrectSecret(this.newUser.id,this.newUser.secretOption,this.newUser.secret).then(data=>{
-            if(data==='success')
-              this.activeStep=2;
-            else
-              this.$message.error({
-                message:'密保问题错误',
-                showClose:true
+          this.$refs['form'].validate(valid=>{
+            if(valid){
+              //验证密保问题答案是否正确
+              checkCorrectSecret(this.newUser).then(data=>{
+                if(data==='success')
+                  this.activeStep=2;
+                else
+                  this.$message.error({
+                    message:'密保问题错误',
+                    showClose:true
+                  })
               })
+            }
           })
         },
-        thirdToCompleted(formName){
-          this.$refs[formName].validate((valid) => {
+        thirdToCompleted(){
+          this.$refs['form'].validate((valid) => {
             if (valid) {
-              //TODO: 验证新密码格式并提交数据修改到数据库
-              this.activeStep=3;
-              this.countDown()
-              return '1';
+              //验证新密码格式并提交数据修改到数据库
+              this.$store.dispatch('updatePasswordBySecret',{id:this.newUser.id,password:encryptMd5(this.newUser.password)}).then(()=>{
+                this.activeStep=3;
+                this.countDown()
+              }).catch(err=>{
+                this.$message.error({
+                  message:err,
+                  showClose:false
+                })
+              })
             } else {
               console.log('error submit!!');
               return '0';
             }
           });
-        },
-        showPasswordChange(){
-          if(this.showPasswordType=='password')
-            this.showPasswordType='text'
-          else
-            this.showPasswordType='password'
-          this.showPassword=!this.showPassword
-          if(!this.showPassword)
-            this.showPassword=!this.showPassword
-          console.log(this.showPassword)
         },
         countDown () {
           if (!this.canClick) return  //改动的是这两行代码
@@ -215,33 +204,16 @@
         }
       },
       watch:{
-        rePassword() {
-          if(this.rePassword!==this.newUser.password)
-            this.showAlertPassword=true
-          else
-            this.showAlertPassword=false
-          //console.log(this.rePassword,this.newUser.password)
-        },
         totalTime(){
           if(this.totalTime<0){
-            //将用户名和token放入sessionStorage
-            sessionStorage.setItem("userId",this.user.id)
-            sessionStorage.setItem("user",JSON.stringify(this.user))
-            console.log("in login image is " + sessionStorage.getItem("user"))
-            //将用户信息放入vuex
-            this.$store.commit("setUser",this.user)
-            this.$store.commit("changeLoginStatus")
-            if(this.user.flag==0)
-              this.$router.push({name:'Home'})
-            else
-              this.$router.push({name:'Admin'})
+            this.$router.push({path:'/home'})
           }
         }
       },
-      computed:{
-
+      mounted() {
+        this.nowOptions=this.options
       }
-    }
+  }
 </script>
 
 <style lang="less" scoped>

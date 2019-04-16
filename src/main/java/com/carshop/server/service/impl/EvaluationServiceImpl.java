@@ -61,14 +61,14 @@ public class EvaluationServiceImpl implements EvaluationService {
         String id = params.get("id");
         String shopId = params.get("shopId");
         String carId = params.get("carId");
-        if(id==null){
-            if(shopId==null){
-                //id为空shopId为空              3:通过carId拉取每辆车的所有订单的评价
-            }else{
-                //id为空shopId不为空            1:通过商户shopId拉取每个商户订单的评价
-            }
-        }else{
-                //id不为空shopId为空             
+        if(id==null&&shopId==null){                 //id为空shopId为空              3:通过carId拉取每辆车的所有订单的评价
+
+
+
+        }else if(id==null&&shopId!=null){           //id为空shopId不为空            1:通过商户shopId拉取每个商户订单的评价
+                //id不为空shopId为空
+        }else if(id!=null&&shopId==null){
+            
         }
         return null;
     }

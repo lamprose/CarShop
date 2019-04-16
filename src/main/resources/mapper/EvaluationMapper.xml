@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.carshop.server.dao.EvaluationMapper">
+    <resultMap id="EvaluationMap" type="Evaluations">
+        <id column="evaId" property="evaId"/>
+        <result column="grade" property="grade"/>
+        <result column="evaluate" property="evaluate"/>
+        <result column="evaTime" property="evaTime"/>
+        <association column="id" property="user"
+                     select="com.carshop.server.dao.UserMapper.selectOneById" javaType="User"/>
+        <association column="carId" property="car"
+                     select="com.carshop.server.dao.CarsMapper.selectOneByCarId" javaType="Cars"/>
+    </resultMap>
+
+    <select id="selectAvgGradeByCarId">
+        SELECT AVG(grade) WHERE carId = #{carId} AND grade > 0
+    </select>
+
+    <insert id="insertOneByEvaluation">
+        INSERT INTO evaluations (id, carId, grade, evaluate, evaTime)
+        VALUES(#{user.id},#{car.carId},#{grade},#{evaluate},#{evaTime})
+    </insert>
+</mapper>

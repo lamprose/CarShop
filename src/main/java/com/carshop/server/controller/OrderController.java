@@ -20,10 +20,16 @@ public class OrderController {
     OrderService orderService;
 
 
-    //获取订单，根据brandId,拉取订单信息
+    //获取订单，根据brandId,拉取商铺订单信息
     @PostMapping("getOrderListPage")
     public Map<String, Object> getOrdeListPage(@RequestBody Map<String,String> params){
         return orderService.getOrderListPage(params);
+    }
+
+    //获取订单，根据用户id,拉取用户个人订单信息
+    @PostMapping("getUserOrderListPage")
+    public Map<String, Object> getUserOrdeListPage(@RequestBody Map<String,String> params){
+        return orderService.getUserOrderListPage(params);
     }
 
     //获取订单，根据brandId,拉取订单信息,编辑订单状态
@@ -32,10 +38,16 @@ public class OrderController {
         return orderService.editOrder(params);
     }
 
-    //普通用户添加订单
+    //普通用户添加订单，未支付
     @PostMapping("addOrder")
-    public Map<String, Object> addOrder(@RequestBody Map<String,String> params){
+    public Map<String, Object> addOrder(@RequestBody List<Map<String,String>> params){
         return orderService.addOrder(params);
+    }
+
+    //支付完成修改订单状态
+    @PostMapping("/changeOrderStatus")
+    public Map<String,Object> changeOrderStatus(@RequestBody List<Map<String,String>> params){
+        return orderService.changeOrderStatus(params);
     }
 
     //移除订单

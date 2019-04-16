@@ -23,5 +23,7 @@ public interface CarsMapper {
 
     Cars selectOneByCarId(String carId);
 
+    void updateEvaluationByCarId(@Param("carId") String carId, @Param("evaluation") Integer evaluation);
+
     void updateOneByCarId(Cars car);
 }

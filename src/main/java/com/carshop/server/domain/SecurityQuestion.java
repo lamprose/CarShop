@@ -2,16 +2,25 @@ package com.carshop.server.domain;
 
 public class SecurityQuestion {
 
-    private String id;              //用户ID
+    private User user;              //用户ID
     private String questionType;    //问题类型
     private String answer;          //答案
 
-    public String getId() {
-        return id;
+    public SecurityQuestion(User user, String questionType, String answer) {
+        this.user = user;
+        this.questionType = questionType;
+        this.answer = answer;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public SecurityQuestion() {
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getQuestionType() {
@@ -28,5 +37,14 @@ public class SecurityQuestion {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    @Override
+    public String toString() {
+        return "SecurityQuestion{" +
+                "user=" + user +
+                ", questionType='" + questionType + '\'' +
+                ", answer='" + answer + '\'' +
+                '}';
     }
 }

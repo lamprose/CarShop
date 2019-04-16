@@ -77,4 +77,10 @@ public class UserController {
         String token = request.getHeader("Token");
         return userService.checkSession(token);
     }
+
+    //用户修改密码
+    @PostMapping("/changePassword")
+    public Map<String,Object> changePassword(@RequestBody Map<String,String> params, HttpServletRequest request){
+        return userService.changePassword(params,request);
+    }
 }

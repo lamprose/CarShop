@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.carshop.server.dao.CartMapper">
+    <resultMap id="CartMap" type="ShoppingCart">
+        <id column="cartId" property="cartId"/>
+        <result column="amount" property="amount"/>
+        <association column="id" property="user"
+                     select="com.carshop.server.dao.UserMapper.selectOneById" javaType="User"/>
+        <association column="carId" property="car"
+                     select="com.carshop.server.dao.CarsMapper.selectOneByCarId" javaType="Cars"/>
+    </resultMap>
+
+    <select id="selectAllCartByUserId" resultMap="CartMap">
+        SELECT * FROM shoppingCart WHERE id = #{id}
+    </select>
+
+    <select id="selectOneByUserIdAndCarId" resultMap="CartMap">
+        SELECT * FROM shoppingCart WHERE id = #{id} AND carId = #{carId}
+    </select>
+
+    <update id="updateAmountByUserId">
+        UPDATE shoppingCart SET amount = #{amount} WHERE id = #{id}
+    </update>
+
+    <insert id="insertOneByShoppingCart">
+        INSERT shoppingCart (id, carId, amount)
+        VALUES(#{user.id},#{car.carId},#{amount})
+    </insert>
+
+    <delete id="deleteCartsByIds">
+        DELETE FROM
+        shoppingCart
+        WHERE cartId IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.cartId}
+        </foreach>
+    </delete>
+</mapper>

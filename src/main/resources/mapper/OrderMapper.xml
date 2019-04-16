@@ -25,8 +25,18 @@
         (SELECT carId FROM cars WHERE brandId = #{brandId})
     </select>
 
+    <select id="selectAllByUserId" resultMap="OrdersMap">
+        SELECT * FROM orders WHERE id = #{id}
+    </select>
+
     <update id="updateOrderStatusById">
         UPDATE orders SET orderStatus = #{orderStatus} WHERE orderId = #{orderId}
+    </update>
+    
+    <update id="updateOrderStatusByOrderIds" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            UPDATE orders SET orderStatus = #{item.orderStatus} WHERE orderId = #{item.orderId}
+        </foreach>
     </update>
 
     <insert id="insertOneByOrder">
@@ -34,10 +44,18 @@
         VALUES(#{user.id},#{car.carId},#{amount},#{orderStatus},#{orderTime})
     </insert>
 
+    <insert id="insertOrders" useGeneratedKeys="true" keyProperty="orderId" parameterType="java.util.List">
+        INSERT orders (id, carId, amount, orderStatus, orderTime)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.user.id},#{item.car.carId},#{item.amount},#{item.orderStatus},#{item.orderTime})
+        </foreach>
+    </insert>
+
     <delete id="deleteOrdersByIds">
         DELETE FROM
         orders
-        WHERE orderId in
+        WHERE orderId IN
         <foreach collection="list" item="item" open="(" separator="," close=")">
             #{item.orderId}
         </foreach>

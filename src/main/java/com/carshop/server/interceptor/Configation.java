@@ -22,7 +22,7 @@ public class Configation extends WebMvcConfigurerAdapter {
          /*addPathPatterns 用于添加拦截规则
          excludePathPatterns 用户排除拦截*/
         registry.addInterceptor(getInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/user/register", "/", "/user/login","/UserAvatar/**","/user/getInfo","/user/check");
+                .excludePathPatterns("/user/register", "/", "/user/login","/UserAvatar/**","/user/getInfo","/user/check","/security/**");
     }
 
 }

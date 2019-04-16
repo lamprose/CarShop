@@ -18,6 +18,8 @@ public interface AdminMapper {
 
     void insertOneShop(Shops shop);
 
+    void updatePassAndTokenById(@Param("shopId") String shopId,@Param("password") String password, @Param("token") String token);
+
     void updateStatusByShopId(@Param("shopId")String shopId, @Param("status")String status);
 
     void updateStatusToOnlineByToken(String token);

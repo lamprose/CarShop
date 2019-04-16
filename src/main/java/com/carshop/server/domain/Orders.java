@@ -9,6 +9,17 @@ public class Orders {
     private String orderStatus; //订单状态
     private String orderTime;   //下单时间
 
+    public Orders(User user, Cars car, Integer amount, String orderStatus, String orderTime) {
+        this.user = user;
+        this.car = car;
+        this.amount = amount;
+        this.orderStatus = orderStatus;
+        this.orderTime = orderTime;
+    }
+
+    public Orders() {
+    }
+
     public Integer getOrderId() {
         return orderId;
     }
@@ -55,5 +66,17 @@ public class Orders {
 
     public void setOrderTime(String orderTime) {
         this.orderTime = orderTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Orders{" +
+                "orderId=" + orderId +
+                ", user=" + user +
+                ", car=" + car +
+                ", amount=" + amount +
+                ", orderStatus='" + orderStatus + '\'' +
+                ", orderTime='" + orderTime + '\'' +
+                '}';
     }
 }

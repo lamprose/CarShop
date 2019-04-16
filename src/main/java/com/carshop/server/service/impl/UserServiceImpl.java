@@ -12,11 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -68,10 +67,10 @@ public class UserServiceImpl implements UserService {
         String role = params.get("role");
 
         token = RSA.tokenEncrypt(id, password);      //对账号密码字符串token进行RSA加密,获取token
-        password = RSA.passwordEncrypt(password);           //对密码进行RSA加密，获取password
+        password = RSA.passwordEncrypt(password);    //对密码进行RSA加密，获取password
 
         if("normal".equals(role)) {
-            user = userMapper.selectOneById(id);   //普通用户登录
+            user = userMapper.selectOneById(id);     //普通用户登录
             if(user==null){
                 data.put("code", Enum.Code.COMMON.getValue());              //主code:合法token
                 datas.put("code", Enum.Code.ERR_EMPTY.getValue());          //次code:空用户
@@ -262,6 +261,45 @@ public class UserServiceImpl implements UserService {
         }
         catch (Exception e){
             data.put("datas","fail");
+        }
+        return data;
+    }
+
+    @Override
+    public Map<String, Object> changePassword(Map<String, String> params, HttpServletRequest request) {
+
+        String oldPassword = params.get("oldPassword");
+
+        oldPassword = RSA.passwordEncrypt(oldPassword);
+        String newPassword = params.get("newPassword");
+        String token = request.getHeader("Token");
+
+        Map<String,Object> data = new HashMap<>();
+        data.put("code",Enum.Code.COMMON.getValue());
+        User user = userMapper.selectOneByToken(token);
+        if(user==null){
+            Shops shop = adminMapper.selectOneByToken(token);
+            if(!shop.getPassword().equals(oldPassword)){               //验证输入的原密码是否正确，不正确返回空
+                data.put("datas",null);
+                return data;
+            }
+            token = RSA.tokenEncrypt(shop.getShopId(), newPassword);   //对账号密码字符串token进行RSA加密,获取token
+            newPassword = RSA.passwordEncrypt(newPassword);            //对密码进行RSA加密，获取password
+
+            adminMapper.updatePassAndTokenById(shop.getShopId(),newPassword,token);
+            shop = adminMapper.selectOneById(shop.getShopId());
+            data.put("datas",shop);
+        }else {
+            if(!user.getPassword().equals(oldPassword)){                //验证输入的原密码是否正确，不正确返回空
+                data.put("datas",null);
+                return data;
+            }
+            token = RSA.tokenEncrypt(user.getId(), newPassword);       //对账号密码字符串token进行RSA加密,获取token
+            newPassword = RSA.passwordEncrypt(newPassword);            //对密码进行RSA加密，获取password
+
+            userMapper.updatePassAndTokenById(user.getId(),newPassword,token);
+            user = userMapper.selectOneById(user.getId());
+            data.put("datas",user);
         }
         return data;
     }

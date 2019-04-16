@@ -16,9 +16,15 @@ public interface OrderMapper {
 
     void insertOneByOrder(Orders order);
 
+    void insertOrders(List<Orders> ordersList);
+
     List<Orders> selectAll(String brandId);
+
+    List<Orders> selectAllByUserId(String id);
 
     List<Orders> selectAllNameSimilar(@Param("name") String name, @Param("brandId") String brandId);
 
     void updateOrderStatusById(@Param("orderId") String orderId, @Param("orderStatus") String orderStatus);
+
+    void updateOrderStatusByOrderIds(List<Map<String,String>> params);
 }

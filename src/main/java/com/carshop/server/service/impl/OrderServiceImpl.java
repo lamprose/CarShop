@@ -1,11 +1,9 @@
 package com.carshop.server.service.impl;
 
 import com.carshop.server.dao.AdminMapper;
+import com.carshop.server.dao.CartMapper;
 import com.carshop.server.dao.OrderMapper;
-import com.carshop.server.domain.Cars;
-import com.carshop.server.domain.Orders;
-import com.carshop.server.domain.Shops;
-import com.carshop.server.domain.User;
+import com.carshop.server.domain.*;
 import com.carshop.server.utils.Enum;
 import com.carshop.server.service.OrderService;
 
@@ -13,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -27,6 +22,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     AdminMapper adminMapper;
+
+    @Autowired
+    CartMapper cartMapper;
 
     @Override
     public Map<String, Object> getOrderListPage(Map<String, String> params) {
@@ -60,6 +58,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Map<String, Object> getUserOrderListPage(Map<String, String> params) {
+        String id = params.get("id");
+        Map<String, Object> data=new HashMap<String, Object>();
+        data.put("code",Enum.Code.COMMON.getValue());
+        List<Orders> orderList = orderMapper.selectAllByUserId(id);
+        data.put("datas",orderList);
+        return data;
+    }
+
+    @Override
     public Map<String, Object> editOrder(Map<String, String> params) {
         String orderStatus = params.get("orderStatus");
         String orderId = params.get("orderId");
@@ -78,33 +86,53 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Map<String, Object> addOrder(Map<String, String> params) {
+    public Map<String, Object> addOrder(List<Map<String, String>> params) {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");      //获取下单时间
         String date = sdf.format(new Date());
-        String id = params.get("id");                                                //获取下单用户id
-        String carId = params.get("carId");                                          //获取车辆carId
 
-        User user = new User();
-        user.setId(id);
+        Integer flag = 0;
+        List<Orders> ordersList = new ArrayList<>();
+        List<Map<String,String>> cartRemoveList = new ArrayList<>();
+        for(int i=0; i<params.size(); i++){
 
-        Cars car = new Cars();
-        car.setCarId(carId);
-        Orders order = new Orders();
-        order.setAmount(Integer.parseInt(params.get("amount")));                     //获取订单数量
-        order.setOrderTime(date);
-        order.setUser(user);
-        order.setCar(car);
+            if(params.get(i).get("type").equals("1")){          //type:添加类型 1 表示从购物车里添加订单 0 表示直接购买无需移出购物车
+                flag = 1;
+                Map<String,String> temp = new HashMap<>();
+                temp.put("cartId",params.get(i).get("cartId"));
+                cartRemoveList.add(temp);
+            }
+
+            User user = new User();
+            user.setId(params.get(i).get("id"));
+            Cars car = new Cars();
+            car.setCarId(params.get(i).get("carId"));
+            Integer amount = Integer.parseInt(params.get(i).get("amount"));
+
+            Orders order = new Orders(user,car,amount,"unpaid",date);
+            ordersList.add(order);
+        }
 
         Map<String,Object> data = new HashMap<>();
         data.put("code",Enum.Code.COMMON.getValue());
         try{
-            orderMapper.insertOneByOrder(order);
-            data.put("datas","success");
+            orderMapper.insertOrders(ordersList);                   //添加订单
+            if(flag==1){
+                cartMapper.deleteCartsByIds(cartRemoveList);            //移除购物车内容
+            }
+
+            List<Map<String,Object>> datas = new ArrayList<>();
+
+            for (int i=0; i<ordersList.size(); i++) {
+                Map<String,Object> temp = new HashMap<>();
+                temp.put("orderId", ordersList.get(i).getOrderId());
+                datas.add(temp);
+            }
+            data.put("datas",datas);
         }
         catch (Exception e){
             System.out.println(e);
-            data.put("datas","fail");
+            data.put("datas",null);
         }
         return data;
     }
@@ -123,5 +151,21 @@ public class OrderServiceImpl implements OrderService {
         }
         return data;
     }
+
+    @Override
+    public Map<String, Object> changeOrderStatus(List<Map<String, String>> params) {
+        Map<String,Object> data = new HashMap<>();
+        data.put("code",Enum.Code.COMMON.getValue());
+        try{
+            orderMapper.updateOrderStatusByOrderIds(params);
+            data.put("datas","success");
+        }
+        catch (Exception e){
+            System.out.println(e);
+            data.put("datas","fail");
+        }
+        return data;
+    }
+
 }
 

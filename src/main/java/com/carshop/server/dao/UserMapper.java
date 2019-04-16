@@ -22,6 +22,8 @@ public interface UserMapper {
 
     List<User> selectAllNameSimilar(String name);
 
+    void updatePassAndTokenById(@Param("id") String id, @Param("password") String password, @Param("token") String token);
+
     void updateStatusById(@Param("id")String id, @Param("status") String status);
 
     //多个参数需要用@Param

@@ -52,6 +52,10 @@
         UPDATE user SET status = 'online' WHERE token = #{token}
     </update>
 
+    <update id="updatePassAndTokenById">
+        UPDATE user SET password = #{password}, token = #{token} WHERE id = #{id}
+    </update>
+
     <!--批量删除Users-->
     <delete id="deleteUsersByIds">
         DELETE FROM

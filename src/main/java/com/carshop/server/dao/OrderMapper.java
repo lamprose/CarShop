@@ -24,6 +24,8 @@ public interface OrderMapper {
 
     List<Orders> selectAllNameSimilar(@Param("name") String name, @Param("brandId") String brandId);
 
+    Orders selectOneByOrderId(String orderId);
+
     void updateOrderStatusById(@Param("orderId") String orderId, @Param("orderStatus") String orderStatus);
 
     void updateOrderStatusByOrderIds(List<Map<String,String>> params);

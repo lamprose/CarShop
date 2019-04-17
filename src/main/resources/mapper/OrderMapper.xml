@@ -29,12 +29,16 @@
         SELECT * FROM orders WHERE id = #{id}
     </select>
 
+    <select id="selectOneByOrderId" resultMap="OrdersMap">
+        SELECT * FROM orders WHERE orderId = #{orderId}
+    </select>
+
     <update id="updateOrderStatusById">
         UPDATE orders SET orderStatus = #{orderStatus} WHERE orderId = #{orderId}
     </update>
     
     <update id="updateOrderStatusByOrderIds" parameterType="java.util.List">
-        <foreach collection="list" item="item" separator=";">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
             UPDATE orders SET orderStatus = #{item.orderStatus} WHERE orderId = #{item.orderId}
         </foreach>
     </update>

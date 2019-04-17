@@ -49,4 +49,27 @@ public class CarsController {
         return carsService.removeCars(params);
     }
 
+    //通过carId获取车辆的信息
+    @PostMapping("getCarInfo")
+    public Map<String,Object> getCarInfo(@RequestBody Map<String,String> params){
+        return carsService.getCarInfo(params);
+    }
+
+    //根据输入进行商铺名，品牌名，车名搜索
+    @PostMapping("searchByText")
+    public Map<String,Object> searchByText(@RequestBody Map<String,String> params){
+        return carsService.searchByText(params);
+    }
+
+    //根据输入返回含有该字段的字符串
+    @PostMapping("queryStringByText")
+    public Map<String,Object> queryStringByText(@RequestBody Map<String,String> params){
+        return carsService.queryStringByText(params);
+    }
+
+    //获取评分最高的5两车
+    @PostMapping("getHotSearch")
+    public Map<String,Object> getHotSearch(){
+        return carsService.getHotSearch();
+    }
 }

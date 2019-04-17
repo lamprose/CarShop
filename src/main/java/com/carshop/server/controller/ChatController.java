@@ -2,6 +2,7 @@ package com.carshop.server.controller;
 
 
 import com.carshop.server.service.ChatService;
+import com.carshop.server.utils.Enum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,7 @@ public class ChatController {
     public Map<String, Object> sendOneWebSocket(@RequestParam("sendFrom") String sendFrom,@RequestParam("sendTo") String sendTo,@RequestParam("msg") String msg) {
         //封装返回数据
         Map<String,Object> data=new HashMap<String, Object>();
-        data.put("code",20000);
+        data.put("code",Enum.Code.COMMON.getValue());
         data.put("data",ChatService.sendOneMessage(sendFrom,sendTo, msg));
         return data;
     }

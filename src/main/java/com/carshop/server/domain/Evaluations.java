@@ -9,7 +9,8 @@ public class Evaluations {
     private String evaluate;   //评价内容
     private String evaTime;    //评价时间
 
-    public Evaluations(User user, Cars car, Integer grade, String evaluate, String evaTime) {
+    public Evaluations(Integer evaId, User user, Cars car, Integer grade, String evaluate, String evaTime) {
+        this.evaId = evaId;
         this.user = user;
         this.car = car;
         this.grade = grade;

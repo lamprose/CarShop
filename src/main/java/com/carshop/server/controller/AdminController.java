@@ -25,8 +25,6 @@ public class AdminController {
     //获取全部用户信息
     @PostMapping("/getUserListPage")
     public Map<String, Object> getUserListPage(@RequestBody Map<String,String> params, HttpServletResponse response){
-        if(response.getStatus()==298)
-            return null;
         Integer page = Integer.parseInt(params.get("page"));//页码
         String name = params.get("name");//名字查询
         return adminService.getUserListPage(page,name);
@@ -35,8 +33,6 @@ public class AdminController {
     //编辑用户
     @PostMapping("/editUser")
     public Map<String,Object> editUser(@RequestBody Map<String,String> params, HttpServletResponse response){
-        if(response.getStatus()==298)
-            return null;
         return adminService.editUser(params);
     }
 
@@ -70,5 +66,15 @@ public class AdminController {
         return adminService.removeShop(params);
     }
 
-    
+    //通过brandId获取商户信息
+    @PostMapping("/getShopInfo")
+    public Map<String,Object> getShopInfo(@RequestBody Map<String,String> params){
+        return adminService.getShopInfo(params);
+    }
+
+    //通过一列brandId，获取每个品牌中前三的车
+    @PostMapping("/getEachShopTopNumberCars")
+    public Map<String,Object> getEachShopTopNumberCars(@RequestBody List<Map<String,String>> params){
+        return adminService.getEachShopTopNumberCars(params);
+    }
 }

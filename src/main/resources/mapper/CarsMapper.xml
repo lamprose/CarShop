@@ -16,9 +16,21 @@
         SELECT * FROM cars WHERE brandId = #{brandId}
     </select>
 
+    <select id="selectTopNumberCarsByEvaluation" resultMap="CarsMap">
+        SELECT * FROM cars ORDER BY evaluation DESC LIMIT 0,#{number}
+    </select>
+
+    <select id="selectTopNumberCarsByEvaluationAndBrandId" resultMap="CarsMap">
+        SELECT * FROM cars WHERE brandId = #{brandId} ORDER BY evaluation DESC LIMIT 0,#{number}
+    </select>
+
     <!--根据车名进行模糊查询-->
     <select id="selectAllNameSimilar" resultMap="CarsMap">
         SELECT * FROM cars WHERE carName LIKE '%${carName}%' AND brandId = #{brandId}
+    </select>
+
+    <select id="selectAllTextSimilar" resultMap="CarsMap">
+        SELECT * FROM cars WHERE carName LIKE '%${text}%'
     </select>
 
     <select id="selectOneByCarId" resultMap="CarsMap">

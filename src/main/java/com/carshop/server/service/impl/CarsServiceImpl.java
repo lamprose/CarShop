@@ -1,6 +1,7 @@
 package com.carshop.server.service.impl;
 
 import com.carshop.server.dao.AdminMapper;
+import com.carshop.server.dao.BrandsMapper;
 import com.carshop.server.dao.CarsMapper;
 import com.carshop.server.dao.ParametersMapper;
 import com.carshop.server.domain.Brands;
@@ -12,6 +13,7 @@ import com.carshop.server.utils.Enum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,9 @@ public class CarsServiceImpl implements CarsService {
 
     @Autowired
     AdminMapper adminMapper;
+
+    @Autowired
+    BrandsMapper brandsMapper;
 
     @Autowired
     ParametersMapper parametersMapper;
@@ -122,6 +127,7 @@ public class CarsServiceImpl implements CarsService {
         Cars car = new Cars();
         car.setCarId(params.get("carId"));
         car.setCarName(params.get("carName"));
+        car.setEvaluation("0");
         car.setPrice(Double.parseDouble(params.get("price")));
         car.setBrand(brand);
 
@@ -150,6 +156,94 @@ public class CarsServiceImpl implements CarsService {
         catch (Exception e){
             System.out.println(e);
             data.put("datas","fail");
+        }
+        return data;
+    }
+
+    @Override
+    public Map<String, Object> getCarInfo(Map<String, String> params) {
+        String carId = params.get("carId");
+        Map<String,Object> data = new HashMap<>();
+        data.put("code",Enum.Code.COMMON.getValue());
+        try {
+            Cars car = carsMapper.selectOneByCarId(carId);
+            data.put("datas",car);
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        return data;
+    }
+
+    @Override
+    public Map<String, Object> searchByText(Map<String, String> params) {
+        String text = params.get("text");
+        Map<String,Object> data = new HashMap<>();
+        data.put("code",Enum.Code.COMMON.getValue());
+
+        Map<String,Object> datas = new HashMap<>();
+
+        List<Cars> carsList = new ArrayList<>();
+        List<Brands> brandsList = new ArrayList<>();
+        List<Shops> shopsList = new ArrayList<>();
+        try {
+            carsList = carsMapper.selectAllTextSimilar(text);
+            brandsList = brandsMapper.selectAllNameSimilar(text);
+            shopsList = adminMapper.selectAllNameSimilar(text);
+            datas.put("cars",carsList);
+            datas.put("brands",brandsList);
+            datas.put("shops",shopsList);
+            data.put("datas",datas);
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        return data;
+    }
+
+    @Override
+    public Map<String,Object> queryStringByText(Map<String,String> params){
+        String text = params.get("text");
+        Map<String,Object> data = new HashMap<>();
+        data.put("code",Enum.Code.COMMON.getValue());
+        List<String> queryString = new ArrayList<>();
+        List<Cars> carsList = new ArrayList<>();
+        List<Brands> brandsList = new ArrayList<>();
+        List<Shops> shopsList = new ArrayList<>();
+        try {
+            carsList = carsMapper.selectAllTextSimilar(text);
+            brandsList = brandsMapper.selectAllNameSimilar(text);
+            shopsList = adminMapper.selectAllNameSimilar(text);
+
+            for(int i=0; i<carsList.size();i++){
+                queryString.add(carsList.get(i).getCarName());
+            }
+            for(int i=0; i<brandsList.size();i++){
+                queryString.add(brandsList.get(i).getBrandName());
+            }
+            for(int i=0; i<shopsList.size();i++){
+                queryString.add(shopsList.get(i).getShopName());
+            }
+            data.put("datas",queryString);
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        return data;
+    }
+
+    @Override
+    public Map<String, Object> getHotSearch(){
+        Map<String,Object> data = new HashMap<>();
+        data.put("code",Enum.Code.COMMON.getValue());
+        List<Cars> carsList = new ArrayList<>();
+
+        try{
+            carsList = carsMapper.selectTopNumberCarsByEvaluation(5);
+            data.put("datas",carsList);
+        }
+        catch (Exception e){
+            System.out.println(e);
         }
         return data;
     }

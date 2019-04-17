@@ -21,9 +21,15 @@ public interface CarsMapper {
 
     List<Cars> selectAllNameSimilar(@Param("carName") String carName, @Param("brandId") String brandId);
 
+    List<Cars> selectAllTextSimilar(@Param("text") String text);
+
     Cars selectOneByCarId(String carId);
 
-    void updateEvaluationByCarId(@Param("carId") String carId, @Param("evaluation") Integer evaluation);
+    List<Cars> selectTopNumberCarsByEvaluation(Integer number);
+
+    List<Cars> selectTopNumberCarsByEvaluationAndBrandId(@Param("number") Integer number, @Param("brandId") String brandId);
+
+    void updateEvaluationByCarId(@Param("carId") String carId, @Param("evaluation") Double evaluation);
 
     void updateOneByCarId(Cars car);
 }

@@ -1,8 +1,10 @@
 package com.carshop.server.service.impl;
 
 import com.carshop.server.dao.AdminMapper;
+import com.carshop.server.dao.CarsMapper;
 import com.carshop.server.dao.UserMapper;
 import com.carshop.server.domain.Brands;
+import com.carshop.server.domain.Cars;
 import com.carshop.server.domain.Shops;
 import com.carshop.server.domain.User;
 import com.carshop.server.encrypt_decrypt.RSA;
@@ -11,6 +13,7 @@ import com.carshop.server.utils.Enum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +25,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    CarsMapper carsMapper;
 
     @Override
     public Map<String,Object> getUserListPage(Integer page,String name){
@@ -195,6 +201,37 @@ public class AdminServiceImpl implements AdminService {
             System.out.println(e);
             data.put("datas","fail");
         }
+        return data;
+    }
+
+    @Override
+    public Map<String,Object> getShopInfo(Map<String,String> params){
+        String brandId = params.get("brandId");
+        Map<String,Object> data = new HashMap<>();
+        data.put("code",Enum.Code.COMMON.getValue());
+        try{
+            Shops shop = adminMapper.selectOneByBrandId(brandId);
+            data.put("datas",shop);
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        return data;
+    }
+
+    @Override
+    public Map<String,Object> getEachShopTopNumberCars(List<Map<String,String>> params){
+        Map<String,Object> data = new HashMap<>();
+        Map<String,Object> datas = new HashMap<>();
+        data.put("code",Enum.Code.COMMON.getValue());
+        String brandId;
+        for(int i=0; i<params.size(); i++){
+            brandId = params.get(i).get("brandId");
+            List<Cars> carsList = new ArrayList<>();
+            carsList = carsMapper.selectTopNumberCarsByEvaluationAndBrandId(3,brandId);
+            datas.put(brandId,carsList);
+        }
+        data.put("datas",datas);
         return data;
     }
 }

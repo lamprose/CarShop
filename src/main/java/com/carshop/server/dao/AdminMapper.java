@@ -12,6 +12,8 @@ import java.util.Map;
 @Repository
 public interface AdminMapper {
 
+    Shops selectOneByBrandId(String brandId);
+
     Shops selectOneById(String ShopId);
 
     Shops selectOneByToken(String token);

@@ -12,12 +12,43 @@
                      select="com.carshop.server.dao.CarsMapper.selectOneByCarId" javaType="Cars"/>
     </resultMap>
 
-    <select id="selectAvgGradeByCarId">
-        SELECT AVG(grade) WHERE carId = #{carId} AND grade > 0
+    <select id="selectAvgGradeByCarId" resultType="java.lang.Double">
+        SELECT AVG(grade) FROM evaluations WHERE carId = #{carId} AND grade > 0
     </select>
 
+    <select id="selectAllByCarId" resultMap="EvaluationMap">
+        SELECT * FROM evaluations WHERE carId = #{carId}
+    </select>
+
+    <select id="selectAllByUserIdAndCarId" resultMap="EvaluationMap">
+        SELECT * FROM evaluations WHERE carId = #{carId} AND id = #{id}
+    </select>
+
+    <select id="selectOneByEvaId" resultMap="EvaluationMap">
+        SELECT * FROM evaluations WHERE evaId = #{evaId}
+    </select>
+
+    <update id="updateOneByEvaluation">
+        UPDATE evaluations SET
+        id = #{user.id},
+        carId = #{car.carId},
+        grade = #{grade},
+        evaluate = #{evaluate},
+        evaTime = #{evaTime}
+        WHERE evaId = #{evaId}
+    </update>
+
     <insert id="insertOneByEvaluation">
-        INSERT INTO evaluations (id, carId, grade, evaluate, evaTime)
-        VALUES(#{user.id},#{car.carId},#{grade},#{evaluate},#{evaTime})
+        INSERT INTO evaluations (evaId, id, carId, grade, evaluate, evaTime)
+        VALUES(#{evaId},#{user.id},#{car.carId},#{grade},#{evaluate},#{evaTime})
     </insert>
+
+    <delete id="deleteEvaluationsByIds">
+        DELETE FROM
+        evaluations
+        WHERE evaId IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.evaId}
+        </foreach>
+    </delete>
 </mapper>

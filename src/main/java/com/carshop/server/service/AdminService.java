@@ -8,6 +8,10 @@ import java.util.Map;
 public interface AdminService {
 
 
+    Map<String,Object> getEachShopTopNumberCars(List<Map<String,String>> params);
+
+    Map<String,Object> getShopInfo(Map<String,String> params);
+
     Map<String,Object> getUserListPage(Integer page, String name);
 
     Map<String,Object> editUser(Map<String,String> params);

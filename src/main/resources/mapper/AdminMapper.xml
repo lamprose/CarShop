@@ -17,6 +17,10 @@
         SELECT * FROM shops WHERE shopId = #{shopId}
     </select>
 
+    <select id="selectOneByBrandId" resultMap="ShopsMap">
+        SELECT * FROM shops WHERE brandId = #{brandId}
+    </select>
+
     <select id="selectOneByToken" resultMap="ShopsMap">
         SELECT * FROM shops WHERE token = #{token}
     </select>

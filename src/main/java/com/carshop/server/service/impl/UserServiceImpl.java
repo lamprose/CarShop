@@ -169,19 +169,19 @@ public class UserServiceImpl implements UserService {
         //String token = request.getQueryString().substring(0);   //解决参数中含有+问题，token => token=...
         //token = token.substring(6);                             //取去除前六个字符token=的子串，即为参数token
 
-        String token = params.get("token");
+        String id = params.get("id");
         Map<String, Object> data=new HashMap<String, Object>();
         Map<String, Object> datas=new HashMap<String, Object>();
-        User user = userMapper.selectOneByToken(token);
+        User user = new User();
+        Shops shop = new Shops();
+        user = userMapper.selectOneById(id);
+
         if(user==null){
-            Shops shop = adminMapper.selectOneByToken(token);
-            if(shop.getShopId().equals("superAdmin")){
-                datas.put("role","superAdmin");
+            shop = adminMapper.selectOneById(id);
+            if(shop!=null){
+                datas.put("role",shop.getShopId().equals("superAdmin")?"superAdmin":"admin");
+                datas.put("data",shop);
             }
-            else{
-                datas.put("role","admin");
-            }
-            datas.put("data",shop);
         }
         else{
             datas.put("data",user);

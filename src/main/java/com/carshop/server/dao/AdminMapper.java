@@ -22,6 +22,8 @@ public interface AdminMapper {
 
     void updatePassAndTokenById(@Param("shopId") String shopId,@Param("password") String password, @Param("token") String token);
 
+    void updateShopById(Shops newShop);
+
     void updateStatusByShopId(@Param("shopId")String shopId, @Param("status")String status);
 
     void updateStatusToOnlineByToken(String token);

@@ -61,21 +61,40 @@ public class AdminServiceImpl implements AdminService {
         String sex = params.get("sex");
         String phone = params.get("phone");
         String loc = params.get("loc");
-        User user = new User();
-        user.setId(id);
-        user.setName(name);
-        user.setSex(sex);
-        user.setPhone(phone);
-        user.setLoc(loc);
+        User user = userMapper.selectOneById(id);
+        Shops shop = adminMapper.selectOneById(id);
         Map<String,Object> data = new HashMap<>();
+        if(user!=null){
+            User newUser = new User();
+            newUser.setId(id);
+            newUser.setName(name);
+            newUser.setSex(sex);
+            newUser.setPhone(phone);
+            newUser.setLoc(loc);
+            try{
+                userMapper.updateUserById(newUser);
+                data.put("datas","success");
+            }
+            catch (Exception e){
+                data.put("datas","fail");
+            }
+        }
+        else if(shop!=null){
+            Shops newShop= new Shops();
+            newShop.setShopId(id);
+            newShop.setShopName(name);
+            newShop.setPhone(phone);
+            try{
+                adminMapper.updateShopById(newShop);
+                data.put("datas","success");
+            }
+            catch (Exception e){
+                data.put("datas","fail");
+            }
+        }
+
         data.put("code",Enum.Code.COMMON.getValue());
-        try{
-            userMapper.updateUserById(user);
-            data.put("datas","success");
-        }
-        catch (Exception e){
-            data.put("datas","fail");
-        }
+
        return data;
     }
 
@@ -159,7 +178,7 @@ public class AdminServiceImpl implements AdminService {
     public Map<String,Object> addShop(Map<String,String> params){
         String shopId = params.get("shopId");
         String shopName = params.get("shopName");
-        String password = shopId;                       //初始密码默认为id
+        String password = params.get("password");                       //初始密码默认为id
         String phone = params.get("phone");
         String brandId = params.get("brandId");
 

@@ -24,7 +24,7 @@ public class ChatController {
         //封装返回数据
         Map<String,Object> data=new HashMap<String, Object>();
         data.put("code",Enum.Code.COMMON.getValue());
-        data.put("data",ChatService.sendOneMessage(sendFrom,sendTo, msg));
+        data.put("datas",ChatService.sendOneMessage(sendFrom,sendTo, msg));
         return data;
     }
 }

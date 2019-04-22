@@ -59,6 +59,10 @@
         UPDATE shops SET password = #{password},token = #{token} WHERE shopId = #{shopId}
     </update>
 
+    <update id="updateShopById">
+        UPDATE shops SET shopName = #{shopName}, phone = #{phone} WHERE shopId = #{shopId}
+    </update>
+
     <insert id="insertOneShop">
         INSERT INTO shops VALUES(#{shopId}, #{shopName}, #{password}, #{brand.brandId}, #{phone}, #{token}, #{status})
     </insert>

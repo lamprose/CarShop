@@ -87,8 +87,8 @@ public class UserServiceImpl implements UserService {
                 user.setToken(token);
 
                 datas.put("role",role);                                      //封装数据，用户角色
-                data.put("code", Enum.Code.COMMON.getValue());              //主code:合法token
-                datas.put("code", Enum.Code.COMMON.getValue());             //次code:正常登录
+                data.put("code", Enum.Code.COMMON.getValue());               //主code:合法token
+                datas.put("code", Enum.Code.COMMON.getValue());              //次code:正常登录
                 datas.put("data",user);
             }
         } else if("admin".equals(role)){

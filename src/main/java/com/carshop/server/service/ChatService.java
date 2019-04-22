@@ -23,7 +23,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 @ServerEndpoint(value = "/websocket/{shopId}")
 @Component
-public class ChatService {
+public class
+ChatService {
     /**
      * concurrent包的线程安全Set，用来存放每个客户端对应的CumWebSocket对象。
      */
@@ -139,6 +140,7 @@ public class ChatService {
         Session sessionTo = sessionPool.get(sendTo);
         System.out.println(sendFrom+"#"+sendTo+"#"+message);
         if (sessionTo != null) {
+            System.out.println(sessionTo);
             try {
                 sessionTo.getAsyncRemote().sendText(sendFrom+"&&"+message);
                 return "success";

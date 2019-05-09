@@ -9,15 +9,13 @@
 ---
 ## 截图
 
-主页：
+#### 主页：
 
 ![home-1](./screenshots/home-1.png)
-
 ![home-2](./screenshots/home-2.png)
-
 ![home-3](./screenshots/home-3.png)
 
-管理员界面：
+#### 管理员界面：
 
 ![admin](./screenshots/admin.png)
 

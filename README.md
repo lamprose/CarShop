@@ -12,13 +12,13 @@ Based on SpringBoot [Source Code](https://github.com/lipese/CarShop/tree/server)
 ---
 ## Screenshots
 
-home page:
+#### Home Page:
 
 ![home-1](./screenshots/home-1.png)
 ![home-2](./screenshots/home-2.png)
 ![home-3](./screenshots/home-3.png)
 
-admin page:
+#### Admin Page:
 
 ![admin](./screenshots/admin.png)
 

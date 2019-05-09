@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [中文用户请点](./README_CN.md)
 
 # CarShop
@@ -25,3 +26,9 @@ admin page:
 ## License
 [MIT](./LICENSE)  
 Copyright (c) 2017-present lipese
+=======
+[中文用户请点](https://github.com/lipses/CarShop/blob/master/README_CN.md)
+
+# CarShop
+A simple online automobile sales system
+>>>>>>> parent of eca82ff... Update README.md

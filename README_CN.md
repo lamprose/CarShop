@@ -15,6 +15,8 @@
 
 ![home-2](./screenshots/home-2.png)
 
+![home-3](./screenshots/home-3.png)
+
 管理员界面：
 
 ![admin](./screenshots/admin.png)

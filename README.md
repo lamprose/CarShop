@@ -10,17 +10,17 @@ Based on Vue.js+ElementUI [Source Code](https://github.com/lipese/CarShop/tree/b
 Based on SpringBoot [Source Code](https://github.com/lipese/CarShop/tree/server)
 
 ---
-## ScreenShots
+## Screenshots
 
 home page:
 
-![home-1](E:/Program/Github/CarShop-master/screenshots/home-1.png)
-
-![home-2](E:/Program/Github/CarShop-master/screenshots/home-2.png)
+![home-1](./screenshots/home-1.png)
+![home-2](./screenshots/home-2.png)
+![home-3](./screenshots/home-3.png)
 
 admin page:
 
-![admin](E:/Program/Github/CarShop-master/screenshots/admin.png)
+![admin](./screenshots/admin.png)
 
 ## License
 [MIT](./LICENSE)  

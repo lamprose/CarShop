@@ -1,15 +1,5 @@
-/*export const serverUrl="ws://192.168.3.28:8080/websocket/"
-export const baseUrl="http://192.168.3.28:8080"
-export const serverAvatar="http://192.168.3.28:8080/UserAvatar/"*/
+import { config } from '@/config';
 
-/*export const serverUrl="ws://192.168.1.106:8080/websocket/"
-export const baseUrl="http://192.168.1.106:8080"
-export const serverAvatar="http://192.168.1.106:8080/UserAvatar/"*/
-
-export const serverUrl="ws://10.202.153.185:8080/websocket/"
-export const baseUrl="http://10.202.153.185:8080"
-export const serverAvatar="http://10.202.153.185:8080/UserAvatar/"
-
-/*export const serverUrl="ws://localhost:8080/websocket/"
-export const baseUrl="http://localhost:8080"
-export const serverAvatar="http://localhost:8080/UserAvatar/"*/
+export const serverUrl="ws://"+config.serverIp+"/websocket/"
+export const baseUrl="http://"+config.serverIp
+export const serverAvatar="http://"+config.serverIp+"/UserAvatar/"

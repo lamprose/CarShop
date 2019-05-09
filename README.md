@@ -4,10 +4,10 @@
 A simple online automobile sales system which of Data Course Design in Junior
 
 # Browser
-Based on Vue.js+ElementUI [Source Code](https://github.com/lipese/CarShop/tree/browser)
+Based on Vue.js+ElementUI [Source Code](https://github.com/lamprose/CarShop/tree/browser)
 
 # Server
-Based on SpringBoot [Source Code](https://github.com/lipese/CarShop/tree/server)
+Based on SpringBoot [Source Code](https://github.com/lamprose/CarShop/tree/server)
 
 ---
 ## Screenshots
@@ -24,4 +24,4 @@ Based on SpringBoot [Source Code](https://github.com/lipese/CarShop/tree/server)
 
 ## License
 [MIT](./LICENSE)  
-Copyright (c) 2017-present lipese
+Copyright (c) 2017-present lamprose

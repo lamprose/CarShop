@@ -124,6 +124,12 @@ I have encountered some problems in the development process and solutions, I hop
 - vue-element-admin:[https://panjiachen.github.io/vue-element-admin-site](https://panjiachen.github.io/vue-element-admin-site/)  
 - git：[http://www.liaoxuefeng.com](http://www.liaoxuefeng.com/)  
 
+## Donate
+
+<span>![qq](https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/qq.png)</span><span>![wechat](https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/wechat.png)</span><span>![alipay](https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/alipay.png)</span>
+
+
 ## License
+
 [MIT](./LICENSE)  
 Copyright (c) 2017-present lamprose

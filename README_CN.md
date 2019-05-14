@@ -123,6 +123,10 @@ npm run dev
 - vue-element-admin:[https://panjiachen.github.io/vue-element-admin-site](https://panjiachen.github.io/vue-element-admin-site/)
 - git：[http://www.liaoxuefeng.com](http://www.liaoxuefeng.com/)
 
+## 捐赠
+
+<span>![qq](https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/qq.png)</span><span>![wechat](https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/wechat.png)</span><span>![alipay](https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/alipay.png)</span>
+
 ## 许可证
 [MIT](./LICENSE)  
 Copyright (c) 2017-present lamprose

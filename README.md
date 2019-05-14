@@ -126,8 +126,7 @@ I have encountered some problems in the development process and solutions, I hop
 
 ## Donate
 
-<span>![qq](https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/qq.png)</span><span>![wechat](https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/wechat.png)</span><span>![alipay](https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/alipay.png)</span>
-
+<img src='https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/qq.png' width='200px' /><img src='https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/wechat.png' width='200px' /><img src='https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/alipay.png' width='200px' />
 
 ## License
 

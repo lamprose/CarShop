@@ -125,7 +125,7 @@ npm run dev
 
 ## 捐赠
 
-<span>![qq](https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/qq.png)</span><span>![wechat](https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/wechat.png)</span><span>![alipay](https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/alipay.png)</span>
+<img src='https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/qq.png' width='300px' /><img src='https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/wechat.png' width='300px' /><img src='https://raw.githubusercontent.com/lamprose/image_hosting/blog/donate/alipay.png' width='300px' />
 
 ## 许可证
 [MIT](./LICENSE)  
